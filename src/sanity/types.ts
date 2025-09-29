@@ -13,6 +13,45 @@
  */
 
 // Source: schema.json
+export type Event = {
+  _id: string;
+  _type: "event";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title?: string;
+  description?: string;
+  date?: string;
+  location?: string;
+  link?: string;
+  needsVolunteer?: boolean;
+  image?: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+  };
+  slug?: Slug;
+};
+
+export type Category = {
+  _id: string;
+  _type: "category";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title?: string;
+  slug?: Slug;
+  description?: string;
+};
+
 export type BlogPost = {
   _id: string;
   _type: "blogPost";
@@ -20,8 +59,21 @@ export type BlogPost = {
   _updatedAt: string;
   _rev: string;
   title?: string;
-  author?: string;
+  slug?: Slug;
   publishedAt?: string;
+  mainImage?: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+  };
   body?: Array<{
     children?: Array<{
       marks?: Array<string>;
@@ -52,21 +104,36 @@ export type BlogPost = {
     _type: "image";
     _key: string;
   }>;
-  slug?: Slug;
+  categories?: Array<{
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    _key: string;
+    [internalGroqTypeReferenceTo]?: "category";
+  }>;
+  author?: {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "author";
+  };
+  relatedBlogPosts?: Array<{
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    _key: string;
+    [internalGroqTypeReferenceTo]?: "blogPost";
+  }>;
 };
 
-export type Event = {
+export type Author = {
   _id: string;
-  _type: "event";
+  _type: "author";
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  title?: string;
-  description?: string;
-  date?: string;
-  location?: string;
-  link?: string;
-  needsVolunteer?: boolean;
+  name?: string;
+  slug?: Slug;
   image?: {
     asset?: {
       _ref: string;
@@ -79,7 +146,24 @@ export type Event = {
     crop?: SanityImageCrop;
     _type: "image";
   };
-  slug?: Slug;
+  bio?: Array<{
+    children?: Array<{
+      marks?: Array<string>;
+      text?: string;
+      _type: "span";
+      _key: string;
+    }>;
+    style?: "normal" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "blockquote";
+    listItem?: "bullet" | "number";
+    markDefs?: Array<{
+      href?: string;
+      _type: "link";
+      _key: string;
+    }>;
+    level?: number;
+    _type: "block";
+    _key: string;
+  }>;
 };
 
 export type SanityImagePaletteSwatch = {
@@ -200,26 +284,15 @@ export type SanityAssetSourceData = {
   url?: string;
 };
 
-export type AllSanitySchemaTypes = BlogPost | Event | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageHotspot | SanityImageCrop | SanityFileAsset | SanityImageAsset | SanityImageMetadata | Geopoint | Slug | SanityAssetSourceData;
+export type AllSanitySchemaTypes = Event | Category | BlogPost | Author | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageHotspot | SanityImageCrop | SanityFileAsset | SanityImageAsset | SanityImageMetadata | Geopoint | Slug | SanityAssetSourceData;
 export declare const internalGroqTypeReferenceTo: unique symbol;
 // Source: ./src/sanity/lib/queries.ts
 // Variable: BLOG_POSTS_QUERY
-// Query: *[_type == "blogPost" && defined(slug.current)][0...12]{    _id,    title,    slug,    author,    publishedAt  }
+// Query: *[_type == "blogPost" && defined(slug.current)]    | order(publishedAt desc)[0...12]{      _id,      title,      slug,      body,      mainImage,      publishedAt,      "categories": coalesce(        categories[]->{          _id,          slug,          title        },        []      ),      author->{        name,        image      }    }
 export type BLOG_POSTS_QUERYResult = Array<{
   _id: string;
   title: string | null;
   slug: Slug | null;
-  author: string | null;
-  publishedAt: string | null;
-}>;
-// Variable: BLOG_POST_QUERY
-// Query: *[_type == "blogPost" && slug.current == $slug][0]{    _id,    title,    slug,    author,    publishedAt,    body  }
-export type BLOG_POST_QUERYResult = {
-  _id: string;
-  title: string | null;
-  slug: Slug | null;
-  author: string | null;
-  publishedAt: string | null;
   body: Array<{
     children?: Array<{
       marks?: Array<string>;
@@ -249,6 +322,121 @@ export type BLOG_POST_QUERYResult = {
     crop?: SanityImageCrop;
     _type: "image";
     _key: string;
+  }> | null;
+  mainImage: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+  } | null;
+  publishedAt: string | null;
+  categories: Array<{
+    _id: string;
+    slug: Slug | null;
+    title: string | null;
+  }> | Array<never>;
+  author: {
+    name: string | null;
+    image: {
+      asset?: {
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      };
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      _type: "image";
+    } | null;
+  } | null;
+}>;
+// Variable: BLOG_POSTS_SLUGS_QUERY
+// Query: *[_type == "blogPost" && defined(slug.current)]{    "slug": slug.current  }
+export type BLOG_POSTS_SLUGS_QUERYResult = Array<{
+  slug: string | null;
+}>;
+// Variable: BLOG_POST_QUERY
+// Query: *[_type == "blogPost" && slug.current == $slug][0]{    _id,    title,    body,    mainImage,    publishedAt,    "categories": coalesce(      categories[]->{        _id,        slug,        title      },      []    ),    author->{      name,      image    },    relatedBlogPosts[] {      _key, // each array item always has one      ...@->{ _id, title, slug }    }  }
+export type BLOG_POST_QUERYResult = {
+  _id: string;
+  title: string | null;
+  body: Array<{
+    children?: Array<{
+      marks?: Array<string>;
+      text?: string;
+      _type: "span";
+      _key: string;
+    }>;
+    style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+    listItem?: "bullet" | "number";
+    markDefs?: Array<{
+      href?: string;
+      _type: "link";
+      _key: string;
+    }>;
+    level?: number;
+    _type: "block";
+    _key: string;
+  } | {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+    _key: string;
+  }> | null;
+  mainImage: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+  } | null;
+  publishedAt: string | null;
+  categories: Array<{
+    _id: string;
+    slug: Slug | null;
+    title: string | null;
+  }> | Array<never>;
+  author: {
+    name: string | null;
+    image: {
+      asset?: {
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      };
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      _type: "image";
+    } | null;
+  } | null;
+  relatedBlogPosts: Array<{
+    _key: string;
+    _id: string;
+    title: string | null;
+    slug: Slug | null;
   }> | null;
 } | null;
 // Variable: EVENTS_QUERY
@@ -282,6 +470,7 @@ export type EVENT_QUERYResult = {
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
+    alt?: string;
     _type: "image";
   } | null;
 } | null;
@@ -290,8 +479,9 @@ export type EVENT_QUERYResult = {
 import "@sanity/client";
 declare module "@sanity/client" {
   interface SanityQueries {
-    "\n  *[_type == \"blogPost\" && defined(slug.current)][0...12]{\n    _id,\n    title,\n    slug,\n    author,\n    publishedAt\n  }\n": BLOG_POSTS_QUERYResult;
-    "\n  *[_type == \"blogPost\" && slug.current == $slug][0]{\n    _id,\n    title,\n    slug,\n    author,\n    publishedAt,\n    body\n  }\n": BLOG_POST_QUERYResult;
+    "\n  *[_type == \"blogPost\" && defined(slug.current)]\n    | order(publishedAt desc)[0...12]{\n      _id,\n      title,\n      slug,\n      body,\n      mainImage,\n      publishedAt,\n      \"categories\": coalesce(\n        categories[]->{\n          _id,\n          slug,\n          title\n        },\n        []\n      ),\n      author->{\n        name,\n        image\n      }\n    }\n": BLOG_POSTS_QUERYResult;
+    "\n  *[_type == \"blogPost\" && defined(slug.current)]{\n    \"slug\": slug.current\n  }\n": BLOG_POSTS_SLUGS_QUERYResult;
+    "\n  *[_type == \"blogPost\" && slug.current == $slug][0]{\n    _id,\n    title,\n    body,\n    mainImage,\n    publishedAt,\n    \"categories\": coalesce(\n      categories[]->{\n        _id,\n        slug,\n        title\n      },\n      []\n    ),\n    author->{\n      name,\n      image\n    },\n    relatedBlogPosts[] {\n      _key, // each array item always has one\n      ...@->{ _id, title, slug }\n    }\n  }\n": BLOG_POST_QUERYResult;
     "\n  *[_type == \"event\" && defined(slug.current)] | order(date asc)[0...20]{\n    _id,\n    title,\n    slug,\n    date,\n    location,\n    needsVolunteer\n  }\n": EVENTS_QUERYResult;
     "\n  *[_type == \"event\" && slug.current == $slug][0]{\n    _id,\n    title,\n    slug,\n    description,\n    date,\n    location,\n    link,\n    needsVolunteer,\n    image\n  }\n": EVENT_QUERYResult;
   }
