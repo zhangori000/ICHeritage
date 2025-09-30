@@ -46,12 +46,8 @@ export default defineType({
     }),
     defineField({
       name: "body",
-      type: "array",
       title: "Content",
-      of: [
-        { type: "block" }, // Portable Text blocks
-        { type: "image" }, // inline images
-      ],
+      type: "blockContent", // 👈 switched to reusable blockContent type
     }),
     defineField({
       name: "categories",
@@ -68,7 +64,19 @@ export default defineType({
     defineField({
       name: "relatedBlogPosts",
       type: "array",
+      title: "Related Blog Posts",
       of: [{ type: "reference", to: { type: "blogPost" } }],
     }),
   ],
+  preview: {
+    select: {
+      title: "title",
+      author: "author.name",
+      media: "mainImage",
+    },
+    prepare(selection) {
+      const { author } = selection;
+      return { ...selection, subtitle: author ? `by ${author}` : "" };
+    },
+  },
 });
