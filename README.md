@@ -14,3 +14,11 @@ npm run dev
 
 - Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 - Open [http://localhost:3000/studio](http://localhost:3000/studio) to edit content.
+
+# References
+
+Sanity set up course:
+https://www.sanity.io/learn/course/content-driven-web-application-foundations/build-up-the-blog
+
+Visual Editing guide
+https://www.sanity.io/learn/course/visual-editing-with-next-js/token-handling-and-security

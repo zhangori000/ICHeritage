@@ -1,13 +1,32 @@
 import { defineQuery } from "next-sanity";
 
-// BLOG QUERIES
 export const BLOG_POSTS_QUERY = defineQuery(`
-  *[_type == "blogPost" && defined(slug.current)][0...12]{
-    _id,
-    title,
-    slug,
-    author,
-    publishedAt
+  *[_type == "blogPost" && defined(slug.current)]
+    | order(publishedAt desc)[]{
+      _id,
+      title,
+      slug,
+      body,
+      mainImage,
+      publishedAt,
+      "categories": coalesce(
+        categories[]->{
+          _id,
+          slug,
+          title
+        },
+        []
+      ),
+      author->{
+        name,
+        image
+      }
+    }
+`);
+
+export const BLOG_POSTS_SLUGS_QUERY = defineQuery(`
+  *[_type == "blogPost" && defined(slug.current)]{
+    "slug": slug.current
   }
 `);
 
@@ -15,10 +34,25 @@ export const BLOG_POST_QUERY = defineQuery(`
   *[_type == "blogPost" && slug.current == $slug][0]{
     _id,
     title,
-    slug,
-    author,
+    body,
+    mainImage,
     publishedAt,
-    body
+    "categories": coalesce(
+      categories[]->{
+        _id,
+        slug,
+        title
+      },
+      []
+    ),
+    author->{
+      name,
+      image
+    },
+    relatedBlogPosts[] {
+      _key, // each array item always has one
+      ...@->{ _id, title, slug }
+    }
   }
 `);
 
@@ -47,3 +81,28 @@ export const EVENT_QUERY = defineQuery(`
     image
   }
 `);
+
+export const PAGE_QUERY =
+  defineQuery(`*[_type == "page" && slug.current == $slug][0]{
+  ...,
+  content[]{
+    ...,
+    _type == "faqs" => {
+      ...,
+      faqs[]->
+    }
+  }
+}`);
+
+export const HOME_PAGE_QUERY = defineQuery(`*[_id == "siteSettings"][0]{
+    homePage->{
+      ...,
+      content[]{
+        ...,
+        _type == "faqs" => {
+          ...,
+          faqs[]->
+        }
+      }      
+    }
+  }`);
