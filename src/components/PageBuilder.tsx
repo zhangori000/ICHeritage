@@ -22,6 +22,14 @@ export const createDataAttributeConfig = {
   baseUrl: typeof stega.studioUrl === "string" ? stega.studioUrl : "",
 };
 
+// classic exhaustive-check helper
+function assertNever(
+  x: never,
+  msg = "Unhandled block type. Please add a switch statement to handle it"
+): never {
+  throw new Error(`${msg}: ${JSON.stringify(x)}`);
+}
+
 export function PageBuilder({
   content,
   documentId,
@@ -93,11 +101,9 @@ export function PageBuilder({
             );
           default:
             // This is a fallback for when we don't have a block type
-            return (
-              <div key={(block as any)._key}>
-                Block not found: {(block as any)._type}
-              </div>
-            );
+            // Because the union only contains the 4 cases above,
+            // `block` is `never` here. This enforces exhaustiveness.
+            return assertNever(block);
         }
       })}
     </main>
