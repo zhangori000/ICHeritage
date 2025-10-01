@@ -5,6 +5,7 @@ import { Header } from "@/components/Header";
 import { SanityLive } from "@/sanity/lib/live";
 import { sanityFetch } from "@/sanity/lib/live";
 import { SITE_SETTINGS_QUERY } from "@/sanity/lib/queries";
+import type { Image } from "sanity"; // 👈 1. IMPORT THE TYPE HERE.. to solve annoying typing issues.
 
 export default async function FrontendLayout({
   children,
@@ -16,7 +17,7 @@ export default async function FrontendLayout({
   });
   return (
     <section className="bg-white min-h-screen">
-      <Header logo={siteSettings?.logo} />
+      <Header logo={siteSettings?.logo as Image | null} />
       {children}
       <SanityLive />
       {(await draftMode()).isEnabled && (
