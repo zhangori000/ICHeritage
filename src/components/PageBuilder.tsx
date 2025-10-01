@@ -4,6 +4,7 @@ import { Hero } from "@/components/blocks/Hero";
 import { Features } from "@/components/blocks/Features";
 import { SplitImage } from "@/components/blocks/SplitImage";
 import { FAQs } from "@/components/blocks/FAQs";
+import { HeroBanner } from "./blocks/HeroBanner";
 import { PAGE_QUERYResult } from "@/sanity/types";
 import { client } from "@/sanity/lib/client";
 import { createDataAttribute } from "next-sanity";
@@ -97,6 +98,12 @@ export function PageBuilder({
             return (
               <DragHandle key={block._key}>
                 <FAQs {...block} />
+              </DragHandle>
+            );
+          case "heroBanner":
+            return (
+              <DragHandle key={block._key}>
+                <HeroBanner {...block} />
               </DragHandle>
             );
           default:
