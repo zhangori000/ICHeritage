@@ -82,27 +82,56 @@ export const EVENT_QUERY = defineQuery(`
   }
 `);
 
-export const PAGE_QUERY =
-  defineQuery(`*[_type == "page" && slug.current == $slug][0]{
-  ...,
+export const PAGE_QUERY = defineQuery(`
+*[_type == "page" && slug.current == $slug][0]{
+  _id,
+  _type,
+  title,
+  slug,
+  // the pageBuilder array:
   content[]{
     ...,
+    // explicitly project heroBanner fields so they’re definitely in the result
+    _type == "heroBanner" => {
+      ...,
+      titleColor,
+      kickerColor,
+      bodyColor,
+      overlayOpacity
+    },
+    // keep resolving faqs
     _type == "faqs" => {
       ...,
       faqs[]->
     }
   }
-}`);
+}
+`);
 
-export const HOME_PAGE_QUERY = defineQuery(`*[_id == "siteSettings"][0]{
-    homePage->{
+export const HOME_PAGE_QUERY = defineQuery(`
+*[_id == "siteSettings"][0]{
+  homePage->{
+    _id,
+    _type,
+    title,
+    slug,
+    content[]{
       ...,
-      content[]{
+      _type == "heroBanner" => {
         ...,
-        _type == "faqs" => {
-          ...,
-          faqs[]->
-        }
-      }      
+        // ensure these are actually in the result:
+        titleColor,
+        kickerColor,
+        bodyColor,
+        overlayOpacity
+      },
+      _type == "faqs" => { ..., faqs[]-> }
     }
-  }`);
+  }
+}
+`);
+
+// SITE_SETTINGS_QUERY
+export const SITE_SETTINGS_QUERY = defineQuery(`*[_id == "siteSettings"][0]{
+  logo
+}`);

@@ -1,2 +1,48 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
+/* Your theme tokens */
+:root {
+  /* brand palette from your notes */
+  --background: #fbf2da;
+  --foreground: #3a3a3a;
+  --card: #fefcf7;
+  --card-foreground: #3a3a3a;
+  --popover: #fefcf7;
+  --popover-foreground: #3a3a3a;
+
+  /* main brand colors */
+  --primary: #a73438; /* red */
+  --primary-foreground: #ffffff;
+
+  --secondary: #5a6b4f; /* green */
+  --secondary-foreground: #ffffff;
+
+  --accent: #5a6b4f; /* using same green for accent */
+  --accent-foreground: #ffffff;
+
+  --muted: #f0e6d2;
+  --muted-foreground: #6b6b6b;
+
+  --border: #e8dcc6;
+  --input: #fefcf7;
+  --ring: #a734384d;
+
+  /* optional chart aliases */
+  --chart-1: #a73438;
+  --chart-2: #5a6b4f;
+  --chart-3: #3a3a3a;
+  --chart-4: #fbf2da;
+  --chart-5: #fefcf7;
+
+  --radius: 0.5rem;
+}
+
+/* convenience utilities (optional): make “bg-background/85” work if you use it literally */
+.bg-background\/85 {
+  background-color: color-mix(in oklab, var(--background) 85%, transparent);
+}
+
+/* if you want font-serif to match the goal site’s look */
+.font-serif {
+  font-family: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+}

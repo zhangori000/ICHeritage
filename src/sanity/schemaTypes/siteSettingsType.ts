@@ -12,6 +12,19 @@ export const siteSettingsType = defineType({
       type: "reference",
       to: [{ type: "page" }],
     }),
+    defineField({
+      name: "logo",
+      type: "image",
+      title: "Site Logo",
+      options: { hotspot: true },
+      fields: [
+        defineField({
+          name: "alt",
+          type: "string",
+          title: "Alternative text",
+        }),
+      ],
+    }),
   ],
   preview: {
     prepare() {

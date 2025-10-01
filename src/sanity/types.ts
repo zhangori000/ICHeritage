@@ -13,6 +13,43 @@
  */
 
 // Source: schema.json
+export type ColorChoice = {
+  _type: "colorChoice";
+  token?: "foreground" | "primary" | "muted-foreground" | "white" | "black";
+  customHex?: string;
+};
+
+export type HeroBanner = {
+  _type: "heroBanner";
+  background?: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  };
+  overlayOpacity?: number;
+  title?: string;
+  titleColor?: Color;
+  kicker?: string;
+  kickerColor?: Color;
+  body?: string;
+  bodyColor?: Color;
+  primaryCta?: {
+    label?: string;
+    href?: string;
+  };
+  secondaryCta?: {
+    label?: string;
+    href?: string;
+  };
+};
+
 export type SiteSettings = {
   _id: string;
   _type: "siteSettings";
@@ -24,6 +61,19 @@ export type SiteSettings = {
     _type: "reference";
     _weak?: boolean;
     [internalGroqTypeReferenceTo]?: "page";
+  };
+  logo?: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
   };
 };
 
@@ -155,6 +205,8 @@ export type Faq = {
 };
 
 export type PageBuilder = Array<{
+  _key: string;
+} & HeroBanner | {
   _key: string;
 } & Hero | {
   _key: string;
@@ -342,6 +394,39 @@ export type Author = {
   }>;
 };
 
+export type Color = {
+  _type: "color";
+  hex?: string;
+  alpha?: number;
+  hsl?: HslaColor;
+  hsv?: HsvaColor;
+  rgb?: RgbaColor;
+};
+
+export type RgbaColor = {
+  _type: "rgbaColor";
+  r?: number;
+  g?: number;
+  b?: number;
+  a?: number;
+};
+
+export type HsvaColor = {
+  _type: "hsvaColor";
+  h?: number;
+  s?: number;
+  v?: number;
+  a?: number;
+};
+
+export type HslaColor = {
+  _type: "hslaColor";
+  h?: number;
+  s?: number;
+  l?: number;
+  a?: number;
+};
+
 export type SanityImagePaletteSwatch = {
   _type: "sanity.imagePaletteSwatch";
   background?: string;
@@ -460,7 +545,7 @@ export type SanityAssetSourceData = {
   url?: string;
 };
 
-export type AllSanitySchemaTypes = SiteSettings | SplitImage | Hero | Features | Faqs | Faq | PageBuilder | Page | Event | Category | BlockContent | BlogPost | Author | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageHotspot | SanityImageCrop | SanityFileAsset | SanityImageAsset | SanityImageMetadata | Geopoint | Slug | SanityAssetSourceData;
+export type AllSanitySchemaTypes = ColorChoice | HeroBanner | SiteSettings | SplitImage | Hero | Features | Faqs | Faq | PageBuilder | Page | Event | Category | BlockContent | BlogPost | Author | Color | RgbaColor | HsvaColor | HslaColor | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageHotspot | SanityImageCrop | SanityFileAsset | SanityImageAsset | SanityImageMetadata | Geopoint | Slug | SanityAssetSourceData;
 export declare const internalGroqTypeReferenceTo: unique symbol;
 // Source: ./src/sanity/lib/queries.ts
 // Variable: BLOG_POSTS_QUERY
@@ -593,15 +678,12 @@ export type EVENT_QUERYResult = {
   } | null;
 } | null;
 // Variable: PAGE_QUERY
-// Query: *[_type == "page" && slug.current == $slug][0]{  ...,  content[]{    ...,    _type == "faqs" => {      ...,      faqs[]->    }  }}
+// Query: *[_type == "page" && slug.current == $slug][0]{  _id,  _type,  title,  slug,  // the pageBuilder array:  content[]{    ...,    // explicitly project heroBanner fields so they’re definitely in the result    _type == "heroBanner" => {      ...,      titleColor,      kickerColor,      bodyColor,      overlayOpacity    },    // keep resolving faqs    _type == "faqs" => {      ...,      faqs[]->    }  }}
 export type PAGE_QUERYResult = {
   _id: string;
   _type: "page";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  title?: string;
-  slug?: Slug;
+  title: string | null;
+  slug: Slug | null;
   content: Array<{
     _key: string;
     _type: "faqs";
@@ -702,6 +784,36 @@ export type PAGE_QUERYResult = {
     };
   } | {
     _key: string;
+    _type: "heroBanner";
+    background?: {
+      asset?: {
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      };
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      _type: "image";
+    };
+    overlayOpacity: number | null;
+    title?: string;
+    titleColor: Color | null;
+    kicker?: string;
+    kickerColor: Color | null;
+    body?: string;
+    bodyColor: Color | null;
+    primaryCta?: {
+      label?: string;
+      href?: string;
+    };
+    secondaryCta?: {
+      label?: string;
+      href?: string;
+    };
+  } | {
+    _key: string;
     _type: "splitImage";
     orientation?: "imageLeft" | "imageRight";
     title?: string;
@@ -718,32 +830,17 @@ export type PAGE_QUERYResult = {
       _type: "image";
     };
   }> | null;
-  mainImage?: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    _type: "image";
-  };
 } | null;
 // Variable: HOME_PAGE_QUERY
-// Query: *[_id == "siteSettings"][0]{    homePage->{      ...,      content[]{        ...,        _type == "faqs" => {          ...,          faqs[]->        }      }          }  }
+// Query: *[_id == "siteSettings"][0]{  homePage->{    _id,    _type,    title,    slug,    content[]{      ...,      _type == "heroBanner" => {        ...,        // ensure these are actually in the result:        titleColor,        kickerColor,        bodyColor,        overlayOpacity      },      _type == "faqs" => { ..., faqs[]-> }    }  }}
 export type HOME_PAGE_QUERYResult = {
   homePage: null;
 } | {
   homePage: {
     _id: string;
     _type: "page";
-    _createdAt: string;
-    _updatedAt: string;
-    _rev: string;
-    title?: string;
-    slug?: Slug;
+    title: string | null;
+    slug: Slug | null;
     content: Array<{
       _key: string;
       _type: "faqs";
@@ -844,6 +941,36 @@ export type HOME_PAGE_QUERYResult = {
       };
     } | {
       _key: string;
+      _type: "heroBanner";
+      background?: {
+        asset?: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        };
+        media?: unknown;
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        _type: "image";
+      };
+      overlayOpacity: number | null;
+      title?: string;
+      titleColor: Color | null;
+      kicker?: string;
+      kickerColor: Color | null;
+      body?: string;
+      bodyColor: Color | null;
+      primaryCta?: {
+        label?: string;
+        href?: string;
+      };
+      secondaryCta?: {
+        label?: string;
+        href?: string;
+      };
+    } | {
+      _key: string;
       _type: "splitImage";
       orientation?: "imageLeft" | "imageRight";
       title?: string;
@@ -860,18 +987,25 @@ export type HOME_PAGE_QUERYResult = {
         _type: "image";
       };
     }> | null;
-    mainImage?: {
-      asset?: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-      };
-      media?: unknown;
-      hotspot?: SanityImageHotspot;
-      crop?: SanityImageCrop;
-      _type: "image";
+  } | null;
+} | null;
+// Variable: SITE_SETTINGS_QUERY
+// Query: *[_id == "siteSettings"][0]{  logo}
+export type SITE_SETTINGS_QUERYResult = {
+  logo: null;
+} | {
+  logo: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
     };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
   } | null;
 } | null;
 
@@ -884,7 +1018,8 @@ declare module "@sanity/client" {
     "\n  *[_type == \"blogPost\" && slug.current == $slug][0]{\n    _id,\n    title,\n    body,\n    mainImage,\n    publishedAt,\n    \"categories\": coalesce(\n      categories[]->{\n        _id,\n        slug,\n        title\n      },\n      []\n    ),\n    author->{\n      name,\n      image\n    },\n    relatedBlogPosts[] {\n      _key, // each array item always has one\n      ...@->{ _id, title, slug }\n    }\n  }\n": BLOG_POST_QUERYResult;
     "\n  *[_type == \"event\" && defined(slug.current)] | order(date asc)[0...20]{\n    _id,\n    title,\n    slug,\n    date,\n    location,\n    needsVolunteer\n  }\n": EVENTS_QUERYResult;
     "\n  *[_type == \"event\" && slug.current == $slug][0]{\n    _id,\n    title,\n    slug,\n    description,\n    date,\n    location,\n    link,\n    needsVolunteer,\n    image\n  }\n": EVENT_QUERYResult;
-    "*[_type == \"page\" && slug.current == $slug][0]{\n  ...,\n  content[]{\n    ...,\n    _type == \"faqs\" => {\n      ...,\n      faqs[]->\n    }\n  }\n}": PAGE_QUERYResult;
-    "*[_id == \"siteSettings\"][0]{\n    homePage->{\n      ...,\n      content[]{\n        ...,\n        _type == \"faqs\" => {\n          ...,\n          faqs[]->\n        }\n      }      \n    }\n  }": HOME_PAGE_QUERYResult;
+    "\n*[_type == \"page\" && slug.current == $slug][0]{\n  _id,\n  _type,\n  title,\n  slug,\n  // the pageBuilder array:\n  content[]{\n    ...,\n    // explicitly project heroBanner fields so they\u2019re definitely in the result\n    _type == \"heroBanner\" => {\n      ...,\n      titleColor,\n      kickerColor,\n      bodyColor,\n      overlayOpacity\n    },\n    // keep resolving faqs\n    _type == \"faqs\" => {\n      ...,\n      faqs[]->\n    }\n  }\n}\n": PAGE_QUERYResult;
+    "\n*[_id == \"siteSettings\"][0]{\n  homePage->{\n    _id,\n    _type,\n    title,\n    slug,\n    content[]{\n      ...,\n      _type == \"heroBanner\" => {\n        ...,\n        // ensure these are actually in the result:\n        titleColor,\n        kickerColor,\n        bodyColor,\n        overlayOpacity\n      },\n      _type == \"faqs\" => { ..., faqs[]-> }\n    }\n  }\n}\n": HOME_PAGE_QUERYResult;
+    "*[_id == \"siteSettings\"][0]{\n  logo\n}": SITE_SETTINGS_QUERYResult;
   }
 }

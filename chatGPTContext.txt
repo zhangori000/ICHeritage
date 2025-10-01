@@ -1,0 +1,328 @@
+My public folder has 
+public/block-previews/_MACOSX/._faqs.png, ._fetures.png, ._hero.png, .splitImage.png
+
+and also has 
+public/block-previews/faqs.png, features.png, hero.png, 
+and also has
+
+public/file.svg, globe.svg, next.svg, vercel.svg, window.svg 
+
+
+src/app/(frontend)/layout.tsx: 
+import { draftMode } from "next/headers";
+import { VisualEditing } from "next-sanity/visual-editing";
+import { DisableDraftMode } from "@/components/DisableDraftMode";
+import { Header } from "@/components/Header";
+import { SanityLive } from "@/sanity/lib/live";
+import { sanityFetch } from "@/sanity/lib/live";
+import { SITE_SETTINGS_QUERY } from "@/sanity/lib/queries";
+
+export default async function FrontendLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <section className="bg-white min-h-screen">
+      <Header />
+      {children}
+      <SanityLive />
+      {(await draftMode()).isEnabled && (
+        <>
+          <DisableDraftMode />
+          <VisualEditing />
+        </>
+      )}
+    </section>
+  );
+}
+
+
+
+
+This is the header:
+import Link from "next/link";
+
+export function Header() {
+  return (
+    <div className="from-pink-50 to-white bg-gradient-to-b p-6">
+      <header className="bg-white/80 shadow-md flex items-center justify-between p-6 rounded-lg container mx-auto shadow-pink-50">
+        <Link
+          className="text-pink-700 md:text-xl font-bold tracking-tight"
+          href="/"
+        >
+          Layer Caker
+        </Link>
+        <ul className="flex items-center gap-4 font-semibold text-slate-700">
+          <li>
+            <Link
+              className="hover:text-pink-500 transition-colors"
+              href="/posts"
+            >
+              Posts
+            </Link>
+          </li>
+          <li>
+            <Link
+              className="hover:text-pink-500 transition-colors"
+              href="/studio"
+            >
+              Sanity Studio
+            </Link>
+          </li>
+        </ul>
+      </header>
+    </div>
+  );
+}
+
+
+
+
+This is my siteSettings schema 
+import { defineField, defineType } from "sanity";
+import { ControlsIcon } from "@sanity/icons";
+
+export const siteSettingsType = defineType({
+  name: "siteSettings",
+  title: "Site Settings",
+  type: "document",
+  icon: ControlsIcon,
+  fields: [
+    defineField({
+      name: "homePage",
+      type: "reference",
+      to: [{ type: "page" }],
+    }),
+  ],
+  preview: {
+    prepare() {
+      return {
+        title: "Site Settings",
+      };
+    },
+  },
+});
+
+
+This is my sanity/structure.ts 
+import type { StructureResolver } from "sanity/structure";
+
+// https://www.sanity.io/docs/structure-builder-cheat-sheet
+export const structure: StructureResolver = (S) =>
+  S.list()
+    .title("Content")
+    .items([
+      S.listItem()
+        .id("siteSettings")
+        .schemaType("siteSettings")
+        .title("Site Settings")
+        .child(
+          S.editor()
+            .id("siteSettings")
+            .schemaType("siteSettings")
+            .documentId("siteSettings")
+        ),
+      // Blog section
+      S.listItem()
+        .title("Blog")
+        .child(
+          S.list()
+            .title("Blog")
+            .items([
+              S.documentTypeListItem("blogPost").title("Blog Posts"),
+              S.documentTypeListItem("category").title("Categories"),
+              S.documentTypeListItem("author").title("Authors"),
+            ])
+        ),
+
+      S.divider(),
+
+      // Pages & FAQs
+      S.documentTypeListItem("page").title("Pages"),
+      S.documentTypeListItem("faq").title("FAQs"),
+
+      S.divider(),
+
+      // Events (your new type)
+      S.documentTypeListItem("event").title("Events"),
+
+      S.divider(),
+
+      // Everything else (catch-all)
+      ...S.documentTypeListItems().filter(
+        (item) =>
+          item.getId() &&
+          ![
+            "blogPost",
+            "category",
+            "author",
+            "page",
+            "faq",
+            "event",
+            "siteSettings",
+          ].includes(item.getId()!)
+      ),
+    ]);
+
+
+This is my queries file
+import { defineQuery } from "next-sanity";
+
+export const BLOG_POSTS_QUERY = defineQuery(`
+  *[_type == "blogPost" && defined(slug.current)]
+    | order(publishedAt desc)[]{
+      _id,
+      title,
+      slug,
+      body,
+      mainImage,
+      publishedAt,
+      "categories": coalesce(
+        categories[]->{
+          _id,
+          slug,
+          title
+        },
+        []
+      ),
+      author->{
+        name,
+        image
+      }
+    }
+`);
+
+export const BLOG_POSTS_SLUGS_QUERY = defineQuery(`
+  *[_type == "blogPost" && defined(slug.current)]{
+    "slug": slug.current
+  }
+`);
+
+export const BLOG_POST_QUERY = defineQuery(`
+  *[_type == "blogPost" && slug.current == $slug][0]{
+    _id,
+    title,
+    body,
+    mainImage,
+    publishedAt,
+    "categories": coalesce(
+      categories[]->{
+        _id,
+        slug,
+        title
+      },
+      []
+    ),
+    author->{
+      name,
+      image
+    },
+    relatedBlogPosts[] {
+      _key, // each array item always has one
+      ...@->{ _id, title, slug }
+    }
+  }
+`);
+
+// EVENT QUERIES
+export const EVENTS_QUERY = defineQuery(`
+  *[_type == "event" && defined(slug.current)] | order(date asc)[0...20]{
+    _id,
+    title,
+    slug,
+    date,
+    location,
+    needsVolunteer
+  }
+`);
+
+export const EVENT_QUERY = defineQuery(`
+  *[_type == "event" && slug.current == $slug][0]{
+    _id,
+    title,
+    slug,
+    description,
+    date,
+    location,
+    link,
+    needsVolunteer,
+    image
+  }
+`);
+
+export const PAGE_QUERY =
+  defineQuery(`*[_type == "page" && slug.current == $slug][0]{
+  ...,
+  content[]{
+    ...,
+    _type == "faqs" => {
+      ...,
+      faqs[]->
+    }
+  }
+}`);
+
+export const HOME_PAGE_QUERY = defineQuery(`*[_id == "siteSettings"][0]{
+    homePage->{
+      ...,
+      content[]{
+        ...,
+        _type == "faqs" => {
+          ...,
+          faqs[]->
+        }
+      }      
+    }
+  }`);
+
+
+I also have images set up 
+import createImageUrlBuilder from '@sanity/image-url'
+import { SanityImageSource } from "@sanity/image-url/lib/types/types";
+
+import { dataset, projectId } from '../env'
+
+// https://www.sanity.io/docs/image-url
+const builder = createImageUrlBuilder({ projectId, dataset })
+
+export const urlFor = (source: SanityImageSource) => {
+  return builder.image(source)
+}
+
+
+:root {
+    --background: #fbf2da;
+    --foreground: #3a3a3a;
+    --card: #fefcf7;
+    --card-foreground: #3a3a3a;
+    --popover: #fefcf7;
+    --popover-foreground: #3a3a3a;
+    --primary: #a73438;
+    --primary-foreground: #fff;
+    --secondary: #5a6b4f;
+    --secondary-foreground: #fff;
+    --muted: #f0e6d2;
+    --muted-foreground: #6b6b6b;
+    --accent: #5a6b4f;
+    --accent-foreground: #fff;
+    --destructive: #a73438;
+    --destructive-foreground: #fff;
+    --border: #e8dcc6;
+    --input: #fefcf7;
+    --ring: #a734384d;
+    --chart-1: #a73438;
+    --chart-2: #5a6b4f;
+    --chart-3: #3a3a3a;
+    --chart-4: #fbf2da;
+    --chart-5: #fefcf7;
+    --radius: .5rem;
+    --sidebar: #fbf2da;
+    --sidebar-foreground: #3a3a3a;
+    --sidebar-primary: #a73438;
+    --sidebar-primary-foreground: #fff;
+    --sidebar-accent: #5a6b4f;
+    --sidebar-accent-foreground: #fff;
+    --sidebar-border: #e8dcc6;
+    --sidebar-ring: #a734384d;
+}
