@@ -1,26 +1,15 @@
+// src/components/Header.tsx
 "use client";
 
+import * as React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import * as React from "react";
-
-import type { Image as SanityImage } from "sanity";
+import type { SITE_SETTINGS_QUERYResult } from "@/sanity/types";
 import { urlFor } from "@/sanity/lib/image";
 
-/**
- * Props: optional Sanity image for logo. If omitted, we show /images/logo.png.
- * Hover behavior:
- * - Top-level nav links: text-only hover (var(--primary))
- * - Buttons (Login / Donate / Hamburger / Close): bg var(--accent) + white text on hover
- */
-type HeaderProps = {
-  logo?: SanityImage | null;
-};
-
-/** Nav model
- * Program replaces “Start a chapter” + “Volunteer”.
- * Removed “Initiatives” per your note.
- */
+/* ------------------------------------------------------------------ */
+/* Nav model (matches your latest: Program w/ 2 children, no Init.)    */
+/* ------------------------------------------------------------------ */
 const NAV_ITEMS: Array<
   | { id: string; label: string; href: string }
   | {
@@ -51,45 +40,43 @@ const NAV_ITEMS: Array<
   { id: "nav-about", label: "About", href: "/about" },
 ];
 
-export function Header({ logo }: HeaderProps) {
-  // Mobile drawer open/close
+/* ------------------------------------------------------------------ */
+/* Props: use the generated type, just like Footer.                    */
+/* ------------------------------------------------------------------ */
+type HeaderProps = { settings: SITE_SETTINGS_QUERYResult };
+
+/* ------------------------------------------------------------------ */
+/* Component                                                           */
+/* ------------------------------------------------------------------ */
+export function Header({ settings }: HeaderProps) {
+  // Brand name mirrors Footer fallback
+  const orgName = settings?.orgName ?? "ICHeritage";
+
+  // Sanity image object (nullable), same as Footer
+  const logo = settings?.logo ?? null;
+
+  // Build a safe URL for the Sanity logo or fallback (same logic as Footer)
+  const logo40 =
+    (logo?.asset?._ref &&
+      urlFor(logo).width(80).height(80).fit("crop").url()) ||
+    "/images/logo.png";
+  const logo32 =
+    (logo?.asset?._ref &&
+      urlFor(logo).width(64).height(64).fit("crop").url()) ||
+    "/images/logo.png";
+
+  // Mobile drawer state
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
-  // Prevent page scroll when drawer is open
+  // Prevent background scroll when drawer is open
   React.useEffect(() => {
     document.documentElement.style.overflow = mobileOpen ? "hidden" : "";
   }, [mobileOpen]);
 
-  // Small helper to render the logo block (reused in desktop + mobile)
-  const LogoEl = (
-    <>
-      {logo ? (
-        <Image
-          alt="ICHeritage Logo"
-          src={
-            urlFor(logo).width(80).height(80).fit("crop").url() ??
-            "/images/logo.png"
-          }
-          width={40}
-          height={40}
-          className="h-8 w-8 sm:h-10 sm:w-10"
-        />
-      ) : (
-        <Image
-          alt="ICHeritage Logo"
-          src="/images/logo.png"
-          width={40}
-          height={40}
-          className="h-8 w-8 sm:h-10 sm:w-10"
-        />
-      )}
-    </>
-  );
-
   return (
     <>
       {/* ============================================================
-          Sticky Header (thin border using your tokens)
+          Sticky Header (matches Footer tokens)
       ============================================================ */}
       <header
         className="sticky top-0 z-[100] w-full backdrop-blur"
@@ -106,20 +93,26 @@ export function Header({ logo }: HeaderProps) {
               className="flex items-center gap-2 sm:gap-3 shrink-0"
               aria-label="Home"
             >
-              {LogoEl}
+              <Image
+                alt={`${orgName} Logo`}
+                src={logo40}
+                width={40}
+                height={40}
+                className="h-8 w-8 sm:h-10 sm:w-10"
+              />
               <span className="font-noto-serif-sc text-lg sm:text-xl font-semibold text-[var(--foreground)]">
-                ICHeritage
+                {orgName}
               </span>
             </Link>
 
             {/* ------------------ Desktop navigation ------------------ */}
             <nav className="hidden lg:flex items-center gap-6 xl:gap-8 flex-1 justify-center">
               {NAV_ITEMS.map((item) => {
-                // Simple link
                 if ("href" in item) {
+                  // Simple link — hover = text color only
                   return (
                     <Link
-                      key={item.id} // ✅ stable unique key
+                      key={item.id}
                       href={item.href}
                       className="text-sm font-medium transition-colors px-3 py-2 rounded-md text-[var(--muted-foreground)] hover:text-[var(--primary)]"
                     >
@@ -128,10 +121,9 @@ export function Header({ logo }: HeaderProps) {
                   );
                 }
 
-                // Dropdown (Program) — CSS-only via group hover to avoid flicker
+                // Dropdown (Program) — group hover keeps panel open
                 return (
                   <div key={item.id} className="relative group">
-                    {/* Trigger */}
                     <button
                       type="button"
                       className="text-sm font-medium transition-colors px-3 py-2 rounded-md text-[var(--muted-foreground)] hover:text-[var(--primary)]"
@@ -142,23 +134,20 @@ export function Header({ logo }: HeaderProps) {
                       {item.label}
                     </button>
 
-                    {/* Panel — visible while hovering trigger OR panel (group-hover) */}
                     <div
                       id="program-menu"
                       role="menu"
                       className={[
                         "absolute left-0 mt-2 w-56 rounded-md border shadow-lg p-2 origin-top",
                         "bg-[var(--card)] border-[var(--border)]",
-                        // hidden by default
                         "invisible opacity-0 translate-y-1",
-                        // show while hovering the .group
                         "group-hover:visible group-hover:opacity-100 group-hover:translate-y-0",
                         "transition-all duration-150",
                       ].join(" ")}
                     >
                       {item.children.map((child) => (
                         <Link
-                          key={child.id} // ✅ stable unique key
+                          key={child.id}
                           href={child.href}
                           role="menuitem"
                           className="block rounded-md px-3 py-2 text-sm transition-colors text-[var(--muted-foreground)] hover:text-[var(--primary)]"
@@ -174,6 +163,7 @@ export function Header({ logo }: HeaderProps) {
 
             {/* ------------------ Desktop actions ------------------ */}
             <div className="hidden lg:flex items-center gap-3 xl:gap-4">
+              {/* Login — outline; hover = green accent bg + white text */}
               <Link
                 href="/auth/signin"
                 className={[
@@ -187,6 +177,7 @@ export function Header({ logo }: HeaderProps) {
                 Login
               </Link>
 
+              {/* Donate — solid primary; hover brighten */}
               <Link
                 href="/donate"
                 className={[
@@ -235,9 +226,8 @@ export function Header({ logo }: HeaderProps) {
       </header>
 
       {/* ============================================================
-          Mobile drawer + backdrop (above all content)
+          Mobile drawer + backdrop
       ============================================================ */}
-
       {/* Backdrop */}
       <div
         aria-hidden="true"
@@ -270,27 +260,14 @@ export function Header({ logo }: HeaderProps) {
             className="flex items-center gap-3"
             onClick={() => setMobileOpen(false)}
           >
-            {/* Use same logo logic on mobile to avoid missing image */}
-            {logo ? (
-              <Image
-                alt="ICHeritage Logo"
-                src={
-                  urlFor(logo).width(64).height(64).fit("crop").url() ??
-                  "/images/logo.png"
-                }
-                width={32}
-                height={32}
-              />
-            ) : (
-              <Image
-                alt="ICHeritage Logo"
-                src="/images/logo.png"
-                width={32}
-                height={32}
-              />
-            )}
+            <Image
+              alt={`${orgName} Logo`}
+              src={logo32}
+              width={32}
+              height={32}
+            />
             <span className="font-noto-serif-sc text-lg font-semibold">
-              ICHeritage
+              {orgName}
             </span>
           </Link>
 
@@ -332,7 +309,7 @@ export function Header({ logo }: HeaderProps) {
               if ("href" in item) {
                 return (
                   <Link
-                    key={item.id} // ✅ stable key
+                    key={item.id}
                     href={item.href}
                     onClick={() => setMobileOpen(false)}
                     className="block py-3 text-base font-medium transition-colors text-[var(--muted-foreground)] hover:text-[var(--primary)]"
@@ -342,10 +319,10 @@ export function Header({ logo }: HeaderProps) {
                 );
               }
 
-              // Program group: add divider + indent
+              // Program children, visually grouped
               return (
                 <div
-                  key={item.id} // ✅ stable key
+                  key={item.id}
                   className="space-y-1 pt-3 border-t border-[var(--border)]"
                 >
                   <div className="text-sm font-semibold text-[color:var(--foreground)]/60 uppercase tracking-wider mb-2">
@@ -353,7 +330,7 @@ export function Header({ logo }: HeaderProps) {
                   </div>
                   {item.children.map((child) => (
                     <Link
-                      key={child.id} // ✅ stable key
+                      key={child.id}
                       href={child.href}
                       onClick={() => setMobileOpen(false)}
                       className="block py-3 pl-4 text-base font-medium transition-colors text-[var(--muted-foreground)] hover:text-[var(--primary)]"
@@ -387,9 +364,9 @@ export function Header({ logo }: HeaderProps) {
                 strokeLinecap="round"
                 strokeLinejoin="round"
               >
-                <circle cx="12" cy="12" r="10"></circle>
-                <path d="M2 12h20"></path>
-                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10"></path>
+                <circle cx="12" cy="12" r="10" />
+                <path d="M2 12h20" />
+                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10" />
               </svg>
               English
             </button>

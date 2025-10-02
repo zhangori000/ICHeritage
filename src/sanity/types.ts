@@ -72,8 +72,27 @@ export type SiteSettings = {
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
-    alt?: string;
     _type: "image";
+  };
+  orgName?: string;
+  footerBlurb?: string;
+  social?: {
+    facebook?: string;
+    twitter?: string;
+    instagram?: string;
+    youtube?: string;
+  };
+  quickLinks?: Array<{
+    label?: string;
+    href?: string;
+    _key: string;
+  }>;
+  contactEmail?: string;
+  contactPhone?: string;
+  address?: Array<string>;
+  newsletter?: {
+    enabled?: boolean;
+    blurb?: string;
   };
 };
 
@@ -990,9 +1009,17 @@ export type HOME_PAGE_QUERYResult = {
   } | null;
 } | null;
 // Variable: SITE_SETTINGS_QUERY
-// Query: *[_id == "siteSettings"][0]{  logo}
+// Query: *[_id == "siteSettings"][0]{  logo,  orgName,  footerBlurb,  social{    facebook, twitter, instagram, youtube  },  quickLinks[]{    _key, label, href  },  contactEmail,  contactPhone,  address,  newsletter{    enabled, blurb  }}
 export type SITE_SETTINGS_QUERYResult = {
   logo: null;
+  orgName: null;
+  footerBlurb: null;
+  social: null;
+  quickLinks: null;
+  contactEmail: null;
+  contactPhone: null;
+  address: null;
+  newsletter: null;
 } | {
   logo: {
     asset?: {
@@ -1004,8 +1031,27 @@ export type SITE_SETTINGS_QUERYResult = {
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
-    alt?: string;
     _type: "image";
+  } | null;
+  orgName: string | null;
+  footerBlurb: string | null;
+  social: {
+    facebook: string | null;
+    twitter: string | null;
+    instagram: string | null;
+    youtube: string | null;
+  } | null;
+  quickLinks: Array<{
+    _key: string;
+    label: string | null;
+    href: string | null;
+  }> | null;
+  contactEmail: string | null;
+  contactPhone: string | null;
+  address: Array<string> | null;
+  newsletter: {
+    enabled: boolean | null;
+    blurb: string | null;
   } | null;
 } | null;
 
@@ -1020,6 +1066,6 @@ declare module "@sanity/client" {
     "\n  *[_type == \"event\" && slug.current == $slug][0]{\n    _id,\n    title,\n    slug,\n    description,\n    date,\n    location,\n    link,\n    needsVolunteer,\n    image\n  }\n": EVENT_QUERYResult;
     "\n*[_type == \"page\" && slug.current == $slug][0]{\n  _id,\n  _type,\n  title,\n  slug,\n  // the pageBuilder array:\n  content[]{\n    ...,\n    // explicitly project heroBanner fields so they\u2019re definitely in the result\n    _type == \"heroBanner\" => {\n      ...,\n      titleColor,\n      kickerColor,\n      bodyColor,\n      overlayOpacity\n    },\n    // keep resolving faqs\n    _type == \"faqs\" => {\n      ...,\n      faqs[]->\n    }\n  }\n}\n": PAGE_QUERYResult;
     "\n*[_id == \"siteSettings\"][0]{\n  homePage->{\n    _id,\n    _type,\n    title,\n    slug,\n    content[]{\n      ...,\n      _type == \"heroBanner\" => {\n        ...,\n        // ensure these are actually in the result:\n        titleColor,\n        kickerColor,\n        bodyColor,\n        overlayOpacity\n      },\n      _type == \"faqs\" => { ..., faqs[]-> }\n    }\n  }\n}\n": HOME_PAGE_QUERYResult;
-    "*[_id == \"siteSettings\"][0]{\n  logo\n}": SITE_SETTINGS_QUERYResult;
+    "\n*[_id == \"siteSettings\"][0]{\n  logo,\n  orgName,\n  footerBlurb,\n  social{\n    facebook, twitter, instagram, youtube\n  },\n  quickLinks[]{\n    _key, label, href\n  },\n  contactEmail,\n  contactPhone,\n  address,\n  newsletter{\n    enabled, blurb\n  }\n}\n": SITE_SETTINGS_QUERYResult;
   }
 }
