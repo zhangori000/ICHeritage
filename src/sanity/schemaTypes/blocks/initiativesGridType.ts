@@ -68,8 +68,24 @@ export const initiativesGridType = defineType({
                 defineField({
                   name: "href",
                   title: "Link",
-                  type: "url",
-                  validation: (rule) => rule.required(),
+                  type: "string",
+                  description: "Relative path (e.g. /resources) or full URL.",
+                  validation: (rule) =>
+                    rule.required().custom((value) => {
+                      if (!value) return true;
+                      const trimmed = value.trim();
+                      if (!trimmed) return "Enter a path or URL";
+                      if (
+                        trimmed.startsWith("/") ||
+                        trimmed.startsWith("http://") ||
+                        trimmed.startsWith("https://") ||
+                        trimmed.startsWith("mailto:") ||
+                        trimmed.startsWith("tel:")
+                      ) {
+                        return true;
+                      }
+                      return "Start with / for internal links or use a full URL";
+                    }),
                 }),
               ],
             }),
@@ -95,7 +111,27 @@ export const initiativesGridType = defineType({
       type: "object",
       fields: [
         defineField({ name: "label", type: "string" }),
-        defineField({ name: "href", type: "url" }),
+        defineField({
+          name: "href",
+          type: "string",
+          description: "Relative path (e.g. /resources) or full URL.",
+          validation: (rule) =>
+            rule.custom((value) => {
+              if (!value) return true;
+              const trimmed = value.trim();
+              if (!trimmed) return "Enter a path or URL";
+              if (
+                trimmed.startsWith("/") ||
+                trimmed.startsWith("http://") ||
+                trimmed.startsWith("https://") ||
+                trimmed.startsWith("mailto:") ||
+                trimmed.startsWith("tel:")
+              ) {
+                return true;
+              }
+              return "Start with / for internal links or use a full URL";
+            }),
+        }),
       ],
     }),
   ],

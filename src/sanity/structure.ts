@@ -15,18 +15,25 @@ export const structure: StructureResolver = (S) =>
             .schemaType("siteSettings")
             .documentId("siteSettings")
         ),
-      // Blog section
+
+      /*
+       * Blog section (keep for reference)
+       * S.listItem()
+       *   .title("Blog")
+       *   .child(
+       *     S.list()
+       *       .title("Blog")
+       *       .items([
+       *         S.documentTypeListItem("blogPost").title("Blog Posts"),
+       *         S.documentTypeListItem("category").title("Categories"),
+       *         S.documentTypeListItem("author").title("Authors"),
+       *       ])
+       *   ),
+       */
+
       S.listItem()
-        .title("Blog")
-        .child(
-          S.list()
-            .title("Blog")
-            .items([
-              S.documentTypeListItem("blogPost").title("Blog Posts"),
-              S.documentTypeListItem("category").title("Categories"),
-              S.documentTypeListItem("author").title("Authors"),
-            ])
-        ),
+        .title("Newsletters")
+        .child(S.documentTypeList("newsletter").title("Newsletters")),
 
       S.divider(),
 
@@ -52,6 +59,7 @@ export const structure: StructureResolver = (S) =>
             "page",
             "faq",
             "event",
+            "newsletter",
             "siteSettings",
           ].includes(item.getId()!)
       ),

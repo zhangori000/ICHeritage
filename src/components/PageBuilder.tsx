@@ -5,6 +5,8 @@ import { Features } from "@/components/blocks/Features";
 import { SplitImage } from "@/components/blocks/SplitImage";
 import { FAQs } from "@/components/blocks/FAQs";
 import { HeroBanner } from "./blocks/HeroBanner";
+import { ResourcesHero } from "./blocks/ResourcesHero";
+import { NewsletterArchive } from "./blocks/NewsletterArchive";
 import { InitiativesGrid } from "./blocks/InitiativesGrid";
 import { PAGE_QUERYResult } from "@/sanity/types";
 import { client } from "@/sanity/lib/client";
@@ -105,6 +107,18 @@ export function PageBuilder({
             return (
               <DragHandle key={block._key}>
                 <HeroBanner {...block} />
+              </DragHandle>
+            );
+          case "resourcesHero":
+            return (
+              <DragHandle key={block._key}>
+                <ResourcesHero {...block} />
+              </DragHandle>
+            );
+          case "newsletterArchive":
+            return (
+              <DragHandle key={block._key}>
+                <NewsletterArchive {...block} />
               </DragHandle>
             );
           case "initiativesGrid":

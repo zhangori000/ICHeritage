@@ -1,4 +1,4 @@
-import { type SchemaTypeDefinition } from "sanity";
+﻿import { type SchemaTypeDefinition } from "sanity";
 
 import blogPost from "./blogPost";
 import author from "./author";
@@ -12,7 +12,10 @@ import { faqsType } from "./blocks/faqsType";
 import { featuresType } from "./blocks/featuresType";
 import { heroType } from "./blocks/heroType";
 import { initiativesGridType } from "./blocks/initiativesGridType";
+import { resourcesHeroType } from "./blocks/resourcesHeroType";
+import { newsletterArchiveType } from "./blocks/newsletterArchiveType";
 import { splitImageType } from "./blocks/splitImageType";
+import newsletter from "./newsletter";
 import { siteSettingsType } from "./siteSettingsType";
 import { heroBannerType } from "./heroBannerType";
 import { colorChoiceType } from "./parts/colorChoice";
@@ -31,7 +34,10 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     featuresType,
     heroType,
     initiativesGridType,
+    resourcesHeroType,
+    newsletterArchiveType,
     splitImageType,
+    newsletter,
     siteSettingsType,
     heroBannerType,
     colorChoiceType,

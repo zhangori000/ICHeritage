@@ -15,6 +15,24 @@ function clean(value: string | null | undefined): string {
   return typeof value === "string" ? stegaClean(value) : value ?? "";
 }
 
+function resolveHref(raw: string | null | undefined): string | null {
+  if (!raw) return null;
+  const trimmed = raw.trim();
+  if (!trimmed) return null;
+  if (
+    trimmed.startsWith("http://") ||
+    trimmed.startsWith("https://") ||
+    trimmed.startsWith("mailto:") ||
+    trimmed.startsWith("tel:")
+  ) {
+    return trimmed;
+  }
+  if (trimmed.startsWith("/")) {
+    return trimmed;
+  }
+  return `/${trimmed.replace(/^\//, "")}`;
+}
+
 const cardTone: CSSProperties & Record<`--${string}`, string> = {
   "--card-bg": "color-mix(in oklab, #ffffff 94%, var(--card) 6%)",
   "--card-border": "color-mix(in oklab, var(--muted) 55%, var(--border) 45%)",
@@ -40,8 +58,8 @@ export function InitiativesGrid({
     ? cards.filter((card): card is NonNullable<typeof card> => Boolean(card))
     : [];
 
-  const sectionCtaHref = clean(sectionCta?.href);
   const sectionCtaLabel = clean(sectionCta?.label);
+  const sectionCtaHref = resolveHref(clean(sectionCta?.href));
 
   return (
     <section
@@ -69,16 +87,16 @@ export function InitiativesGrid({
 
         {items.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 max-w-7xl mx-auto">
-            {items.map((card) => {
+            {items.map((card, index) => {
               const title = clean(card?.title);
               const description = clean(card?.description);
               const label = clean(card?.cta?.label);
-              const href = clean(card?.cta?.href);
+              const href = resolveHref(clean(card?.cta?.href));
               const alt = clean(card?.alt) || title;
 
               return (
                 <article
-                  key={card?._key ?? `${title}-${href}`}
+                  key={card?._key ?? `${title}-${href ?? index}`}
                   className="group text-card-foreground flex flex-col gap-6 rounded-xl border border-[color:var(--card-border)] bg-[color:var(--card-bg)] py-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl overflow-hidden"
                   style={cardTone}
                 >
