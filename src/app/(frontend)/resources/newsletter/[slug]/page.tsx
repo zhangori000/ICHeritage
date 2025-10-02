@@ -1,25 +1,11 @@
-import { notFound } from "next/navigation";
+﻿import { notFound } from "next/navigation";
 
 import { NewsletterArticle } from "@/components/NewsletterArticle";
 import { sanityFetch } from "@/sanity/lib/live";
 import { NEWSLETTER_QUERY } from "@/sanity/lib/queries";
-import type { BLOG_POST_QUERYResult } from "@/sanity/types";
-import type { PortableTextBlock } from "sanity";
+import type { NEWSLETTER_QUERYResult } from "@/sanity/types";
 
 type NewsletterPageParams = { slug: string };
-
-type CoverImage = NonNullable<NonNullable<BLOG_POST_QUERYResult>["mainImage"]>;
-
-type NewsletterQueryResult = {
-  _id: string;
-  title: string | null;
-  issueLabel?: string | null;
-  publishedAt?: string | null;
-  readTime?: string | null;
-  excerpt?: string | null;
-  coverImage?: CoverImage | null;
-  body?: PortableTextBlock[] | null;
-} | null;
 
 export default async function NewsletterPage({
   params,
@@ -28,18 +14,20 @@ export default async function NewsletterPage({
 }) {
   const { slug } = await params;
 
-  const { data } = await sanityFetch<NewsletterQueryResult>({
+  const { data } = await sanityFetch<typeof NEWSLETTER_QUERY>({
     query: NEWSLETTER_QUERY,
     params: { slug },
   });
 
-  if (!data) {
+  const newsletter: NEWSLETTER_QUERYResult | null = data ?? null;
+
+  if (!newsletter) {
     notFound();
   }
 
   return (
     <main className="container mx-auto px-4 py-16 space-y-16">
-      <NewsletterArticle {...data} />
+      <NewsletterArticle {...newsletter} />
     </main>
   );
 }

@@ -4,35 +4,36 @@ import { PAGE_QUERY, NEWSLETTERS_QUERY } from "@/sanity/lib/queries";
 import type { PAGE_QUERYResult, NEWSLETTERS_QUERYResult } from "@/sanity/types";
 
 export default async function ResourcesPage() {
-  const [{ data: page }, { data: newsletters }] = await Promise.all([
-    sanityFetch<{ data: PAGE_QUERYResult }>({
+  const [{ data: pageData }, { data: newsletterData }] = await Promise.all([
+    sanityFetch<typeof PAGE_QUERY>({
       query: PAGE_QUERY,
       params: { slug: "resources" },
     }),
-    sanityFetch<{ data: NEWSLETTERS_QUERYResult }>({
+    sanityFetch<typeof NEWSLETTERS_QUERY>({
       query: NEWSLETTERS_QUERY,
     }),
   ]);
+
+  const page: PAGE_QUERYResult | null = pageData ?? null;
+  const newsletters: NEWSLETTERS_QUERYResult = newsletterData ?? [];
 
   if (!page?.content) {
     return null;
   }
 
-  const newsletterCards = Array.isArray(newsletters)
-    ? newsletters.map((item, index) => {
-        const slugValue = item?.slug ?? null;
-        return {
-          _key: item?._id ?? slugValue ?? `newsletter-${index}`,
-          title: item?.title ?? null,
-          summary: item?.excerpt ?? null,
-          issue: item?.issueLabel ?? null,
-          date: item?.publishedAt ?? null,
-          readTime: item?.readTime ?? null,
-          image: item?.coverImage ?? null,
-          href: slugValue ? `/resources/newsletter/${slugValue}` : null,
-        };
-      })
-    : [];
+  const newsletterCards = newsletters.map((item, index) => {
+    const slugValue = item?.slug ?? null;
+    return {
+      _key: item?._id ?? slugValue ?? `newsletter-${index}`,
+      title: item?.title ?? null,
+      summary: item?.excerpt ?? null,
+      issue: item?.issueLabel ?? null,
+      date: item?.publishedAt ?? null,
+      readTime: item?.readTime ?? null,
+      image: item?.coverImage ?? null,
+      href: slugValue ? `/resources/newsletter/${slugValue}` : null,
+    };
+  });
 
   const contentWithNewsletters = page.content.map((block) =>
     block && block._type === "newsletterArchive"
