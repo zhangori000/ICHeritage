@@ -25,13 +25,13 @@ export default async function ResourcesPage() {
     const slugValue = item?.slug ?? null;
     return {
       _key: item?._id ?? slugValue ?? `newsletter-${index}`,
-      title: item?.title ?? null,
-      summary: item?.excerpt ?? null,
-      issue: item?.issueLabel ?? null,
-      date: item?.publishedAt ?? null,
-      readTime: item?.readTime ?? null,
-      image: item?.coverImage ?? null,
-      href: slugValue ? `/resources/newsletter/${slugValue}` : null,
+      title: item?.title || undefined,
+      summary: item?.excerpt || undefined,
+      issue: item?.issueLabel || undefined,
+      date: item?.publishedAt || undefined,
+      readTime: item?.readTime || undefined,
+      image: item?.coverImage ?? undefined,
+      href: slugValue ? `/resources/newsletter/${slugValue}` : undefined,
     };
   });
 
