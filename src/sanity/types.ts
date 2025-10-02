@@ -114,6 +114,39 @@ export type SplitImage = {
   };
 };
 
+export type InitiativesGrid = {
+  _type: "initiativesGrid";
+  heading?: string;
+  intro?: string;
+  cards?: Array<{
+    title?: string;
+    description?: string;
+    image?: {
+      asset?: {
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      };
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      _type: "image";
+    };
+    alt?: string;
+    cta?: {
+      label?: string;
+      href?: string;
+    };
+    _type: "card";
+    _key: string;
+  }>;
+  sectionCta?: {
+    label?: string;
+    href?: string;
+  };
+};
+
 export type Hero = {
   _type: "hero";
   title?: string;
@@ -232,6 +265,8 @@ export type PageBuilder = Array<{
 } & SplitImage | {
   _key: string;
 } & Features | {
+  _key: string;
+} & InitiativesGrid | {
   _key: string;
 } & Faqs>;
 
@@ -564,7 +599,7 @@ export type SanityAssetSourceData = {
   url?: string;
 };
 
-export type AllSanitySchemaTypes = ColorChoice | HeroBanner | SiteSettings | SplitImage | Hero | Features | Faqs | Faq | PageBuilder | Page | Event | Category | BlockContent | BlogPost | Author | Color | RgbaColor | HsvaColor | HslaColor | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageHotspot | SanityImageCrop | SanityFileAsset | SanityImageAsset | SanityImageMetadata | Geopoint | Slug | SanityAssetSourceData;
+export type AllSanitySchemaTypes = ColorChoice | HeroBanner | SiteSettings | SplitImage | InitiativesGrid | Hero | Features | Faqs | Faq | PageBuilder | Page | Event | Category | BlockContent | BlogPost | Author | Color | RgbaColor | HsvaColor | HslaColor | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageHotspot | SanityImageCrop | SanityFileAsset | SanityImageAsset | SanityImageMetadata | Geopoint | Slug | SanityAssetSourceData;
 export declare const internalGroqTypeReferenceTo: unique symbol;
 // Source: ./src/sanity/lib/queries.ts
 // Variable: BLOG_POSTS_QUERY
@@ -833,6 +868,38 @@ export type PAGE_QUERYResult = {
     };
   } | {
     _key: string;
+    _type: "initiativesGrid";
+    heading?: string;
+    intro?: string;
+    cards?: Array<{
+      title?: string;
+      description?: string;
+      image?: {
+        asset?: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        };
+        media?: unknown;
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        _type: "image";
+      };
+      alt?: string;
+      cta?: {
+        label?: string;
+        href?: string;
+      };
+      _type: "card";
+      _key: string;
+    }>;
+    sectionCta?: {
+      label?: string;
+      href?: string;
+    };
+  } | {
+    _key: string;
     _type: "splitImage";
     orientation?: "imageLeft" | "imageRight";
     title?: string;
@@ -985,6 +1052,38 @@ export type HOME_PAGE_QUERYResult = {
         href?: string;
       };
       secondaryCta?: {
+        label?: string;
+        href?: string;
+      };
+    } | {
+      _key: string;
+      _type: "initiativesGrid";
+      heading?: string;
+      intro?: string;
+      cards?: Array<{
+        title?: string;
+        description?: string;
+        image?: {
+          asset?: {
+            _ref: string;
+            _type: "reference";
+            _weak?: boolean;
+            [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+          };
+          media?: unknown;
+          hotspot?: SanityImageHotspot;
+          crop?: SanityImageCrop;
+          _type: "image";
+        };
+        alt?: string;
+        cta?: {
+          label?: string;
+          href?: string;
+        };
+        _type: "card";
+        _key: string;
+      }>;
+      sectionCta?: {
         label?: string;
         href?: string;
       };

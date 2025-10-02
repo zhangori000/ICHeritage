@@ -5,6 +5,7 @@ import { Features } from "@/components/blocks/Features";
 import { SplitImage } from "@/components/blocks/SplitImage";
 import { FAQs } from "@/components/blocks/FAQs";
 import { HeroBanner } from "./blocks/HeroBanner";
+import { InitiativesGrid } from "./blocks/InitiativesGrid";
 import { PAGE_QUERYResult } from "@/sanity/types";
 import { client } from "@/sanity/lib/client";
 import { createDataAttribute } from "next-sanity";
@@ -106,9 +107,15 @@ export function PageBuilder({
                 <HeroBanner {...block} />
               </DragHandle>
             );
+          case "initiativesGrid":
+            return (
+              <DragHandle key={block._key}>
+                <InitiativesGrid {...block} />
+              </DragHandle>
+            );
           default:
             // This is a fallback for when we don't have a block type
-            // Because the union only contains the 4 cases above,
+            // Because the union only contains the handled cases above,
             // `block` is `never` here. This enforces exhaustiveness.
             return assertNever(block);
         }
