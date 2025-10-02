@@ -132,6 +132,22 @@ export const HOME_PAGE_QUERY = defineQuery(`
 `);
 
 // SITE_SETTINGS_QUERY
-export const SITE_SETTINGS_QUERY = defineQuery(`*[_id == "siteSettings"][0]{
-  logo
-}`);
+export const SITE_SETTINGS_QUERY = defineQuery(`
+*[_id == "siteSettings"][0]{
+  logo,
+  orgName,
+  footerBlurb,
+  social{
+    facebook, twitter, instagram, youtube
+  },
+  quickLinks[]{
+    _key, label, href
+  },
+  contactEmail,
+  contactPhone,
+  address,
+  newsletter{
+    enabled, blurb
+  }
+}
+`);
