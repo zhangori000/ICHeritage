@@ -1,4 +1,4 @@
-import { defineQuery } from "next-sanity";
+﻿import { defineQuery } from "next-sanity";
 
 export const BLOG_POSTS_QUERY = defineQuery(`
   *[_type == "blogPost" && defined(slug.current)]
@@ -50,13 +50,39 @@ export const BLOG_POST_QUERY = defineQuery(`
       image
     },
     relatedBlogPosts[] {
-      _key, // each array item always has one
+      _key,
       ...@->{ _id, title, slug }
     }
   }
 `);
 
-// EVENT QUERIES
+export const NEWSLETTERS_QUERY = defineQuery(`
+  *[_type == "newsletter" && defined(slug.current)]
+    | order(publishedAt desc){
+      _id,
+      title,
+      "slug": slug.current,
+      issueLabel,
+      publishedAt,
+      readTime,
+      excerpt,
+      coverImage
+    }
+`);
+
+export const NEWSLETTER_QUERY = defineQuery(`
+  *[_type == "newsletter" && slug.current == $slug][0]{
+    _id,
+    title,
+    issueLabel,
+    publishedAt,
+    readTime,
+    excerpt,
+    coverImage,
+    body
+  }
+`);
+
 export const EVENTS_QUERY = defineQuery(`
   *[_type == "event" && defined(slug.current)] | order(date asc)[0...20]{
     _id,
@@ -88,10 +114,8 @@ export const PAGE_QUERY = defineQuery(`
   _type,
   title,
   slug,
-  // the pageBuilder array:
   content[]{
     ...,
-    // explicitly project heroBanner fields so they’re definitely in the result
     _type == "heroBanner" => {
       ...,
       titleColor,
@@ -99,7 +123,6 @@ export const PAGE_QUERY = defineQuery(`
       bodyColor,
       overlayOpacity
     },
-    // keep resolving faqs
     _type == "faqs" => {
       ...,
       faqs[]->
@@ -119,7 +142,6 @@ export const HOME_PAGE_QUERY = defineQuery(`
       ...,
       _type == "heroBanner" => {
         ...,
-        // ensure these are actually in the result:
         titleColor,
         kickerColor,
         bodyColor,
@@ -131,7 +153,6 @@ export const HOME_PAGE_QUERY = defineQuery(`
 }
 `);
 
-// SITE_SETTINGS_QUERY
 export const SITE_SETTINGS_QUERY = defineQuery(`
 *[_id == "siteSettings"][0]{
   logo,

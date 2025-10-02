@@ -96,6 +96,62 @@ export type SiteSettings = {
   };
 };
 
+export type Newsletter = {
+  _id: string;
+  _type: "newsletter";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title?: string;
+  slug?: Slug;
+  issueLabel?: string;
+  publishedAt?: string;
+  readTime?: string;
+  excerpt?: string;
+  coverImage?: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  };
+  body?: Array<{
+    children?: Array<{
+      marks?: Array<string>;
+      text?: string;
+      _type: "span";
+      _key: string;
+    }>;
+    style?: "normal" | "h1" | "h2" | "h3" | "h4" | "blockquote";
+    listItem?: "bullet";
+    markDefs?: Array<{
+      href?: string;
+      _type: "link";
+      _key: string;
+    }>;
+    level?: number;
+    _type: "block";
+    _key: string;
+  } | {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+    _key: string;
+  }>;
+};
+
 export type SplitImage = {
   _type: "splitImage";
   orientation?: "imageLeft" | "imageRight";
@@ -112,6 +168,58 @@ export type SplitImage = {
     crop?: SanityImageCrop;
     _type: "image";
   };
+};
+
+export type NewsletterArchive = {
+  _type: "newsletterArchive";
+  heading?: string;
+  description?: string;
+  searchPlaceholder?: string;
+  filterLabel?: string;
+  newsletters?: Array<{
+    title?: string;
+    summary?: string;
+    issue?: string;
+    date?: string;
+    readTime?: string;
+    image?: {
+      asset?: {
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      };
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      _type: "image";
+    };
+    href?: string;
+    _key: string;
+  }>;
+  cta?: {
+    title?: string;
+    body?: string;
+    disclaimer?: string;
+    placeholder?: string;
+    buttonLabel?: string;
+    buttonHref?: string;
+  };
+  loadMoreLabel?: string;
+};
+
+export type ResourcesHero = {
+  _type: "resourcesHero";
+  heading?: string;
+  tagline?: string;
+  highlights?: Array<{
+    title?: string;
+    description?: string;
+    icon?: "book-open" | "headphones" | "file-text" | "archive" | "star";
+    tone?: "primary" | "secondary" | "accent";
+    _key: string;
+  }>;
+  ctaLabel?: string;
 };
 
 export type InitiativesGrid = {
@@ -265,6 +373,10 @@ export type PageBuilder = Array<{
 } & SplitImage | {
   _key: string;
 } & Features | {
+  _key: string;
+} & ResourcesHero | {
+  _key: string;
+} & NewsletterArchive | {
   _key: string;
 } & InitiativesGrid | {
   _key: string;
@@ -599,7 +711,7 @@ export type SanityAssetSourceData = {
   url?: string;
 };
 
-export type AllSanitySchemaTypes = ColorChoice | HeroBanner | SiteSettings | SplitImage | InitiativesGrid | Hero | Features | Faqs | Faq | PageBuilder | Page | Event | Category | BlockContent | BlogPost | Author | Color | RgbaColor | HsvaColor | HslaColor | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageHotspot | SanityImageCrop | SanityFileAsset | SanityImageAsset | SanityImageMetadata | Geopoint | Slug | SanityAssetSourceData;
+export type AllSanitySchemaTypes = ColorChoice | HeroBanner | SiteSettings | Newsletter | SplitImage | NewsletterArchive | ResourcesHero | InitiativesGrid | Hero | Features | Faqs | Faq | PageBuilder | Page | Event | Category | BlockContent | BlogPost | Author | Color | RgbaColor | HsvaColor | HslaColor | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageHotspot | SanityImageCrop | SanityFileAsset | SanityImageAsset | SanityImageMetadata | Geopoint | Slug | SanityAssetSourceData;
 export declare const internalGroqTypeReferenceTo: unique symbol;
 // Source: ./src/sanity/lib/queries.ts
 // Variable: BLOG_POSTS_QUERY
@@ -650,7 +762,7 @@ export type BLOG_POSTS_SLUGS_QUERYResult = Array<{
   slug: string | null;
 }>;
 // Variable: BLOG_POST_QUERY
-// Query: *[_type == "blogPost" && slug.current == $slug][0]{    _id,    title,    body,    mainImage,    publishedAt,    "categories": coalesce(      categories[]->{        _id,        slug,        title      },      []    ),    author->{      name,      image    },    relatedBlogPosts[] {      _key, // each array item always has one      ...@->{ _id, title, slug }    }  }
+// Query: *[_type == "blogPost" && slug.current == $slug][0]{    _id,    title,    body,    mainImage,    publishedAt,    "categories": coalesce(      categories[]->{        _id,        slug,        title      },      []    ),    author->{      name,      image    },    relatedBlogPosts[] {      _key,      ...@->{ _id, title, slug }    }  }
 export type BLOG_POST_QUERYResult = {
   _id: string;
   title: string | null;
@@ -696,6 +808,81 @@ export type BLOG_POST_QUERYResult = {
     slug: Slug | null;
   }> | null;
 } | null;
+// Variable: NEWSLETTERS_QUERY
+// Query: *[_type == "newsletter" && defined(slug.current)]    | order(publishedAt desc){      _id,      title,      "slug": slug.current,      issueLabel,      publishedAt,      readTime,      excerpt,      coverImage    }
+export type NEWSLETTERS_QUERYResult = Array<{
+  _id: string;
+  title: string | null;
+  slug: string | null;
+  issueLabel: string | null;
+  publishedAt: string | null;
+  readTime: string | null;
+  excerpt: string | null;
+  coverImage: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  } | null;
+}>;
+// Variable: NEWSLETTER_QUERY
+// Query: *[_type == "newsletter" && slug.current == $slug][0]{    _id,    title,    issueLabel,    publishedAt,    readTime,    excerpt,    coverImage,    body  }
+export type NEWSLETTER_QUERYResult = {
+  _id: string;
+  title: string | null;
+  issueLabel: string | null;
+  publishedAt: string | null;
+  readTime: string | null;
+  excerpt: string | null;
+  coverImage: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  } | null;
+  body: Array<{
+    children?: Array<{
+      marks?: Array<string>;
+      text?: string;
+      _type: "span";
+      _key: string;
+    }>;
+    style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "normal";
+    listItem?: "bullet";
+    markDefs?: Array<{
+      href?: string;
+      _type: "link";
+      _key: string;
+    }>;
+    level?: number;
+    _type: "block";
+    _key: string;
+  } | {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+    _key: string;
+  }> | null;
+} | null;
 // Variable: EVENTS_QUERY
 // Query: *[_type == "event" && defined(slug.current)] | order(date asc)[0...20]{    _id,    title,    slug,    date,    location,    needsVolunteer  }
 export type EVENTS_QUERYResult = Array<{
@@ -732,7 +919,7 @@ export type EVENT_QUERYResult = {
   } | null;
 } | null;
 // Variable: PAGE_QUERY
-// Query: *[_type == "page" && slug.current == $slug][0]{  _id,  _type,  title,  slug,  // the pageBuilder array:  content[]{    ...,    // explicitly project heroBanner fields so they’re definitely in the result    _type == "heroBanner" => {      ...,      titleColor,      kickerColor,      bodyColor,      overlayOpacity    },    // keep resolving faqs    _type == "faqs" => {      ...,      faqs[]->    }  }}
+// Query: *[_type == "page" && slug.current == $slug][0]{  _id,  _type,  title,  slug,  content[]{    ...,    _type == "heroBanner" => {      ...,      titleColor,      kickerColor,      bodyColor,      overlayOpacity    },    _type == "faqs" => {      ...,      faqs[]->    }  }}
 export type PAGE_QUERYResult = {
   _id: string;
   _type: "page";
@@ -900,6 +1087,56 @@ export type PAGE_QUERYResult = {
     };
   } | {
     _key: string;
+    _type: "newsletterArchive";
+    heading?: string;
+    description?: string;
+    searchPlaceholder?: string;
+    filterLabel?: string;
+    newsletters?: Array<{
+      title?: string;
+      summary?: string;
+      issue?: string;
+      date?: string;
+      readTime?: string;
+      image?: {
+        asset?: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        };
+        media?: unknown;
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        _type: "image";
+      };
+      href?: string;
+      _key: string;
+    }>;
+    cta?: {
+      title?: string;
+      body?: string;
+      disclaimer?: string;
+      placeholder?: string;
+      buttonLabel?: string;
+      buttonHref?: string;
+    };
+    loadMoreLabel?: string;
+  } | {
+    _key: string;
+    _type: "resourcesHero";
+    heading?: string;
+    tagline?: string;
+    highlights?: Array<{
+      title?: string;
+      description?: string;
+      icon?: "archive" | "book-open" | "file-text" | "headphones" | "star";
+      tone?: "accent" | "primary" | "secondary";
+      _key: string;
+    }>;
+    ctaLabel?: string;
+  } | {
+    _key: string;
     _type: "splitImage";
     orientation?: "imageLeft" | "imageRight";
     title?: string;
@@ -918,7 +1155,7 @@ export type PAGE_QUERYResult = {
   }> | null;
 } | null;
 // Variable: HOME_PAGE_QUERY
-// Query: *[_id == "siteSettings"][0]{  homePage->{    _id,    _type,    title,    slug,    content[]{      ...,      _type == "heroBanner" => {        ...,        // ensure these are actually in the result:        titleColor,        kickerColor,        bodyColor,        overlayOpacity      },      _type == "faqs" => { ..., faqs[]-> }    }  }}
+// Query: *[_id == "siteSettings"][0]{  homePage->{    _id,    _type,    title,    slug,    content[]{      ...,      _type == "heroBanner" => {        ...,        titleColor,        kickerColor,        bodyColor,        overlayOpacity      },      _type == "faqs" => { ..., faqs[]-> }    }  }}
 export type HOME_PAGE_QUERYResult = {
   homePage: null;
 } | {
@@ -1089,6 +1326,56 @@ export type HOME_PAGE_QUERYResult = {
       };
     } | {
       _key: string;
+      _type: "newsletterArchive";
+      heading?: string;
+      description?: string;
+      searchPlaceholder?: string;
+      filterLabel?: string;
+      newsletters?: Array<{
+        title?: string;
+        summary?: string;
+        issue?: string;
+        date?: string;
+        readTime?: string;
+        image?: {
+          asset?: {
+            _ref: string;
+            _type: "reference";
+            _weak?: boolean;
+            [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+          };
+          media?: unknown;
+          hotspot?: SanityImageHotspot;
+          crop?: SanityImageCrop;
+          _type: "image";
+        };
+        href?: string;
+        _key: string;
+      }>;
+      cta?: {
+        title?: string;
+        body?: string;
+        disclaimer?: string;
+        placeholder?: string;
+        buttonLabel?: string;
+        buttonHref?: string;
+      };
+      loadMoreLabel?: string;
+    } | {
+      _key: string;
+      _type: "resourcesHero";
+      heading?: string;
+      tagline?: string;
+      highlights?: Array<{
+        title?: string;
+        description?: string;
+        icon?: "archive" | "book-open" | "file-text" | "headphones" | "star";
+        tone?: "accent" | "primary" | "secondary";
+        _key: string;
+      }>;
+      ctaLabel?: string;
+    } | {
+      _key: string;
       _type: "splitImage";
       orientation?: "imageLeft" | "imageRight";
       title?: string;
@@ -1160,11 +1447,13 @@ declare module "@sanity/client" {
   interface SanityQueries {
     "\n  *[_type == \"blogPost\" && defined(slug.current)]\n    | order(publishedAt desc)[]{\n      _id,\n      title,\n      slug,\n      body,\n      mainImage,\n      publishedAt,\n      \"categories\": coalesce(\n        categories[]->{\n          _id,\n          slug,\n          title\n        },\n        []\n      ),\n      author->{\n        name,\n        image\n      }\n    }\n": BLOG_POSTS_QUERYResult;
     "\n  *[_type == \"blogPost\" && defined(slug.current)]{\n    \"slug\": slug.current\n  }\n": BLOG_POSTS_SLUGS_QUERYResult;
-    "\n  *[_type == \"blogPost\" && slug.current == $slug][0]{\n    _id,\n    title,\n    body,\n    mainImage,\n    publishedAt,\n    \"categories\": coalesce(\n      categories[]->{\n        _id,\n        slug,\n        title\n      },\n      []\n    ),\n    author->{\n      name,\n      image\n    },\n    relatedBlogPosts[] {\n      _key, // each array item always has one\n      ...@->{ _id, title, slug }\n    }\n  }\n": BLOG_POST_QUERYResult;
+    "\n  *[_type == \"blogPost\" && slug.current == $slug][0]{\n    _id,\n    title,\n    body,\n    mainImage,\n    publishedAt,\n    \"categories\": coalesce(\n      categories[]->{\n        _id,\n        slug,\n        title\n      },\n      []\n    ),\n    author->{\n      name,\n      image\n    },\n    relatedBlogPosts[] {\n      _key,\n      ...@->{ _id, title, slug }\n    }\n  }\n": BLOG_POST_QUERYResult;
+    "\n  *[_type == \"newsletter\" && defined(slug.current)]\n    | order(publishedAt desc){\n      _id,\n      title,\n      \"slug\": slug.current,\n      issueLabel,\n      publishedAt,\n      readTime,\n      excerpt,\n      coverImage\n    }\n": NEWSLETTERS_QUERYResult;
+    "\n  *[_type == \"newsletter\" && slug.current == $slug][0]{\n    _id,\n    title,\n    issueLabel,\n    publishedAt,\n    readTime,\n    excerpt,\n    coverImage,\n    body\n  }\n": NEWSLETTER_QUERYResult;
     "\n  *[_type == \"event\" && defined(slug.current)] | order(date asc)[0...20]{\n    _id,\n    title,\n    slug,\n    date,\n    location,\n    needsVolunteer\n  }\n": EVENTS_QUERYResult;
     "\n  *[_type == \"event\" && slug.current == $slug][0]{\n    _id,\n    title,\n    slug,\n    description,\n    date,\n    location,\n    link,\n    needsVolunteer,\n    image\n  }\n": EVENT_QUERYResult;
-    "\n*[_type == \"page\" && slug.current == $slug][0]{\n  _id,\n  _type,\n  title,\n  slug,\n  // the pageBuilder array:\n  content[]{\n    ...,\n    // explicitly project heroBanner fields so they\u2019re definitely in the result\n    _type == \"heroBanner\" => {\n      ...,\n      titleColor,\n      kickerColor,\n      bodyColor,\n      overlayOpacity\n    },\n    // keep resolving faqs\n    _type == \"faqs\" => {\n      ...,\n      faqs[]->\n    }\n  }\n}\n": PAGE_QUERYResult;
-    "\n*[_id == \"siteSettings\"][0]{\n  homePage->{\n    _id,\n    _type,\n    title,\n    slug,\n    content[]{\n      ...,\n      _type == \"heroBanner\" => {\n        ...,\n        // ensure these are actually in the result:\n        titleColor,\n        kickerColor,\n        bodyColor,\n        overlayOpacity\n      },\n      _type == \"faqs\" => { ..., faqs[]-> }\n    }\n  }\n}\n": HOME_PAGE_QUERYResult;
+    "\n*[_type == \"page\" && slug.current == $slug][0]{\n  _id,\n  _type,\n  title,\n  slug,\n  content[]{\n    ...,\n    _type == \"heroBanner\" => {\n      ...,\n      titleColor,\n      kickerColor,\n      bodyColor,\n      overlayOpacity\n    },\n    _type == \"faqs\" => {\n      ...,\n      faqs[]->\n    }\n  }\n}\n": PAGE_QUERYResult;
+    "\n*[_id == \"siteSettings\"][0]{\n  homePage->{\n    _id,\n    _type,\n    title,\n    slug,\n    content[]{\n      ...,\n      _type == \"heroBanner\" => {\n        ...,\n        titleColor,\n        kickerColor,\n        bodyColor,\n        overlayOpacity\n      },\n      _type == \"faqs\" => { ..., faqs[]-> }\n    }\n  }\n}\n": HOME_PAGE_QUERYResult;
     "\n*[_id == \"siteSettings\"][0]{\n  logo,\n  orgName,\n  footerBlurb,\n  social{\n    facebook, twitter, instagram, youtube\n  },\n  quickLinks[]{\n    _key, label, href\n  },\n  contactEmail,\n  contactPhone,\n  address,\n  newsletter{\n    enabled, blurb\n  }\n}\n": SITE_SETTINGS_QUERYResult;
   }
 }
