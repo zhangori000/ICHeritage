@@ -25,4 +25,4 @@ https://www.sanity.io/learn/course/visual-editing-with-next-js/token-handling-an
 
 Run this to move developmetn dataset to production (delete the developmetn.tar.gz later)
 `npx sanity@latest dataset export development`
-` npx sanity@latest dataset import development.tar.gz production --replace`
+`npx sanity@latest dataset import development.tar.gz production --replace`
