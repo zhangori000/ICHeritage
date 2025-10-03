@@ -41,10 +41,10 @@ export function NewsletterArticle({
   const shouldRenderMeta = issueLabel || publishedAt || readTime;
 
   return (
-    <article className="grid gap-12 lg:grid-cols-12">
-      <header className="lg:col-span-10 lg:col-start-2 space-y-6 text-center lg:text-left">
+    <article className="grid gap-10 px-4 sm:px-6 lg:px-10 lg:grid-cols-12">
+      <header className="space-y-6 text-center lg:col-span-12 lg:col-start-1 lg:px-12 lg:text-left">
         {shouldRenderMeta ? (
-          <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3 text-sm text-[color:var(--foreground)]/70">
+          <div className="flex flex-wrap items-center justify-center gap-3 text-sm text-[color:var(--foreground)]/70 lg:justify-start">
             {issueLabel ? (
               <span className="inline-flex items-center rounded-full bg-[color:var(--accent)]/20 px-3 py-1 font-medium text-[color:var(--accent)]">
                 {issueLabel}
@@ -64,14 +64,18 @@ export function NewsletterArticle({
         ) : null}
 
         {excerpt ? (
-          <p className="text-lg md:text-xl text-[color:var(--foreground)]/80 max-w-3xl mx-auto lg:mx-0">
+          <p className="mx-auto max-w-3xl text-lg text-[color:var(--foreground)]/75 md:text-xl lg:mx-0">
             {excerpt}
           </p>
         ) : null}
       </header>
 
+      <div className="lg:col-span-12 lg:col-start-1 lg:px-12">
+        <hr className="mt-2 border-t border-[color:var(--border)]/80" />
+      </div>
+
       {coverImage ? (
-        <figure className="lg:col-span-10 lg:col-start-2 overflow-hidden rounded-3xl shadow-lg">
+        <figure className="overflow-hidden rounded-3xl shadow-lg pt-6 lg:col-span-12 lg:col-start-1 lg:px-12 lg:pt-8">
           <Image
             src={urlFor(coverImage).width(1400).height(700).fit("crop").url()}
             alt=""
@@ -84,7 +88,7 @@ export function NewsletterArticle({
       ) : null}
 
       {Array.isArray(body) && body.length > 0 ? (
-        <div className="lg:col-span-8 lg:col-start-3 prose prose-neutral lg:prose-lg prose-headings:font-serif prose-headings:text-[color:var(--foreground)] prose-p:text-[color:var(--foreground)]/80 prose-li:text-[color:var(--foreground)]/80">
+        <div className="prose prose-neutral pt-4 text-base lg:col-span-12 lg:col-start-1 lg:px-12 lg:pt-8 lg:text-lg prose-headings:font-serif prose-headings:font-normal prose-headings:text-[color:var(--foreground)] prose-headings:tracking-tight prose-h1:mt-8 prose-h1:mb-3 prose-h2:mt-6 prose-h2:mb-2 prose-h3:mt-5 prose-h3:mb-2 prose-h4:mt-4 prose-h4:mb-2 prose-p:text-[color:var(--foreground)]/80 prose-p:leading-normal prose-li:text-[color:var(--foreground)]/80 prose-li:leading-snug">
           <PortableText value={body} components={components} />
         </div>
       ) : null}
