@@ -14,7 +14,7 @@ type Highlight = NonNullable<ResourcesHeroBlock["highlights"]>[number];
 
 type Tone = NonNullable<Highlight["tone"]>;
 
-type IconName = Highlight["icon"];
+type IconName = string | null | undefined;
 
 type CTA = { label?: string | null; href?: string | null } | null | undefined;
 
