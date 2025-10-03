@@ -258,7 +258,7 @@ export function ResourcesHero(block: ExtendedResourcesHeroBlock) {
 
   return (
     <section className="relative overflow-hidden bg-[color:var(--background)] py-20 lg:py-32">
-      {hasBackgroundImage ? (
+      {hasBackgroundImage && backgroundImage ? (
         <div className="absolute inset-0" aria-hidden>
           <Image
             src={urlFor(backgroundImage).width(2400).height(1350).fit("crop").url()}
