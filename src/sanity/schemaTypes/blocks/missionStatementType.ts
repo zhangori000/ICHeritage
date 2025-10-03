@@ -1,11 +1,11 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
-import { LightbulbIcon } from "@sanity/icons";
+import { BulbOutlineIcon } from "@sanity/icons";
 
 export const missionStatementType = defineType({
   name: "missionStatement",
   title: "Mission Statement",
   type: "object",
-  icon: LightbulbIcon,
+  icon: BulbOutlineIcon,
   fields: [
     defineField({
       name: "sectionId",
