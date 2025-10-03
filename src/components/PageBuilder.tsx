@@ -132,14 +132,12 @@ export function PageBuilder({
           case "chapterApplication":
             return (
               <DragHandle key={block._key}>
-                {/* @ts-expect-error - chapterApplication blocks are added via schema extension */}
                 <ChapterApplication {...block} />
               </DragHandle>
             );
           case "chapterRequirements":
             return (
               <DragHandle key={block._key}>
-                {/* @ts-expect-error - chapterRequirements blocks are added via schema extension */}
                 <ChapterRequirements {...block} />
               </DragHandle>
             );
