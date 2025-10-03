@@ -14,6 +14,10 @@ export const pageBuilderType = defineType({
     defineArrayMember({ type: "faqs" }),
     defineArrayMember({ type: "chapterApplication" }),
     defineArrayMember({ type: "chapterRequirements" }),
+    defineArrayMember({ type: "aboutOverview" }),
+    defineArrayMember({ type: "missionStatement" }),
+    defineArrayMember({ type: "storiesImpact" }),
+    defineArrayMember({ type: "leadershipSection" }),
   ],
   options: {
     insertMenu: {
