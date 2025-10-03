@@ -82,7 +82,26 @@ export const heroBannerType = defineType({
       type: "object",
       fields: [
         defineField({ name: "label", type: "string" }),
-        defineField({ name: "href", type: "url" }),
+        defineField({
+          name: "href",
+          type: "string",
+          description:
+            "Enter either a full URL (https://example.com) or an internal path starting with /about",
+          validation: (Rule) =>
+            Rule.custom((href) => {
+              if (!href) return true;
+              if (href.startsWith("/")) return true;
+
+              try {
+                // new URL throws if not absolute
+                // eslint-disable-next-line no-new
+                new URL(href);
+                return true;
+              } catch (error) {
+                return "Use a relative path (starting with /) or a full URL.";
+              }
+            }),
+        }),
       ],
     }),
 
@@ -92,7 +111,25 @@ export const heroBannerType = defineType({
       type: "object",
       fields: [
         defineField({ name: "label", type: "string" }),
-        defineField({ name: "href", type: "url" }),
+        defineField({
+          name: "href",
+          type: "string",
+          description:
+            "Enter either a full URL (https://example.com) or an internal path starting with /about",
+          validation: (Rule) =>
+            Rule.custom((href) => {
+              if (!href) return true;
+              if (href.startsWith("/")) return true;
+
+              try {
+                // eslint-disable-next-line no-new
+                new URL(href);
+                return true;
+              } catch (error) {
+                return "Use a relative path (starting with /) or a full URL.";
+              }
+            }),
+        }),
       ],
     }),
   ],

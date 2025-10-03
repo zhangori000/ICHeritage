@@ -7,6 +7,11 @@ const heroIconOptions: { title: string; value: string }[] = [
   { title: "Document", value: "file-text" },
   { title: "Archive", value: "archive" },
   { title: "Star", value: "star" },
+  { title: "Community", value: "users" },
+  { title: "Globe", value: "globe" },
+  { title: "Heart", value: "heart" },
+  { title: "Award", value: "award" },
+  { title: "Lightbulb", value: "lightbulb" },
 ];
 
 const toneOptions: { title: string; value: string }[] = [
@@ -33,6 +38,19 @@ export const resourcesHeroType = defineType({
       type: "text",
       rows: 3,
       validation: (rule) => rule.required(),
+    }),
+    defineField({
+      name: "backgroundImage",
+      title: "Background image",
+      type: "image",
+      options: { hotspot: true },
+    }),
+    defineField({
+      name: "overlayOpacity",
+      title: "Image overlay opacity (0–100)",
+      type: "number",
+      initialValue: 85,
+      validation: (rule) => rule.min(0).max(100),
     }),
     defineField({
       name: "highlights",
@@ -84,8 +102,79 @@ export const resourcesHeroType = defineType({
       name: "ctaLabel",
       title: "CTA label",
       type: "string",
-      description: "Button text. Links to the newsletter section automatically.",
+      description:
+        "Legacy fallback button text (defaults to the resources newsletter link). Prefer using Primary/Secondary CTA below.",
       initialValue: "Start Exploring",
+    }),
+    defineField({
+      name: "primaryCta",
+      title: "Primary CTA",
+      type: "object",
+      fields: [
+        defineField({
+          name: "label",
+          type: "string",
+          validation: (rule) => rule.required(),
+        }),
+        defineField({
+          name: "href",
+          type: "string",
+          description:
+            "Use an internal path (e.g. /start-a-chapter or #application) or a full URL.",
+          validation: (rule) =>
+            rule.custom((value) => {
+              if (!value) return true;
+              const trimmed = value.trim();
+              if (!trimmed) return "Enter a path or URL.";
+              if (
+                trimmed.startsWith("/") ||
+                trimmed.startsWith("#") ||
+                trimmed.startsWith("http://") ||
+                trimmed.startsWith("https://") ||
+                trimmed.startsWith("mailto:") ||
+                trimmed.startsWith("tel:")
+              ) {
+                return true;
+              }
+              return "Start with /, #, mailto:, tel:, or use a full URL.";
+            }),
+        }),
+      ],
+    }),
+    defineField({
+      name: "secondaryCta",
+      title: "Secondary CTA",
+      type: "object",
+      fields: [
+        defineField({
+          name: "label",
+          type: "string",
+          validation: (rule) => rule.required(),
+        }),
+        defineField({
+          name: "href",
+          type: "string",
+          description:
+            "Use an internal path (e.g. #requirements) or a full URL.",
+          validation: (rule) =>
+            rule.custom((value) => {
+              if (!value) return true;
+              const trimmed = value.trim();
+              if (!trimmed) return "Enter a path or URL.";
+              if (
+                trimmed.startsWith("/") ||
+                trimmed.startsWith("#") ||
+                trimmed.startsWith("http://") ||
+                trimmed.startsWith("https://") ||
+                trimmed.startsWith("mailto:") ||
+                trimmed.startsWith("tel:")
+              ) {
+                return true;
+              }
+              return "Start with /, #, mailto:, tel:, or use a full URL.";
+            }),
+        }),
+      ],
     }),
   ],
 });

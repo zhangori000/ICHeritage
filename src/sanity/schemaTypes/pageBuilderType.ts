@@ -12,6 +12,8 @@ export const pageBuilderType = defineType({
     defineArrayMember({ type: "newsletterArchive" }),
     defineArrayMember({ type: "initiativesGrid" }),
     defineArrayMember({ type: "faqs" }),
+    defineArrayMember({ type: "chapterApplication" }),
+    defineArrayMember({ type: "chapterRequirements" }),
   ],
   options: {
     insertMenu: {

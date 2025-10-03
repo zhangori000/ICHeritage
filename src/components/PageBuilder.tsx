@@ -8,6 +8,8 @@ import { HeroBanner } from "./blocks/HeroBanner";
 import { ResourcesHero } from "./blocks/ResourcesHero";
 import { NewsletterArchive } from "./blocks/NewsletterArchive";
 import { InitiativesGrid } from "./blocks/InitiativesGrid";
+import { ChapterApplication } from "./blocks/ChapterApplication";
+import { ChapterRequirements } from "./blocks/ChapterRequirements";
 import { PAGE_QUERYResult } from "@/sanity/types";
 import { client } from "@/sanity/lib/client";
 import { createDataAttribute } from "next-sanity";
@@ -125,6 +127,20 @@ export function PageBuilder({
             return (
               <DragHandle key={block._key}>
                 <InitiativesGrid {...block} />
+              </DragHandle>
+            );
+          case "chapterApplication":
+            return (
+              <DragHandle key={block._key}>
+                {/* @ts-expect-error - chapterApplication blocks are added via schema extension */}
+                <ChapterApplication {...block} />
+              </DragHandle>
+            );
+          case "chapterRequirements":
+            return (
+              <DragHandle key={block._key}>
+                {/* @ts-expect-error - chapterRequirements blocks are added via schema extension */}
+                <ChapterRequirements {...block} />
               </DragHandle>
             );
           default:

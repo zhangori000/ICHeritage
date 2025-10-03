@@ -750,6 +750,10 @@
                         {
                           "type": "string",
                           "value": "bullet"
+                        },
+                        {
+                          "type": "string",
+                          "value": "number"
                         }
                       ]
                     },
@@ -766,6 +770,13 @@
                             "type": "objectAttribute",
                             "value": {
                               "type": "string"
+                            },
+                            "optional": true
+                          },
+                          "newTab": {
+                            "type": "objectAttribute",
+                            "value": {
+                              "type": "boolean"
                             },
                             "optional": true
                           },
@@ -880,6 +891,102 @@
                     "value": {
                       "type": "string",
                       "value": "image"
+                    }
+                  }
+                },
+                "rest": {
+                  "type": "object",
+                  "attributes": {
+                    "_key": {
+                      "type": "objectAttribute",
+                      "value": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "attributes": {
+                  "filename": {
+                    "type": "objectAttribute",
+                    "value": {
+                      "type": "string"
+                    },
+                    "optional": true
+                  },
+                  "language": {
+                    "type": "objectAttribute",
+                    "value": {
+                      "type": "union",
+                      "of": [
+                        {
+                          "type": "string",
+                          "value": "javascript"
+                        },
+                        {
+                          "type": "string",
+                          "value": "typescript"
+                        },
+                        {
+                          "type": "string",
+                          "value": "json"
+                        },
+                        {
+                          "type": "string",
+                          "value": "shell"
+                        },
+                        {
+                          "type": "string",
+                          "value": "markdown"
+                        }
+                      ]
+                    },
+                    "optional": true
+                  },
+                  "code": {
+                    "type": "objectAttribute",
+                    "value": {
+                      "type": "string"
+                    },
+                    "optional": true
+                  },
+                  "_type": {
+                    "type": "objectAttribute",
+                    "value": {
+                      "type": "string",
+                      "value": "codeBlock"
+                    }
+                  }
+                },
+                "rest": {
+                  "type": "object",
+                  "attributes": {
+                    "_key": {
+                      "type": "objectAttribute",
+                      "value": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "attributes": {
+                  "style": {
+                    "type": "objectAttribute",
+                    "value": {
+                      "type": "string"
+                    },
+                    "optional": true
+                  },
+                  "_type": {
+                    "type": "objectAttribute",
+                    "value": {
+                      "type": "string",
+                      "value": "divider"
                     }
                   }
                 },
@@ -1685,6 +1792,10 @@
                           {
                             "type": "string",
                             "value": "bullet"
+                          },
+                          {
+                            "type": "string",
+                            "value": "number"
                           }
                         ]
                       },
@@ -1701,6 +1812,13 @@
                               "type": "objectAttribute",
                               "value": {
                                 "type": "string"
+                              },
+                              "optional": true
+                            },
+                            "newTab": {
+                              "type": "objectAttribute",
+                              "value": {
+                                "type": "boolean"
                               },
                               "optional": true
                             },
@@ -1815,6 +1933,102 @@
                       "value": {
                         "type": "string",
                         "value": "image"
+                      }
+                    }
+                  },
+                  "rest": {
+                    "type": "object",
+                    "attributes": {
+                      "_key": {
+                        "type": "objectAttribute",
+                        "value": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                },
+                {
+                  "type": "object",
+                  "attributes": {
+                    "filename": {
+                      "type": "objectAttribute",
+                      "value": {
+                        "type": "string"
+                      },
+                      "optional": true
+                    },
+                    "language": {
+                      "type": "objectAttribute",
+                      "value": {
+                        "type": "union",
+                        "of": [
+                          {
+                            "type": "string",
+                            "value": "javascript"
+                          },
+                          {
+                            "type": "string",
+                            "value": "typescript"
+                          },
+                          {
+                            "type": "string",
+                            "value": "json"
+                          },
+                          {
+                            "type": "string",
+                            "value": "shell"
+                          },
+                          {
+                            "type": "string",
+                            "value": "markdown"
+                          }
+                        ]
+                      },
+                      "optional": true
+                    },
+                    "code": {
+                      "type": "objectAttribute",
+                      "value": {
+                        "type": "string"
+                      },
+                      "optional": true
+                    },
+                    "_type": {
+                      "type": "objectAttribute",
+                      "value": {
+                        "type": "string",
+                        "value": "codeBlock"
+                      }
+                    }
+                  },
+                  "rest": {
+                    "type": "object",
+                    "attributes": {
+                      "_key": {
+                        "type": "objectAttribute",
+                        "value": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                },
+                {
+                  "type": "object",
+                  "attributes": {
+                    "style": {
+                      "type": "objectAttribute",
+                      "value": {
+                        "type": "string"
+                      },
+                      "optional": true
+                    },
+                    "_type": {
+                      "type": "objectAttribute",
+                      "value": {
+                        "type": "string",
+                        "value": "divider"
                       }
                     }
                   },
@@ -2181,6 +2395,10 @@
                         {
                           "type": "string",
                           "value": "bullet"
+                        },
+                        {
+                          "type": "string",
+                          "value": "number"
                         }
                       ]
                     },
@@ -2197,6 +2415,13 @@
                             "type": "objectAttribute",
                             "value": {
                               "type": "string"
+                            },
+                            "optional": true
+                          },
+                          "newTab": {
+                            "type": "objectAttribute",
+                            "value": {
+                              "type": "boolean"
                             },
                             "optional": true
                           },
@@ -2311,6 +2536,102 @@
                     "value": {
                       "type": "string",
                       "value": "image"
+                    }
+                  }
+                },
+                "rest": {
+                  "type": "object",
+                  "attributes": {
+                    "_key": {
+                      "type": "objectAttribute",
+                      "value": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "attributes": {
+                  "filename": {
+                    "type": "objectAttribute",
+                    "value": {
+                      "type": "string"
+                    },
+                    "optional": true
+                  },
+                  "language": {
+                    "type": "objectAttribute",
+                    "value": {
+                      "type": "union",
+                      "of": [
+                        {
+                          "type": "string",
+                          "value": "javascript"
+                        },
+                        {
+                          "type": "string",
+                          "value": "typescript"
+                        },
+                        {
+                          "type": "string",
+                          "value": "json"
+                        },
+                        {
+                          "type": "string",
+                          "value": "shell"
+                        },
+                        {
+                          "type": "string",
+                          "value": "markdown"
+                        }
+                      ]
+                    },
+                    "optional": true
+                  },
+                  "code": {
+                    "type": "objectAttribute",
+                    "value": {
+                      "type": "string"
+                    },
+                    "optional": true
+                  },
+                  "_type": {
+                    "type": "objectAttribute",
+                    "value": {
+                      "type": "string",
+                      "value": "codeBlock"
+                    }
+                  }
+                },
+                "rest": {
+                  "type": "object",
+                  "attributes": {
+                    "_key": {
+                      "type": "objectAttribute",
+                      "value": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "attributes": {
+                  "style": {
+                    "type": "objectAttribute",
+                    "value": {
+                      "type": "string"
+                    },
+                    "optional": true
+                  },
+                  "_type": {
+                    "type": "objectAttribute",
+                    "value": {
+                      "type": "string",
+                      "value": "divider"
                     }
                   }
                 },
@@ -2915,6 +3236,10 @@
                     {
                       "type": "string",
                       "value": "bullet"
+                    },
+                    {
+                      "type": "string",
+                      "value": "number"
                     }
                   ]
                 },
@@ -2931,6 +3256,13 @@
                         "type": "objectAttribute",
                         "value": {
                           "type": "string"
+                        },
+                        "optional": true
+                      },
+                      "newTab": {
+                        "type": "objectAttribute",
+                        "value": {
+                          "type": "boolean"
                         },
                         "optional": true
                       },
@@ -3045,6 +3377,102 @@
                 "value": {
                   "type": "string",
                   "value": "image"
+                }
+              }
+            },
+            "rest": {
+              "type": "object",
+              "attributes": {
+                "_key": {
+                  "type": "objectAttribute",
+                  "value": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "attributes": {
+              "filename": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "string"
+                },
+                "optional": true
+              },
+              "language": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "union",
+                  "of": [
+                    {
+                      "type": "string",
+                      "value": "javascript"
+                    },
+                    {
+                      "type": "string",
+                      "value": "typescript"
+                    },
+                    {
+                      "type": "string",
+                      "value": "json"
+                    },
+                    {
+                      "type": "string",
+                      "value": "shell"
+                    },
+                    {
+                      "type": "string",
+                      "value": "markdown"
+                    }
+                  ]
+                },
+                "optional": true
+              },
+              "code": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "string"
+                },
+                "optional": true
+              },
+              "_type": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "string",
+                  "value": "codeBlock"
+                }
+              }
+            },
+            "rest": {
+              "type": "object",
+              "attributes": {
+                "_key": {
+                  "type": "objectAttribute",
+                  "value": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "attributes": {
+              "style": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "string"
+                },
+                "optional": true
+              },
+              "_type": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "string",
+                  "value": "divider"
                 }
               }
             },
