@@ -128,9 +128,10 @@ export type Newsletter = {
       _key: string;
     }>;
     style?: "normal" | "h1" | "h2" | "h3" | "h4" | "blockquote";
-    listItem?: "bullet";
+    listItem?: "bullet" | "number";
     markDefs?: Array<{
       href?: string;
+      newTab?: boolean;
       _type: "link";
       _key: string;
     }>;
@@ -148,6 +149,16 @@ export type Newsletter = {
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
     _type: "image";
+    _key: string;
+  } | {
+    filename?: string;
+    language?: "javascript" | "typescript" | "json" | "shell" | "markdown";
+    code?: string;
+    _type: "codeBlock";
+    _key: string;
+  } | {
+    style?: string;
+    _type: "divider";
     _key: string;
   }>;
 };
@@ -266,9 +277,10 @@ export type Hero = {
       _key: string;
     }>;
     style?: "normal" | "h1" | "h2" | "h3" | "h4" | "blockquote";
-    listItem?: "bullet";
+    listItem?: "bullet" | "number";
     markDefs?: Array<{
       href?: string;
+      newTab?: boolean;
       _type: "link";
       _key: string;
     }>;
@@ -286,6 +298,16 @@ export type Hero = {
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
     _type: "image";
+    _key: string;
+  } | {
+    filename?: string;
+    language?: "javascript" | "typescript" | "json" | "shell" | "markdown";
+    code?: string;
+    _type: "codeBlock";
+    _key: string;
+  } | {
+    style?: string;
+    _type: "divider";
     _key: string;
   }>;
   image?: {
@@ -340,9 +362,10 @@ export type Faq = {
       _key: string;
     }>;
     style?: "normal" | "h1" | "h2" | "h3" | "h4" | "blockquote";
-    listItem?: "bullet";
+    listItem?: "bullet" | "number";
     markDefs?: Array<{
       href?: string;
+      newTab?: boolean;
       _type: "link";
       _key: string;
     }>;
@@ -360,6 +383,16 @@ export type Faq = {
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
     _type: "image";
+    _key: string;
+  } | {
+    filename?: string;
+    language?: "javascript" | "typescript" | "json" | "shell" | "markdown";
+    code?: string;
+    _type: "codeBlock";
+    _key: string;
+  } | {
+    style?: string;
+    _type: "divider";
     _key: string;
   }>;
 };
@@ -452,9 +485,10 @@ export type BlockContent = Array<{
     _key: string;
   }>;
   style?: "normal" | "h1" | "h2" | "h3" | "h4" | "blockquote";
-  listItem?: "bullet";
+  listItem?: "bullet" | "number";
   markDefs?: Array<{
     href?: string;
+    newTab?: boolean;
     _type: "link";
     _key: string;
   }>;
@@ -472,6 +506,16 @@ export type BlockContent = Array<{
   hotspot?: SanityImageHotspot;
   crop?: SanityImageCrop;
   _type: "image";
+  _key: string;
+} | {
+  filename?: string;
+  language?: "javascript" | "typescript" | "json" | "shell" | "markdown";
+  code?: string;
+  _type: "codeBlock";
+  _key: string;
+} | {
+  style?: string;
+  _type: "divider";
   _key: string;
 }>;
 
@@ -860,14 +904,25 @@ export type NEWSLETTER_QUERYResult = {
       _key: string;
     }>;
     style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "normal";
-    listItem?: "bullet";
+    listItem?: "bullet" | "number";
     markDefs?: Array<{
       href?: string;
+      newTab?: boolean;
       _type: "link";
       _key: string;
     }>;
     level?: number;
     _type: "block";
+    _key: string;
+  } | {
+    filename?: string;
+    language?: "javascript" | "json" | "markdown" | "shell" | "typescript";
+    code?: string;
+    _type: "codeBlock";
+    _key: string;
+  } | {
+    style?: string;
+    _type: "divider";
     _key: string;
   } | {
     asset?: {
@@ -944,14 +999,25 @@ export type PAGE_QUERYResult = {
           _key: string;
         }>;
         style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "normal";
-        listItem?: "bullet";
+        listItem?: "bullet" | "number";
         markDefs?: Array<{
           href?: string;
+          newTab?: boolean;
           _type: "link";
           _key: string;
         }>;
         level?: number;
         _type: "block";
+        _key: string;
+      } | {
+        filename?: string;
+        language?: "javascript" | "json" | "markdown" | "shell" | "typescript";
+        code?: string;
+        _type: "codeBlock";
+        _key: string;
+      } | {
+        style?: string;
+        _type: "divider";
         _key: string;
       } | {
         asset?: {
@@ -989,14 +1055,25 @@ export type PAGE_QUERYResult = {
         _key: string;
       }>;
       style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "normal";
-      listItem?: "bullet";
+      listItem?: "bullet" | "number";
       markDefs?: Array<{
         href?: string;
+        newTab?: boolean;
         _type: "link";
         _key: string;
       }>;
       level?: number;
       _type: "block";
+      _key: string;
+    } | {
+      filename?: string;
+      language?: "javascript" | "json" | "markdown" | "shell" | "typescript";
+      code?: string;
+      _type: "codeBlock";
+      _key: string;
+    } | {
+      style?: string;
+      _type: "divider";
       _key: string;
     } | {
       asset?: {
@@ -1183,14 +1260,25 @@ export type HOME_PAGE_QUERYResult = {
             _key: string;
           }>;
           style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "normal";
-          listItem?: "bullet";
+          listItem?: "bullet" | "number";
           markDefs?: Array<{
             href?: string;
+            newTab?: boolean;
             _type: "link";
             _key: string;
           }>;
           level?: number;
           _type: "block";
+          _key: string;
+        } | {
+          filename?: string;
+          language?: "javascript" | "json" | "markdown" | "shell" | "typescript";
+          code?: string;
+          _type: "codeBlock";
+          _key: string;
+        } | {
+          style?: string;
+          _type: "divider";
           _key: string;
         } | {
           asset?: {
@@ -1228,14 +1316,25 @@ export type HOME_PAGE_QUERYResult = {
           _key: string;
         }>;
         style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "normal";
-        listItem?: "bullet";
+        listItem?: "bullet" | "number";
         markDefs?: Array<{
           href?: string;
+          newTab?: boolean;
           _type: "link";
           _key: string;
         }>;
         level?: number;
         _type: "block";
+        _key: string;
+      } | {
+        filename?: string;
+        language?: "javascript" | "json" | "markdown" | "shell" | "typescript";
+        code?: string;
+        _type: "codeBlock";
+        _key: string;
+      } | {
+        style?: string;
+        _type: "divider";
         _key: string;
       } | {
         asset?: {

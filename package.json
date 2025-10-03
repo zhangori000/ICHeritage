@@ -24,7 +24,7 @@
                          "@sanity/color-input":  "^4.0.6",
                          "@sanity/image-url":  "^1.2.0",
                          "@sanity/vision":  "^4.8.1",
-                         "dayjs":  "^1.11.18",
+        "dayjs":  "^1.11.18",
                          "next":  "15.5.3",
                          "next-sanity":  "^10.1.4",
                          "react":  "19.1.0",

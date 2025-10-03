@@ -15,6 +15,8 @@ import { initiativesGridType } from "./blocks/initiativesGridType";
 import { resourcesHeroType } from "./blocks/resourcesHeroType";
 import { newsletterArchiveType } from "./blocks/newsletterArchiveType";
 import { splitImageType } from "./blocks/splitImageType";
+import { chapterApplicationType } from "./blocks/chapterApplicationType";
+import { chapterRequirementsType } from "./blocks/chapterRequirementsType";
 import newsletter from "./newsletter";
 import { siteSettingsType } from "./siteSettingsType";
 import { heroBannerType } from "./heroBannerType";
@@ -37,6 +39,8 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     resourcesHeroType,
     newsletterArchiveType,
     splitImageType,
+    chapterApplicationType,
+    chapterRequirementsType,
     newsletter,
     siteSettingsType,
     heroBannerType,

@@ -26,17 +26,17 @@ const NAV_ITEMS: Array<
       {
         id: "nav-program-start",
         label: "Start a chapter",
-        href: "/program/start",
+        href: "/start-a-chapter",
       },
       {
         id: "nav-program-volunteer",
         label: "Volunteer",
-        href: "/program/volunteer",
+        href: "/volunteer",
       },
     ],
   },
   { id: "nav-workshops", label: "Workshops", href: "/workshops" },
-  { id: "nav-brands", label: "Brands", href: "/brands" },
+  { id: "nav-brands", label: "Brands", href: "/partners" },
   { id: "nav-about", label: "About", href: "/about" },
 ];
 
