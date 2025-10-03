@@ -30,7 +30,10 @@ export default defineType({
         { title: "H4", value: "h4" },
         { title: "Quote", value: "blockquote" },
       ],
-      lists: [{ title: "Bullet", value: "bullet" }],
+      lists: [
+        { title: "Bullet", value: "bullet" },
+        { title: "Numbered", value: "number" },
+      ],
       // Marks let you mark up inline text in the block editor.
       marks: {
         // Decorators usually describe a single property – e.g. a typographic
@@ -38,6 +41,9 @@ export default defineType({
         decorators: [
           { title: "Strong", value: "strong" },
           { title: "Emphasis", value: "em" },
+          { title: "Underline", value: "underline" },
+          { title: "Strike", value: "strike-through" },
+          { title: "Code", value: "code" },
         ],
         // Annotations can be any object structure – e.g. a link or a footnote.
         annotations: [
@@ -51,6 +57,12 @@ export default defineType({
                 name: "href",
                 type: "url",
               },
+              {
+                title: "Open in new tab",
+                name: "newTab",
+                type: "boolean",
+                initialValue: false,
+              },
             ],
           },
         ],
@@ -62,6 +74,71 @@ export default defineType({
     defineArrayMember({
       type: "image",
       options: { hotspot: true },
+    }),
+    defineArrayMember({
+      name: "codeBlock",
+      type: "object",
+      title: "Code Snippet",
+      fields: [
+        {
+          name: "filename",
+          title: "Filename",
+          type: "string",
+        },
+        {
+          name: "language",
+          title: "Language",
+          type: "string",
+          options: {
+            list: [
+              { title: "JavaScript", value: "javascript" },
+              { title: "TypeScript", value: "typescript" },
+              { title: "JSON", value: "json" },
+              { title: "Shell", value: "shell" },
+              { title: "Markdown", value: "markdown" },
+            ],
+          },
+        },
+        {
+          name: "code",
+          title: "Code",
+          type: "text",
+          rows: 8,
+          validation: (rule) => rule.required(),
+        },
+      ],
+      preview: {
+        select: {
+          title: "filename",
+          subtitle: "language",
+        },
+        prepare({ title, subtitle }) {
+          return {
+            title: title || "Code Snippet",
+            subtitle: subtitle || undefined,
+          };
+        },
+      },
+    }),
+    defineArrayMember({
+      name: "divider",
+      type: "object",
+      title: "Divider",
+      fields: [
+        {
+          name: "style",
+          type: "string",
+          hidden: true,
+          initialValue: "divider",
+        },
+      ],
+      preview: {
+        prepare() {
+          return {
+            title: "Divider",
+          };
+        },
+      },
     }),
   ],
 });
