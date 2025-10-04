@@ -10,6 +10,10 @@ import { NewsletterArchive } from "./blocks/NewsletterArchive";
 import { InitiativesGrid } from "./blocks/InitiativesGrid";
 import { ChapterApplication } from "./blocks/ChapterApplication";
 import { ChapterRequirements } from "./blocks/ChapterRequirements";
+import { AboutOverview } from "./blocks/AboutOverview";
+import { MissionStatement } from "./blocks/MissionStatement";
+import { StoriesImpact } from "./blocks/StoriesImpact";
+import { LeadershipSection } from "./blocks/LeadershipSection";
 import { PAGE_QUERYResult } from "@/sanity/types";
 import { client } from "@/sanity/lib/client";
 import { createDataAttribute } from "next-sanity";
@@ -139,6 +143,30 @@ export function PageBuilder({
             return (
               <DragHandle key={block._key}>
                 <ChapterRequirements {...block} />
+              </DragHandle>
+            );
+          case "aboutOverview":
+            return (
+              <DragHandle key={block._key}>
+                <AboutOverview {...block} />
+              </DragHandle>
+            );
+          case "missionStatement":
+            return (
+              <DragHandle key={block._key}>
+                <MissionStatement {...block} />
+              </DragHandle>
+            );
+          case "storiesImpact":
+            return (
+              <DragHandle key={block._key}>
+                <StoriesImpact {...block} />
+              </DragHandle>
+            );
+          case "leadershipSection":
+            return (
+              <DragHandle key={block._key}>
+                <LeadershipSection {...block} />
               </DragHandle>
             );
           default:

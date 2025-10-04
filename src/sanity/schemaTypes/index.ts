@@ -17,6 +17,10 @@ import { newsletterArchiveType } from "./blocks/newsletterArchiveType";
 import { splitImageType } from "./blocks/splitImageType";
 import { chapterApplicationType } from "./blocks/chapterApplicationType";
 import { chapterRequirementsType } from "./blocks/chapterRequirementsType";
+import { aboutOverviewType } from "./blocks/aboutOverviewType";
+import { missionStatementType } from "./blocks/missionStatementType";
+import { storiesImpactType } from "./blocks/storiesImpactType";
+import { leadershipSectionType } from "./blocks/leadershipSectionType";
 import newsletter from "./newsletter";
 import { siteSettingsType } from "./siteSettingsType";
 import { heroBannerType } from "./heroBannerType";
@@ -41,6 +45,10 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     splitImageType,
     chapterApplicationType,
     chapterRequirementsType,
+    aboutOverviewType,
+    missionStatementType,
+    storiesImpactType,
+    leadershipSectionType,
     newsletter,
     siteSettingsType,
     heroBannerType,
