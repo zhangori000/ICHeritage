@@ -14,6 +14,8 @@ import { AboutOverview } from "./blocks/AboutOverview";
 import { MissionStatement } from "./blocks/MissionStatement";
 import { StoriesImpact } from "./blocks/StoriesImpact";
 import { LeadershipSection } from "./blocks/LeadershipSection";
+import { PodcastHighlights } from "./blocks/PodcastHighlights";
+import { WorkshopsDirectory } from "./blocks/WorkshopsDirectory";
 import { PAGE_QUERYResult } from "@/sanity/types";
 import { client } from "@/sanity/lib/client";
 import { createDataAttribute } from "next-sanity";
@@ -167,6 +169,18 @@ export function PageBuilder({
             return (
               <DragHandle key={block._key}>
                 <LeadershipSection {...block} />
+              </DragHandle>
+            );
+          case "workshopsDirectory":
+            return (
+              <DragHandle key={block._key}>
+                <WorkshopsDirectory {...block} />
+              </DragHandle>
+            );
+          case "podcastHighlights":
+            return (
+              <DragHandle key={block._key}>
+                <PodcastHighlights {...block} />
               </DragHandle>
             );
           default:

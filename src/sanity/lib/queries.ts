@@ -126,6 +126,39 @@ export const PAGE_QUERY = defineQuery(`
     _type == "faqs" => {
       ...,
       faqs[]->
+    },
+    _type == "workshopsDirectory" => {
+      ...,
+      categoryCards[]->{
+        _id,
+        title,
+        slug,
+        icon,
+        description
+      },
+      "workshops": *[_type == "workshop" && defined(slug.current)]
+        | order(start asc){
+          _id,
+          title,
+          "slug": slug.current,
+          summary,
+          categories[]->{
+            _id,
+            title,
+            slug,
+            icon,
+            description
+          },
+          start,
+          end,
+          location,
+          capacity,
+          registeredCount,
+          needsVolunteers,
+          registerUrl,
+          volunteerUrl,
+          heroImage
+        }
     }
   }
 }
@@ -147,10 +180,125 @@ export const HOME_PAGE_QUERY = defineQuery(`
         bodyColor,
         overlayOpacity
       },
-      _type == "faqs" => { ..., faqs[]-> }
+      _type == "faqs" => { ..., faqs[]-> },
+      _type == "workshopsDirectory" => {
+        ...,
+        categoryCards[]->{
+          _id,
+          title,
+          slug,
+          icon,
+          description
+        },
+        "workshops": *[_type == "workshop" && defined(slug.current)]
+          | order(start asc){
+            _id,
+            title,
+            "slug": slug.current,
+            summary,
+            categories[]->{
+              _id,
+              title,
+              slug,
+              icon,
+              description
+            },
+            start,
+            end,
+            location,
+            capacity,
+            registeredCount,
+            needsVolunteers,
+            registerUrl,
+            volunteerUrl,
+            heroImage
+          }
+      }
     }
   }
 }
+`);
+
+export const WORKSHOPS_QUERY = defineQuery(`
+  *[_type == "workshop" && defined(slug.current)]
+    | order(start asc){
+      _id,
+      title,
+      "slug": slug.current,
+      summary,
+      categories,
+      start,
+      end,
+      location,
+      capacity,
+      registeredCount,
+      needsVolunteers,
+      registerUrl,
+      volunteerUrl,
+      heroImage,
+      categories[]->{
+        _id,
+        title,
+        slug,
+        icon,
+        description
+      }
+    }
+`);
+
+export const WORKSHOP_QUERY = defineQuery(`
+  *[_type == "workshop" && slug.current == $slug][0]{
+    _id,
+    title,
+    "slug": slug.current,
+    summary,
+    categories[]->{
+      _id,
+      title,
+      slug,
+      icon,
+      description
+    },
+    start,
+    end,
+    location,
+    capacity,
+    registeredCount,
+    needsVolunteers,
+    registerUrl,
+    volunteerUrl,
+    heroImage,
+    hosts[]{
+      _key,
+      name,
+      role,
+      avatar,
+      socialLinks[]{
+        _key,
+        label,
+        url
+      }
+    },
+    contact{
+      ctaLabel,
+      instructions,
+      email,
+      phone,
+      responseNote
+    },
+    externalLinks[]{
+      _key,
+      label,
+      href
+    },
+    body
+  }
+`);
+
+export const WORKSHOP_SLUGS_QUERY = defineQuery(`
+  *[_type == "workshop" && defined(slug.current)]{
+    "slug": slug.current
+  }
 `);
 
 export const SITE_SETTINGS_QUERY = defineQuery(`

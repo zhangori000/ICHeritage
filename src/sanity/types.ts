@@ -13,6 +13,98 @@
  */
 
 // Source: schema.json
+export type WorkshopCategory = {
+  _id: string;
+  _type: "workshopCategory";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title?: string;
+  slug?: Slug;
+  icon?: string;
+  description?: string;
+};
+
+export type Workshop = {
+  _id: string;
+  _type: "workshop";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title?: string;
+  slug?: Slug;
+  summary?: string;
+  categories?: Array<{
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    _key: string;
+    [internalGroqTypeReferenceTo]?: "workshopCategory";
+  }>;
+  start?: string;
+  end?: string;
+  location?: string;
+  capacity?: number;
+  registeredCount?: number;
+  needsVolunteers?: boolean;
+  registerUrl?: string;
+  volunteerUrl?: string;
+  heroImage?: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+  };
+  body?: Array<{
+    children?: Array<{
+      marks?: Array<string>;
+      text?: string;
+      _type: "span";
+      _key: string;
+    }>;
+    style?: "normal" | "h1" | "h2" | "h3" | "h4" | "blockquote";
+    listItem?: "bullet" | "number";
+    markDefs?: Array<{
+      href?: string;
+      newTab?: boolean;
+      _type: "link";
+      _key: string;
+    }>;
+    level?: number;
+    _type: "block";
+    _key: string;
+  } | {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+    _key: string;
+  } | {
+    filename?: string;
+    language?: "javascript" | "typescript" | "json" | "shell" | "markdown";
+    code?: string;
+    _type: "codeBlock";
+    _key: string;
+  } | {
+    style?: string;
+    _type: "divider";
+    _key: string;
+  }>;
+};
+
 export type ColorChoice = {
   _type: "colorChoice";
   token?: "foreground" | "primary" | "muted-foreground" | "white" | "black";
@@ -163,6 +255,242 @@ export type Newsletter = {
   }>;
 };
 
+export type WorkshopsDirectory = {
+  _type: "workshopsDirectory";
+  sectionId?: string;
+  heading?: string;
+  intro?: string;
+  searchPlaceholder?: string;
+  categoryCards?: Array<{
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    _key: string;
+    [internalGroqTypeReferenceTo]?: "workshopCategory";
+  }>;
+  showVolunteerBadge?: boolean;
+};
+
+export type PodcastHighlights = {
+  _type: "podcastHighlights";
+  sectionId?: string;
+  heading?: string;
+  intro?: string;
+  episodes?: Array<{
+    episodeLabel?: string;
+    duration?: string;
+    publishedAt?: string;
+    title?: string;
+    guestName?: string;
+    guestTitle?: string;
+    programTag?: string;
+    summary?: string;
+    heroImage?: {
+      asset?: {
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      };
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      alt?: string;
+      _type: "image";
+    };
+    youtubeUrl?: string;
+    spotifyUrl?: string;
+    appleUrl?: string;
+    _key: string;
+  }>;
+  platformHeading?: string;
+  platforms?: Array<{
+    label?: string;
+    href?: string;
+    platform?: "spotify" | "apple" | "youtube" | "other";
+    _key: string;
+  }>;
+  viewAllCta?: {
+    label?: string;
+    href?: string;
+  };
+};
+
+export type LeadershipSection = {
+  _type: "leadershipSection";
+  sectionId?: string;
+  heading?: string;
+  intro?: string;
+  executiveHeading?: string;
+  executiveSubheading?: string;
+  executiveTeam?: Array<{
+    name?: string;
+    title?: string;
+    credential?: string;
+    bio?: string;
+    headshot?: {
+      asset?: {
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      };
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      _type: "image";
+    };
+    linkedin?: string;
+    email?: string;
+    _key: string;
+  }>;
+  advisoryHeading?: string;
+  advisorySubheading?: string;
+  advisors?: Array<{
+    name?: string;
+    role?: string;
+    expertise?: string;
+    bio?: string;
+    _key: string;
+  }>;
+  ctaCard?: {
+    heading?: string;
+    body?: string;
+    primaryCta?: {
+      label?: string;
+      href?: string;
+    };
+    secondaryCta?: {
+      label?: string;
+      href?: string;
+    };
+  };
+};
+
+export type StoriesImpact = {
+  _type: "storiesImpact";
+  sectionId?: string;
+  heading?: string;
+  intro?: string;
+  stories?: Array<{
+    quote?: string;
+    name?: string;
+    role?: string;
+    location?: string;
+    program?: string;
+    _key: string;
+  }>;
+  statsCard?: {
+    heading?: string;
+    description?: string;
+    stats?: Array<{
+      value?: string;
+      label?: string;
+      color?: "primary" | "secondary" | "accent";
+      _key: string;
+    }>;
+  };
+};
+
+export type MissionStatement = {
+  _type: "missionStatement";
+  sectionId?: string;
+  heading?: string;
+  mission?: string;
+  pillars?: Array<{
+    title?: string;
+    description?: string;
+    _key: string;
+  }>;
+  visionHeading?: string;
+  vision?: string;
+};
+
+export type AboutOverview = {
+  _type: "aboutOverview";
+  sectionId?: string;
+  heading?: string;
+  intro?: Array<string>;
+  pillars?: Array<{
+    title?: string;
+    description?: string;
+    _key: string;
+  }>;
+  stats?: Array<{
+    icon?: "users" | "calendar" | "globe" | "award" | "sparkles" | "book-open" | "heart";
+    value?: string;
+    label?: string;
+    description?: string;
+    _key: string;
+  }>;
+};
+
+export type ChapterRequirements = {
+  _type: "chapterRequirements";
+  sectionId?: string;
+  heading?: string;
+  intro?: string;
+  cards?: Array<{
+    title?: string;
+    icon?: "users" | "book-open" | "calendar" | "target" | "globe" | "heart" | "award" | "lightbulb" | "sparkles";
+    tone?: "primary" | "secondary" | "accent" | "muted";
+    points?: Array<string>;
+    _key: string;
+  }>;
+  processCard?: {
+    title?: string;
+    steps?: Array<{
+      label?: string;
+      duration?: string;
+      _key: string;
+    }>;
+  };
+  metricsCard?: {
+    title?: string;
+    metrics?: Array<{
+      label?: string;
+      value?: string;
+      _key: string;
+    }>;
+  };
+};
+
+export type ChapterApplication = {
+  _type: "chapterApplication";
+  sectionId?: string;
+  kicker?: string;
+  title?: string;
+  description?: string;
+  highlights?: Array<{
+    icon?: "book-open" | "calendar" | "users" | "award" | "sparkles" | "lightbulb" | "handshake" | "graduation-cap";
+    title?: string;
+    body?: string;
+    _type: "highlight";
+    _key: string;
+  }>;
+  benefitsHeading?: string;
+  benefitsIntro?: string;
+  benefits?: Array<{
+    title?: string;
+    description?: string;
+    _type: "benefit";
+    _key: string;
+  }>;
+  cardTitle?: string;
+  cardSubtitle?: string;
+  cardFacts?: Array<{
+    label?: string;
+    value?: string;
+    _type: "fact";
+    _key: string;
+  }>;
+  cta?: {
+    label?: string;
+    href?: string;
+  };
+  cardFootnote?: string;
+};
+
 export type SplitImage = {
   _type: "splitImage";
   orientation?: "imageLeft" | "imageRight";
@@ -223,14 +551,35 @@ export type ResourcesHero = {
   _type: "resourcesHero";
   heading?: string;
   tagline?: string;
+  backgroundImage?: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  };
+  overlayOpacity?: number;
   highlights?: Array<{
     title?: string;
     description?: string;
-    icon?: "book-open" | "headphones" | "file-text" | "archive" | "star";
+    icon?: "book-open" | "headphones" | "file-text" | "archive" | "star" | "users" | "globe" | "heart" | "award" | "lightbulb";
     tone?: "primary" | "secondary" | "accent";
     _key: string;
   }>;
   ctaLabel?: string;
+  primaryCta?: {
+    label?: string;
+    href?: string;
+  };
+  secondaryCta?: {
+    label?: string;
+    href?: string;
+  };
 };
 
 export type InitiativesGrid = {
@@ -413,7 +762,23 @@ export type PageBuilder = Array<{
   _key: string;
 } & InitiativesGrid | {
   _key: string;
-} & Faqs>;
+} & Faqs | {
+  _key: string;
+} & ChapterApplication | {
+  _key: string;
+} & ChapterRequirements | {
+  _key: string;
+} & AboutOverview | {
+  _key: string;
+} & MissionStatement | {
+  _key: string;
+} & StoriesImpact | {
+  _key: string;
+} & LeadershipSection | {
+  _key: string;
+} & PodcastHighlights | {
+  _key: string;
+} & WorkshopsDirectory>;
 
 export type Page = {
   _id: string;
@@ -755,7 +1120,7 @@ export type SanityAssetSourceData = {
   url?: string;
 };
 
-export type AllSanitySchemaTypes = ColorChoice | HeroBanner | SiteSettings | Newsletter | SplitImage | NewsletterArchive | ResourcesHero | InitiativesGrid | Hero | Features | Faqs | Faq | PageBuilder | Page | Event | Category | BlockContent | BlogPost | Author | Color | RgbaColor | HsvaColor | HslaColor | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageHotspot | SanityImageCrop | SanityFileAsset | SanityImageAsset | SanityImageMetadata | Geopoint | Slug | SanityAssetSourceData;
+export type AllSanitySchemaTypes = WorkshopCategory | Workshop | ColorChoice | HeroBanner | SiteSettings | Newsletter | WorkshopsDirectory | PodcastHighlights | LeadershipSection | StoriesImpact | MissionStatement | AboutOverview | ChapterRequirements | ChapterApplication | SplitImage | NewsletterArchive | ResourcesHero | InitiativesGrid | Hero | Features | Faqs | Faq | PageBuilder | Page | Event | Category | BlockContent | BlogPost | Author | Color | RgbaColor | HsvaColor | HslaColor | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageHotspot | SanityImageCrop | SanityFileAsset | SanityImageAsset | SanityImageMetadata | Geopoint | Slug | SanityAssetSourceData;
 export declare const internalGroqTypeReferenceTo: unique symbol;
 // Source: ./src/sanity/lib/queries.ts
 // Variable: BLOG_POSTS_QUERY
@@ -974,13 +1339,95 @@ export type EVENT_QUERYResult = {
   } | null;
 } | null;
 // Variable: PAGE_QUERY
-// Query: *[_type == "page" && slug.current == $slug][0]{  _id,  _type,  title,  slug,  content[]{    ...,    _type == "heroBanner" => {      ...,      titleColor,      kickerColor,      bodyColor,      overlayOpacity    },    _type == "faqs" => {      ...,      faqs[]->    }  }}
+// Query: *[_type == "page" && slug.current == $slug][0]{  _id,  _type,  title,  slug,  content[]{    ...,    _type == "heroBanner" => {      ...,      titleColor,      kickerColor,      bodyColor,      overlayOpacity    },    _type == "faqs" => {      ...,      faqs[]->    },    _type == "workshopsDirectory" => {      ...,      categoryCards[]->{        _id,        title,        slug,        icon,        description      },      "workshops": *[_type == "workshop" && defined(slug.current)]        | order(start asc){          _id,          title,          "slug": slug.current,          summary,          categories[]->{            _id,            title,            slug,            icon,            description          },          start,          end,          location,          capacity,          registeredCount,          needsVolunteers,          registerUrl,          volunteerUrl,          heroImage        }    }  }}
 export type PAGE_QUERYResult = {
   _id: string;
   _type: "page";
   title: string | null;
   slug: Slug | null;
   content: Array<{
+    _key: string;
+    _type: "aboutOverview";
+    sectionId?: string;
+    heading?: string;
+    intro?: Array<string>;
+    pillars?: Array<{
+      title?: string;
+      description?: string;
+      _key: string;
+    }>;
+    stats?: Array<{
+      icon?: "award" | "book-open" | "calendar" | "globe" | "heart" | "sparkles" | "users";
+      value?: string;
+      label?: string;
+      description?: string;
+      _key: string;
+    }>;
+  } | {
+    _key: string;
+    _type: "chapterApplication";
+    sectionId?: string;
+    kicker?: string;
+    title?: string;
+    description?: string;
+    highlights?: Array<{
+      icon?: "award" | "book-open" | "calendar" | "graduation-cap" | "handshake" | "lightbulb" | "sparkles" | "users";
+      title?: string;
+      body?: string;
+      _type: "highlight";
+      _key: string;
+    }>;
+    benefitsHeading?: string;
+    benefitsIntro?: string;
+    benefits?: Array<{
+      title?: string;
+      description?: string;
+      _type: "benefit";
+      _key: string;
+    }>;
+    cardTitle?: string;
+    cardSubtitle?: string;
+    cardFacts?: Array<{
+      label?: string;
+      value?: string;
+      _type: "fact";
+      _key: string;
+    }>;
+    cta?: {
+      label?: string;
+      href?: string;
+    };
+    cardFootnote?: string;
+  } | {
+    _key: string;
+    _type: "chapterRequirements";
+    sectionId?: string;
+    heading?: string;
+    intro?: string;
+    cards?: Array<{
+      title?: string;
+      icon?: "award" | "book-open" | "calendar" | "globe" | "heart" | "lightbulb" | "sparkles" | "target" | "users";
+      tone?: "accent" | "muted" | "primary" | "secondary";
+      points?: Array<string>;
+      _key: string;
+    }>;
+    processCard?: {
+      title?: string;
+      steps?: Array<{
+        label?: string;
+        duration?: string;
+        _key: string;
+      }>;
+    };
+    metricsCard?: {
+      title?: string;
+      metrics?: Array<{
+        label?: string;
+        value?: string;
+        _key: string;
+      }>;
+    };
+  } | {
     _key: string;
     _type: "faqs";
     title?: string;
@@ -1164,6 +1611,69 @@ export type PAGE_QUERYResult = {
     };
   } | {
     _key: string;
+    _type: "leadershipSection";
+    sectionId?: string;
+    heading?: string;
+    intro?: string;
+    executiveHeading?: string;
+    executiveSubheading?: string;
+    executiveTeam?: Array<{
+      name?: string;
+      title?: string;
+      credential?: string;
+      bio?: string;
+      headshot?: {
+        asset?: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        };
+        media?: unknown;
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        _type: "image";
+      };
+      linkedin?: string;
+      email?: string;
+      _key: string;
+    }>;
+    advisoryHeading?: string;
+    advisorySubheading?: string;
+    advisors?: Array<{
+      name?: string;
+      role?: string;
+      expertise?: string;
+      bio?: string;
+      _key: string;
+    }>;
+    ctaCard?: {
+      heading?: string;
+      body?: string;
+      primaryCta?: {
+        label?: string;
+        href?: string;
+      };
+      secondaryCta?: {
+        label?: string;
+        href?: string;
+      };
+    };
+  } | {
+    _key: string;
+    _type: "missionStatement";
+    sectionId?: string;
+    heading?: string;
+    mission?: string;
+    pillars?: Array<{
+      title?: string;
+      description?: string;
+      _key: string;
+    }>;
+    visionHeading?: string;
+    vision?: string;
+  } | {
+    _key: string;
     _type: "newsletterArchive";
     heading?: string;
     description?: string;
@@ -1201,17 +1711,82 @@ export type PAGE_QUERYResult = {
     loadMoreLabel?: string;
   } | {
     _key: string;
+    _type: "podcastHighlights";
+    sectionId?: string;
+    heading?: string;
+    intro?: string;
+    episodes?: Array<{
+      episodeLabel?: string;
+      duration?: string;
+      publishedAt?: string;
+      title?: string;
+      guestName?: string;
+      guestTitle?: string;
+      programTag?: string;
+      summary?: string;
+      heroImage?: {
+        asset?: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        };
+        media?: unknown;
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        alt?: string;
+        _type: "image";
+      };
+      youtubeUrl?: string;
+      spotifyUrl?: string;
+      appleUrl?: string;
+      _key: string;
+    }>;
+    platformHeading?: string;
+    platforms?: Array<{
+      label?: string;
+      href?: string;
+      platform?: "apple" | "other" | "spotify" | "youtube";
+      _key: string;
+    }>;
+    viewAllCta?: {
+      label?: string;
+      href?: string;
+    };
+  } | {
+    _key: string;
     _type: "resourcesHero";
     heading?: string;
     tagline?: string;
+    backgroundImage?: {
+      asset?: {
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      };
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      _type: "image";
+    };
+    overlayOpacity?: number;
     highlights?: Array<{
       title?: string;
       description?: string;
-      icon?: "archive" | "book-open" | "file-text" | "headphones" | "star";
+      icon?: "archive" | "award" | "book-open" | "file-text" | "globe" | "headphones" | "heart" | "lightbulb" | "star" | "users";
       tone?: "accent" | "primary" | "secondary";
       _key: string;
     }>;
     ctaLabel?: string;
+    primaryCta?: {
+      label?: string;
+      href?: string;
+    };
+    secondaryCta?: {
+      label?: string;
+      href?: string;
+    };
   } | {
     _key: string;
     _type: "splitImage";
@@ -1229,10 +1804,83 @@ export type PAGE_QUERYResult = {
       crop?: SanityImageCrop;
       _type: "image";
     };
+  } | {
+    _key: string;
+    _type: "storiesImpact";
+    sectionId?: string;
+    heading?: string;
+    intro?: string;
+    stories?: Array<{
+      quote?: string;
+      name?: string;
+      role?: string;
+      location?: string;
+      program?: string;
+      _key: string;
+    }>;
+    statsCard?: {
+      heading?: string;
+      description?: string;
+      stats?: Array<{
+        value?: string;
+        label?: string;
+        color?: "accent" | "primary" | "secondary";
+        _key: string;
+      }>;
+    };
+  } | {
+    _key: string;
+    _type: "workshopsDirectory";
+    sectionId?: string;
+    heading?: string;
+    intro?: string;
+    searchPlaceholder?: string;
+    categoryCards: Array<{
+      _id: string;
+      title: string | null;
+      slug: Slug | null;
+      icon: string | null;
+      description: string | null;
+    }> | null;
+    showVolunteerBadge?: boolean;
+    workshops: Array<{
+      _id: string;
+      title: string | null;
+      slug: string | null;
+      summary: string | null;
+      categories: Array<{
+        _id: string;
+        title: string | null;
+        slug: Slug | null;
+        icon: string | null;
+        description: string | null;
+      }> | null;
+      start: string | null;
+      end: string | null;
+      location: string | null;
+      capacity: number | null;
+      registeredCount: number | null;
+      needsVolunteers: boolean | null;
+      registerUrl: string | null;
+      volunteerUrl: string | null;
+      heroImage: {
+        asset?: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        };
+        media?: unknown;
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        alt?: string;
+        _type: "image";
+      } | null;
+    }>;
   }> | null;
 } | null;
 // Variable: HOME_PAGE_QUERY
-// Query: *[_id == "siteSettings"][0]{  homePage->{    _id,    _type,    title,    slug,    content[]{      ...,      _type == "heroBanner" => {        ...,        titleColor,        kickerColor,        bodyColor,        overlayOpacity      },      _type == "faqs" => { ..., faqs[]-> }    }  }}
+// Query: *[_id == "siteSettings"][0]{  homePage->{    _id,    _type,    title,    slug,    content[]{      ...,      _type == "heroBanner" => {        ...,        titleColor,        kickerColor,        bodyColor,        overlayOpacity      },      _type == "faqs" => { ..., faqs[]-> },      _type == "workshopsDirectory" => {        ...,        categoryCards[]->{          _id,          title,          slug,          icon,          description        },        "workshops": *[_type == "workshop" && defined(slug.current)]          | order(start asc){            _id,            title,            "slug": slug.current,            summary,            categories[]->{              _id,              title,              slug,              icon,              description            },            start,            end,            location,            capacity,            registeredCount,            needsVolunteers,            registerUrl,            volunteerUrl,            heroImage          }      }    }  }}
 export type HOME_PAGE_QUERYResult = {
   homePage: null;
 } | {
@@ -1242,6 +1890,88 @@ export type HOME_PAGE_QUERYResult = {
     title: string | null;
     slug: Slug | null;
     content: Array<{
+      _key: string;
+      _type: "aboutOverview";
+      sectionId?: string;
+      heading?: string;
+      intro?: Array<string>;
+      pillars?: Array<{
+        title?: string;
+        description?: string;
+        _key: string;
+      }>;
+      stats?: Array<{
+        icon?: "award" | "book-open" | "calendar" | "globe" | "heart" | "sparkles" | "users";
+        value?: string;
+        label?: string;
+        description?: string;
+        _key: string;
+      }>;
+    } | {
+      _key: string;
+      _type: "chapterApplication";
+      sectionId?: string;
+      kicker?: string;
+      title?: string;
+      description?: string;
+      highlights?: Array<{
+        icon?: "award" | "book-open" | "calendar" | "graduation-cap" | "handshake" | "lightbulb" | "sparkles" | "users";
+        title?: string;
+        body?: string;
+        _type: "highlight";
+        _key: string;
+      }>;
+      benefitsHeading?: string;
+      benefitsIntro?: string;
+      benefits?: Array<{
+        title?: string;
+        description?: string;
+        _type: "benefit";
+        _key: string;
+      }>;
+      cardTitle?: string;
+      cardSubtitle?: string;
+      cardFacts?: Array<{
+        label?: string;
+        value?: string;
+        _type: "fact";
+        _key: string;
+      }>;
+      cta?: {
+        label?: string;
+        href?: string;
+      };
+      cardFootnote?: string;
+    } | {
+      _key: string;
+      _type: "chapterRequirements";
+      sectionId?: string;
+      heading?: string;
+      intro?: string;
+      cards?: Array<{
+        title?: string;
+        icon?: "award" | "book-open" | "calendar" | "globe" | "heart" | "lightbulb" | "sparkles" | "target" | "users";
+        tone?: "accent" | "muted" | "primary" | "secondary";
+        points?: Array<string>;
+        _key: string;
+      }>;
+      processCard?: {
+        title?: string;
+        steps?: Array<{
+          label?: string;
+          duration?: string;
+          _key: string;
+        }>;
+      };
+      metricsCard?: {
+        title?: string;
+        metrics?: Array<{
+          label?: string;
+          value?: string;
+          _key: string;
+        }>;
+      };
+    } | {
       _key: string;
       _type: "faqs";
       title?: string;
@@ -1425,6 +2155,69 @@ export type HOME_PAGE_QUERYResult = {
       };
     } | {
       _key: string;
+      _type: "leadershipSection";
+      sectionId?: string;
+      heading?: string;
+      intro?: string;
+      executiveHeading?: string;
+      executiveSubheading?: string;
+      executiveTeam?: Array<{
+        name?: string;
+        title?: string;
+        credential?: string;
+        bio?: string;
+        headshot?: {
+          asset?: {
+            _ref: string;
+            _type: "reference";
+            _weak?: boolean;
+            [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+          };
+          media?: unknown;
+          hotspot?: SanityImageHotspot;
+          crop?: SanityImageCrop;
+          _type: "image";
+        };
+        linkedin?: string;
+        email?: string;
+        _key: string;
+      }>;
+      advisoryHeading?: string;
+      advisorySubheading?: string;
+      advisors?: Array<{
+        name?: string;
+        role?: string;
+        expertise?: string;
+        bio?: string;
+        _key: string;
+      }>;
+      ctaCard?: {
+        heading?: string;
+        body?: string;
+        primaryCta?: {
+          label?: string;
+          href?: string;
+        };
+        secondaryCta?: {
+          label?: string;
+          href?: string;
+        };
+      };
+    } | {
+      _key: string;
+      _type: "missionStatement";
+      sectionId?: string;
+      heading?: string;
+      mission?: string;
+      pillars?: Array<{
+        title?: string;
+        description?: string;
+        _key: string;
+      }>;
+      visionHeading?: string;
+      vision?: string;
+    } | {
+      _key: string;
       _type: "newsletterArchive";
       heading?: string;
       description?: string;
@@ -1462,17 +2255,82 @@ export type HOME_PAGE_QUERYResult = {
       loadMoreLabel?: string;
     } | {
       _key: string;
+      _type: "podcastHighlights";
+      sectionId?: string;
+      heading?: string;
+      intro?: string;
+      episodes?: Array<{
+        episodeLabel?: string;
+        duration?: string;
+        publishedAt?: string;
+        title?: string;
+        guestName?: string;
+        guestTitle?: string;
+        programTag?: string;
+        summary?: string;
+        heroImage?: {
+          asset?: {
+            _ref: string;
+            _type: "reference";
+            _weak?: boolean;
+            [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+          };
+          media?: unknown;
+          hotspot?: SanityImageHotspot;
+          crop?: SanityImageCrop;
+          alt?: string;
+          _type: "image";
+        };
+        youtubeUrl?: string;
+        spotifyUrl?: string;
+        appleUrl?: string;
+        _key: string;
+      }>;
+      platformHeading?: string;
+      platforms?: Array<{
+        label?: string;
+        href?: string;
+        platform?: "apple" | "other" | "spotify" | "youtube";
+        _key: string;
+      }>;
+      viewAllCta?: {
+        label?: string;
+        href?: string;
+      };
+    } | {
+      _key: string;
       _type: "resourcesHero";
       heading?: string;
       tagline?: string;
+      backgroundImage?: {
+        asset?: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        };
+        media?: unknown;
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        _type: "image";
+      };
+      overlayOpacity?: number;
       highlights?: Array<{
         title?: string;
         description?: string;
-        icon?: "archive" | "book-open" | "file-text" | "headphones" | "star";
+        icon?: "archive" | "award" | "book-open" | "file-text" | "globe" | "headphones" | "heart" | "lightbulb" | "star" | "users";
         tone?: "accent" | "primary" | "secondary";
         _key: string;
       }>;
       ctaLabel?: string;
+      primaryCta?: {
+        label?: string;
+        href?: string;
+      };
+      secondaryCta?: {
+        label?: string;
+        href?: string;
+      };
     } | {
       _key: string;
       _type: "splitImage";
@@ -1490,9 +2348,200 @@ export type HOME_PAGE_QUERYResult = {
         crop?: SanityImageCrop;
         _type: "image";
       };
+    } | {
+      _key: string;
+      _type: "storiesImpact";
+      sectionId?: string;
+      heading?: string;
+      intro?: string;
+      stories?: Array<{
+        quote?: string;
+        name?: string;
+        role?: string;
+        location?: string;
+        program?: string;
+        _key: string;
+      }>;
+      statsCard?: {
+        heading?: string;
+        description?: string;
+        stats?: Array<{
+          value?: string;
+          label?: string;
+          color?: "accent" | "primary" | "secondary";
+          _key: string;
+        }>;
+      };
+    } | {
+      _key: string;
+      _type: "workshopsDirectory";
+      sectionId?: string;
+      heading?: string;
+      intro?: string;
+      searchPlaceholder?: string;
+      categoryCards: Array<{
+        _id: string;
+        title: string | null;
+        slug: Slug | null;
+        icon: string | null;
+        description: string | null;
+      }> | null;
+      showVolunteerBadge?: boolean;
+      workshops: Array<{
+        _id: string;
+        title: string | null;
+        slug: string | null;
+        summary: string | null;
+        categories: Array<{
+          _id: string;
+          title: string | null;
+          slug: Slug | null;
+          icon: string | null;
+          description: string | null;
+        }> | null;
+        start: string | null;
+        end: string | null;
+        location: string | null;
+        capacity: number | null;
+        registeredCount: number | null;
+        needsVolunteers: boolean | null;
+        registerUrl: string | null;
+        volunteerUrl: string | null;
+        heroImage: {
+          asset?: {
+            _ref: string;
+            _type: "reference";
+            _weak?: boolean;
+            [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+          };
+          media?: unknown;
+          hotspot?: SanityImageHotspot;
+          crop?: SanityImageCrop;
+          alt?: string;
+          _type: "image";
+        } | null;
+      }>;
     }> | null;
   } | null;
 } | null;
+// Variable: WORKSHOPS_QUERY
+// Query: *[_type == "workshop" && defined(slug.current)]    | order(start asc){      _id,      title,      "slug": slug.current,      summary,      categories,      start,      end,      location,      capacity,      registeredCount,      needsVolunteers,      registerUrl,      volunteerUrl,      heroImage,      categories[]->{        _id,        title,        slug,        icon,        description      }    }
+export type WORKSHOPS_QUERYResult = Array<{
+  _id: string;
+  title: string | null;
+  slug: string | null;
+  summary: string | null;
+  categories: Array<{
+    _id: string;
+    title: string | null;
+    slug: Slug | null;
+    icon: string | null;
+    description: string | null;
+  }> | null;
+  start: string | null;
+  end: string | null;
+  location: string | null;
+  capacity: number | null;
+  registeredCount: number | null;
+  needsVolunteers: boolean | null;
+  registerUrl: string | null;
+  volunteerUrl: string | null;
+  heroImage: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+  } | null;
+}>;
+// Variable: WORKSHOP_QUERY
+// Query: *[_type == "workshop" && slug.current == $slug][0]{    _id,    title,    "slug": slug.current,    summary,    categories[]->{      _id,      title,      slug,      icon,      description    },    start,    end,    location,    capacity,    registeredCount,    needsVolunteers,    registerUrl,    volunteerUrl,    heroImage,    body  }
+export type WORKSHOP_QUERYResult = {
+  _id: string;
+  title: string | null;
+  slug: string | null;
+  summary: string | null;
+  categories: Array<{
+    _id: string;
+    title: string | null;
+    slug: Slug | null;
+    icon: string | null;
+    description: string | null;
+  }> | null;
+  start: string | null;
+  end: string | null;
+  location: string | null;
+  capacity: number | null;
+  registeredCount: number | null;
+  needsVolunteers: boolean | null;
+  registerUrl: string | null;
+  volunteerUrl: string | null;
+  heroImage: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+  } | null;
+  body: Array<{
+    children?: Array<{
+      marks?: Array<string>;
+      text?: string;
+      _type: "span";
+      _key: string;
+    }>;
+    style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "normal";
+    listItem?: "bullet" | "number";
+    markDefs?: Array<{
+      href?: string;
+      newTab?: boolean;
+      _type: "link";
+      _key: string;
+    }>;
+    level?: number;
+    _type: "block";
+    _key: string;
+  } | {
+    filename?: string;
+    language?: "javascript" | "json" | "markdown" | "shell" | "typescript";
+    code?: string;
+    _type: "codeBlock";
+    _key: string;
+  } | {
+    style?: string;
+    _type: "divider";
+    _key: string;
+  } | {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+    _key: string;
+  }> | null;
+} | null;
+// Variable: WORKSHOP_SLUGS_QUERY
+// Query: *[_type == "workshop" && defined(slug.current)]{    "slug": slug.current  }
+export type WORKSHOP_SLUGS_QUERYResult = Array<{
+  slug: string | null;
+}>;
 // Variable: SITE_SETTINGS_QUERY
 // Query: *[_id == "siteSettings"][0]{  logo,  orgName,  footerBlurb,  social{    facebook, twitter, instagram, youtube  },  quickLinks[]{    _key, label, href  },  contactEmail,  contactPhone,  address,  newsletter{    enabled, blurb  }}
 export type SITE_SETTINGS_QUERYResult = {
@@ -1551,8 +2600,11 @@ declare module "@sanity/client" {
     "\n  *[_type == \"newsletter\" && slug.current == $slug][0]{\n    _id,\n    title,\n    issueLabel,\n    publishedAt,\n    readTime,\n    excerpt,\n    coverImage,\n    body\n  }\n": NEWSLETTER_QUERYResult;
     "\n  *[_type == \"event\" && defined(slug.current)] | order(date asc)[0...20]{\n    _id,\n    title,\n    slug,\n    date,\n    location,\n    needsVolunteer\n  }\n": EVENTS_QUERYResult;
     "\n  *[_type == \"event\" && slug.current == $slug][0]{\n    _id,\n    title,\n    slug,\n    description,\n    date,\n    location,\n    link,\n    needsVolunteer,\n    image\n  }\n": EVENT_QUERYResult;
-    "\n*[_type == \"page\" && slug.current == $slug][0]{\n  _id,\n  _type,\n  title,\n  slug,\n  content[]{\n    ...,\n    _type == \"heroBanner\" => {\n      ...,\n      titleColor,\n      kickerColor,\n      bodyColor,\n      overlayOpacity\n    },\n    _type == \"faqs\" => {\n      ...,\n      faqs[]->\n    }\n  }\n}\n": PAGE_QUERYResult;
-    "\n*[_id == \"siteSettings\"][0]{\n  homePage->{\n    _id,\n    _type,\n    title,\n    slug,\n    content[]{\n      ...,\n      _type == \"heroBanner\" => {\n        ...,\n        titleColor,\n        kickerColor,\n        bodyColor,\n        overlayOpacity\n      },\n      _type == \"faqs\" => { ..., faqs[]-> }\n    }\n  }\n}\n": HOME_PAGE_QUERYResult;
+    "\n*[_type == \"page\" && slug.current == $slug][0]{\n  _id,\n  _type,\n  title,\n  slug,\n  content[]{\n    ...,\n    _type == \"heroBanner\" => {\n      ...,\n      titleColor,\n      kickerColor,\n      bodyColor,\n      overlayOpacity\n    },\n    _type == \"faqs\" => {\n      ...,\n      faqs[]->\n    },\n    _type == \"workshopsDirectory\" => {\n      ...,\n      categoryCards[]->{\n        _id,\n        title,\n        slug,\n        icon,\n        description\n      },\n      \"workshops\": *[_type == \"workshop\" && defined(slug.current)]\n        | order(start asc){\n          _id,\n          title,\n          \"slug\": slug.current,\n          summary,\n          categories[]->{\n            _id,\n            title,\n            slug,\n            icon,\n            description\n          },\n          start,\n          end,\n          location,\n          capacity,\n          registeredCount,\n          needsVolunteers,\n          registerUrl,\n          volunteerUrl,\n          heroImage\n        }\n    }\n  }\n}\n": PAGE_QUERYResult;
+    "\n*[_id == \"siteSettings\"][0]{\n  homePage->{\n    _id,\n    _type,\n    title,\n    slug,\n    content[]{\n      ...,\n      _type == \"heroBanner\" => {\n        ...,\n        titleColor,\n        kickerColor,\n        bodyColor,\n        overlayOpacity\n      },\n      _type == \"faqs\" => { ..., faqs[]-> },\n      _type == \"workshopsDirectory\" => {\n        ...,\n        categoryCards[]->{\n          _id,\n          title,\n          slug,\n          icon,\n          description\n        },\n        \"workshops\": *[_type == \"workshop\" && defined(slug.current)]\n          | order(start asc){\n            _id,\n            title,\n            \"slug\": slug.current,\n            summary,\n            categories[]->{\n              _id,\n              title,\n              slug,\n              icon,\n              description\n            },\n            start,\n            end,\n            location,\n            capacity,\n            registeredCount,\n            needsVolunteers,\n            registerUrl,\n            volunteerUrl,\n            heroImage\n          }\n      }\n    }\n  }\n}\n": HOME_PAGE_QUERYResult;
+    "\n  *[_type == \"workshop\" && defined(slug.current)]\n    | order(start asc){\n      _id,\n      title,\n      \"slug\": slug.current,\n      summary,\n      categories,\n      start,\n      end,\n      location,\n      capacity,\n      registeredCount,\n      needsVolunteers,\n      registerUrl,\n      volunteerUrl,\n      heroImage,\n      categories[]->{\n        _id,\n        title,\n        slug,\n        icon,\n        description\n      }\n    }\n": WORKSHOPS_QUERYResult;
+    "\n  *[_type == \"workshop\" && slug.current == $slug][0]{\n    _id,\n    title,\n    \"slug\": slug.current,\n    summary,\n    categories[]->{\n      _id,\n      title,\n      slug,\n      icon,\n      description\n    },\n    start,\n    end,\n    location,\n    capacity,\n    registeredCount,\n    needsVolunteers,\n    registerUrl,\n    volunteerUrl,\n    heroImage,\n    body\n  }\n": WORKSHOP_QUERYResult;
+    "\n  *[_type == \"workshop\" && defined(slug.current)]{\n    \"slug\": slug.current\n  }\n": WORKSHOP_SLUGS_QUERYResult;
     "\n*[_id == \"siteSettings\"][0]{\n  logo,\n  orgName,\n  footerBlurb,\n  social{\n    facebook, twitter, instagram, youtube\n  },\n  quickLinks[]{\n    _key, label, href\n  },\n  contactEmail,\n  contactPhone,\n  address,\n  newsletter{\n    enabled, blurb\n  }\n}\n": SITE_SETTINGS_QUERYResult;
   }
 }

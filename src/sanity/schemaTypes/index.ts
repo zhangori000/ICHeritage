@@ -21,10 +21,14 @@ import { aboutOverviewType } from "./blocks/aboutOverviewType";
 import { missionStatementType } from "./blocks/missionStatementType";
 import { storiesImpactType } from "./blocks/storiesImpactType";
 import { leadershipSectionType } from "./blocks/leadershipSectionType";
+import { podcastHighlightsType } from "./blocks/podcastHighlightsType";
+import { workshopsDirectoryType } from "./blocks/workshopsDirectoryType";
 import newsletter from "./newsletter";
 import { siteSettingsType } from "./siteSettingsType";
 import { heroBannerType } from "./heroBannerType";
 import { colorChoiceType } from "./parts/colorChoice";
+import { workshopType } from "./workshop";
+import { workshopCategoryType } from "./workshopCategory";
 
 export const schema: { types: SchemaTypeDefinition[] } = {
   types: [
@@ -49,9 +53,13 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     missionStatementType,
     storiesImpactType,
     leadershipSectionType,
+    podcastHighlightsType,
+    workshopsDirectoryType,
     newsletter,
     siteSettingsType,
     heroBannerType,
     colorChoiceType,
+    workshopType,
+    workshopCategoryType,
   ],
 };
