@@ -1,11 +1,11 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
-import { MusicIcon } from "@sanity/icons";
+import { MicrophoneIcon } from "@sanity/icons";
 
 export const podcastHighlightsType = defineType({
   name: "podcastHighlights",
   title: "Podcast Highlights",
   type: "object",
-  icon: MusicIcon,
+  icon: MicrophoneIcon,
   fields: [
     defineField({
       name: "sectionId",

@@ -173,8 +173,8 @@ export function PageBuilder({
             );
           case "workshopsDirectory": {
             const { categoryCards, workshops, ...rest } = block;
-            const safeCategoryCards = Array.isArray(categoryCards) ? categoryCards : undefined;
-            const safeWorkshops = Array.isArray(workshops) ? workshops : undefined;
+            const safeCategoryCards = Array.isArray(categoryCards) ? categoryCards : [];
+            const safeWorkshops = Array.isArray(workshops) ? workshops : [];
             return (
               <DragHandle key={block._key}>
                 <WorkshopsDirectory
