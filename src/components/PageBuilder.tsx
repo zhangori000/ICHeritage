@@ -172,12 +172,15 @@ export function PageBuilder({
               </DragHandle>
             );
           case "workshopsDirectory": {
-            const { categoryCards, ...rest } = block;
+            const { categoryCards, workshops, ...rest } = block;
+            const safeCategoryCards = Array.isArray(categoryCards) ? categoryCards : undefined;
+            const safeWorkshops = Array.isArray(workshops) ? workshops : undefined;
             return (
               <DragHandle key={block._key}>
                 <WorkshopsDirectory
                   {...rest}
-                  categoryCards={categoryCards ?? undefined}
+                  categoryCards={safeCategoryCards}
+                  workshops={safeWorkshops}
                 />
               </DragHandle>
             );
