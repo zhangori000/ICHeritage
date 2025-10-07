@@ -18,6 +18,8 @@ export const pageBuilderType = defineType({
     defineArrayMember({ type: "missionStatement" }),
     defineArrayMember({ type: "storiesImpact" }),
     defineArrayMember({ type: "leadershipSection" }),
+    defineArrayMember({ type: "podcastHighlights" }),
+    defineArrayMember({ type: "workshopsDirectory" }),
   ],
   options: {
     insertMenu: {
