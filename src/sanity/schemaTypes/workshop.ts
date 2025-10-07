@@ -189,30 +189,38 @@ export const workshopType = defineType({
           title: "Button label",
           type: "string",
           initialValue: "Contact the Host",
+          description: "Text for the contact button on the workshop page.",
         }),
         defineField({
           name: "instructions",
           title: "Modal instructions",
           type: "text",
           rows: 3,
-          description: "Shown above the contact form to give attendees context.",
+          description:
+            "Short welcome message that appears at the top of the contact modal. Explain what happens after someone submits.",
         }),
         defineField({
           name: "email",
-          title: "Reply-to email",
+          title: "Contact email (shown to attendees)",
           type: "string",
-          validation: (rule) => rule.email().warning("Provide a valid email address"),
+          description:
+            "Where should attendee questions be delivered? This email is shown in the modal so participants know who will reply.",
+          validation: (rule) =>
+            rule.email().warning("Enter a valid email address, or leave blank if you do not use email."),
         }),
         defineField({
           name: "phone",
-          title: "Reply-to phone",
+          title: "Contact phone (optional)",
           type: "string",
+          description:
+            "Optional phone number to display alongside the email. Use if you prefer SMS responses.",
         }),
         defineField({
           name: "responseNote",
           title: "Response note",
           type: "string",
-          description: "Optional note about response time or expectations.",
+          description:
+            "Extra reassurance for attendees (for example, \"We respond within 24 hours\"). Shown under the contact info.",
         }),
       ],
     }),

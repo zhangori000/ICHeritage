@@ -15,8 +15,10 @@ import { stegaClean } from "next-sanity";
 import { urlFor } from "@/sanity/lib/image";
 import { ContactHostModal } from "@/components/workshops/ContactHostModal";
 import { RsvpForm } from "@/components/workshops/RsvpForm";
+import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 
-const placeholderImage = "/Gemini_Generated_Image_podcast_default.png";
+const placeholderImage = "/Gemini_Generated_Image_workshop_default.png";
+const defaultHostAvatar = "/Gemini_Generated_Image_workshop_default.png";
 
 type WorkshopParams = Promise<{ slug: string }>;
 
@@ -72,6 +74,23 @@ function formatDateRange(start?: string | null, end?: string | null) {
     return `${startFormatted} \u2013 ${endDate.format("dddd, MMMM D, YYYY \u2022 h:mm A")}`;
   }
   return startFormatted;
+}
+
+function formatTimeWindow(start?: string | null, end?: string | null) {
+  if (!start) return null;
+  const startDate = dayjs(start);
+  if (!startDate.isValid()) return null;
+  if (!end) {
+    return startDate.format("h:mm A");
+  }
+  const endDate = dayjs(end);
+  if (!endDate.isValid()) {
+    return startDate.format("h:mm A");
+  }
+  if (startDate.isSame(endDate, "day")) {
+    return `${startDate.format("h:mm A")} \u2013 ${endDate.format("h:mm A")}`;
+  }
+  return `${startDate.format("h:mm A")} \u2013 ${endDate.format("MMM D, h:mm A")}`;
 }
 
 function computeCapacity(
@@ -133,7 +152,7 @@ export default async function WorkshopPage({
 
   const title = clean(workshop.title);
   const summary = clean(workshop.summary);
-  const dateRange = formatDateRange(workshop.start, workshop.end);
+  const scheduleDetail = formatDateRange(workshop.start, workshop.end);
   const location = clean(workshop.location);
   const capacityInfo = computeCapacity(
     workshop.capacity,
@@ -210,8 +229,9 @@ export default async function WorkshopPage({
           const role = clean(hostObject.role);
           const avatarAlt = clean(hostObject.avatar?.alt) || name;
           const avatarRef = hostObject.avatar?.asset?._ref;
-          const avatarUrl = avatarRef
-            ? urlFor(hostObject.avatar).width(240).height(240).fit("crop").url()
+          const avatarSource = hostObject.avatar as SanityImageSource | undefined;
+          const avatarUrl = avatarRef && avatarSource
+            ? urlFor(avatarSource).width(240).height(240).fit("crop").url()
             : undefined;
           const socialLinks = Array.isArray(hostObject.socialLinks)
             ? hostObject.socialLinks
@@ -310,17 +330,31 @@ export default async function WorkshopPage({
     Boolean(contactSettings.phone) ||
     Boolean(contactSettings.instructions);
 
+  const startDateObj = workshop.start ? dayjs(workshop.start) : null;
+  const startMonth = startDateObj?.format("MMM") ?? "";
+  const startDay = startDateObj?.format("D") ?? "";
+  const schedulePrimary = startDateObj?.format("dddd, MMMM D") ?? null;
+  const scheduleSecondary = formatTimeWindow(workshop.start, workshop.end);
+  const scheduleSecondaryText = scheduleSecondary ?? scheduleDetail;
+
+  const locationParts = location
+    ? location.split(",").map((part) => part.trim()).filter(Boolean)
+    : [];
+  const locationPrimary = locationParts.length > 0 ? locationParts[0] : location || null;
+  const locationSecondary = locationParts.length > 1 ? locationParts.slice(1).join(", ") : null;
+  const locationHref = location ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location)}` : null;
+
   return (
     <article className="bg-[color:var(--background)]">
-      <div className="container mx-auto px-4 py-12 md:py-16">
-        <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[minmax(0,360px)_minmax(0,1fr)] xl:grid-cols-[minmax(0,420px)_minmax(0,1fr)]">
-          <aside className="flex flex-col gap-6">
+      <div className="container mx-auto px-4 py-10 md:py-12">
+        <div className="mx-auto grid max-w-6xl gap-6 lg:grid-cols-[minmax(0,380px)_minmax(0,1fr)] xl:grid-cols-[minmax(0,420px)_minmax(0,1fr)]">
+          <aside className="flex flex-col gap-4">
             <div className="relative">
               <div
                 className="pointer-events-none absolute inset-0 translate-x-4 translate-y-6 rounded-3xl bg-[color:var(--primary)]/15 blur-3xl"
                 aria-hidden
               />
-              <div className="relative overflow-hidden rounded-3xl border border-[color:var(--border)] bg-[color:var(--card)] shadow-xl">
+              <div className="relative overflow-hidden rounded-2xl border border-[color:var(--border)] bg-[color:var(--card)] shadow-xl">
                 <div className="relative aspect-square w-full">
                   <Image
                     src={heroUrl}
@@ -335,7 +369,7 @@ export default async function WorkshopPage({
             </div>
 
             {hosts.length ? (
-              <div className="rounded-3xl border border-[color:var(--border)] bg-[color:var(--card)] p-6 shadow-sm">
+              <div className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--card)] p-6 shadow-sm">
                 <p className="text-xs uppercase tracking-[0.2em] text-[color:var(--muted-foreground)]">
                   Hosted by
                 </p>
@@ -347,19 +381,13 @@ export default async function WorkshopPage({
                     >
                       <div className="flex items-center gap-3">
                         <div className="relative h-12 w-12 overflow-hidden rounded-full border border-[color:var(--border)] bg-[color:var(--accent)]/25">
-                          {host.avatarUrl ? (
-                            <Image
-                              src={host.avatarUrl}
-                              alt={host.avatarAlt || host.name}
-                              fill
-                              className="object-cover"
-                              sizes="48px"
-                            />
-                          ) : (
-                            <span className="flex h-full w-full items-center justify-center text-sm font-semibold uppercase text-[color:var(--primary)]">
-                              {host.name.charAt(0)}
-                            </span>
-                          )}
+                          <Image
+                            src={host.avatarUrl ?? defaultHostAvatar}
+                            alt={host.avatarAlt || host.name}
+                            fill
+                            className="object-cover"
+                            sizes="48px"
+                          />
                         </div>
                         <div>
                           <p className="text-sm font-semibold text-[color:var(--foreground)]">{host.name}</p>
@@ -401,7 +429,7 @@ export default async function WorkshopPage({
             ) : null}
 
             {showContactModal ? (
-              <div className="rounded-3xl border border-[color:var(--border)] bg-[color:var(--card)] p-6 shadow-sm">
+              <div className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--card)] p-5 shadow-sm">
                 <p className="text-xs uppercase tracking-[0.2em] text-[color:var(--muted-foreground)]">
                   Questions?
                 </p>
@@ -422,7 +450,7 @@ export default async function WorkshopPage({
             ) : null}
 
             {externalLinks.length ? (
-              <div className="rounded-3xl border border-[color:var(--border)] bg-[color:var(--card)] p-6 shadow-sm">
+              <div className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--card)] p-5 shadow-sm">
                 <p className="text-xs uppercase tracking-[0.2em] text-[color:var(--muted-foreground)]">
                   Partner links
                 </p>
@@ -454,8 +482,8 @@ export default async function WorkshopPage({
             ) : null}
           </aside>
 
-          <main className="flex flex-col gap-12">
-            <section className="rounded-3xl border border-[color:var(--border)] bg-[color:var(--card)] p-8 shadow-sm">
+          <main className="flex flex-col gap-6">
+            <section className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--card)] p-6 shadow-sm">
               {categoryBadges.length > 0 || workshop.needsVolunteers ? (
                 <div className="flex flex-wrap gap-2">
                   {categoryBadges.map(({ key, label }) => (
@@ -483,34 +511,36 @@ export default async function WorkshopPage({
                 </p>
               ) : null}
 
-              <div className="mt-8 grid gap-6 text-sm text-[color:var(--muted-foreground)] md:grid-cols-2">
-                {dateRange ? (
-                  <div className="flex items-start gap-3 rounded-2xl border border-[color:var(--border)]/60 bg-[color:var(--background)]/60 p-4">
-                    <div className="mt-1 flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-[color:var(--primary)]/10 text-[color:var(--primary)]">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="h-4 w-4"
-                        aria-hidden
-                      >
-                        <circle cx="12" cy="12" r="10" />
-                        <polyline points="12 6 12 12 16 14" />
-                      </svg>
+              <div className="mt-6 space-y-3">
+                {startDateObj ? (
+                  <div className="flex items-start gap-3" title={scheduleDetail ?? undefined}>
+                    <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center overflow-hidden rounded-[14px] border border-[color:var(--border)]/60">
+                      <div className="flex h-full w-full flex-col bg-[color:var(--background)]">
+                        <div className="flex h-5 items-center justify-center bg-[color:var(--accent)]/35">
+                          <span className="text-[10px] font-semibold uppercase tracking-[0.35em] text-[color:var(--muted-foreground)]">
+                            {startMonth}
+                          </span>
+                        </div>
+                        <div className="flex flex-1 items-center justify-center">
+                          <span className="text-lg font-semibold leading-none text-[color:var(--foreground)] transform -translate-y-[1px]">
+                            {startDay}
+                          </span>
+                        </div>
+                      </div>
                     </div>
-                    <div>
-                      <p className="text-xs uppercase tracking-[0.2em] text-[color:var(--muted-foreground)]">Date & time</p>
-                      <p className="mt-1 text-[color:var(--foreground)]">{dateRange}</p>
+                    <div className="min-w-0 text-sm">
+                      {schedulePrimary ? (
+                        <p className="font-semibold text-[color:var(--foreground)]">{schedulePrimary}</p>
+                      ) : null}
+                      {scheduleSecondaryText ? (
+                        <p className="text-[color:var(--muted-foreground)]">{scheduleSecondaryText}</p>
+                      ) : null}
                     </div>
                   </div>
                 ) : null}
-                {location ? (
-                  <div className="flex items-start gap-3 rounded-2xl border border-[color:var(--border)]/60 bg-[color:var(--background)]/60 p-4">
-                    <div className="mt-1 flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-[color:var(--primary)]/10 text-[color:var(--primary)]">
+                {locationPrimary ? (
+                  <div className="flex items-start gap-3">
+                    <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl border border-[color:var(--border)]/70 bg-[color:var(--background)] text-[color:var(--muted-foreground)]">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 24 24"
@@ -519,22 +549,48 @@ export default async function WorkshopPage({
                         strokeWidth="1.5"
                         strokeLinecap="round"
                         strokeLinejoin="round"
-                        className="h-4 w-4"
+                        className="h-5 w-5"
                         aria-hidden
                       >
                         <path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0" />
                         <circle cx="12" cy="10" r="3" />
                       </svg>
                     </div>
-                    <div>
-                      <p className="text-xs uppercase tracking-[0.2em] text-[color:var(--muted-foreground)]">Location</p>
-                      <p className="mt-1 text-[color:var(--foreground)]">{location}</p>
+                    <div className="min-w-0 text-sm">
+                      {locationHref ? (
+                        <a
+                          href={locationHref}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="group inline-flex items-center gap-1 font-semibold text-[color:var(--foreground)] transition hover:text-[color:var(--primary)]"
+                        >
+                          <span className="truncate">{locationPrimary}</span>
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="1.5"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            className="h-3.5 w-3.5 text-[color:var(--muted-foreground)] transition group-hover:text-[color:var(--primary)]"
+                            aria-hidden
+                          >
+                            <path d="M7 17 17 7M7 7h10v10" />
+                          </svg>
+                        </a>
+                      ) : (
+                        <p className="font-semibold text-[color:var(--foreground)]">{locationPrimary}</p>
+                      )}
+                      {locationSecondary ? (
+                        <p className="text-[color:var(--muted-foreground)]">{locationSecondary}</p>
+                      ) : null}
                     </div>
                   </div>
                 ) : null}
                 {capacityInfo ? (
-                  <div className="flex items-start gap-3 rounded-2xl border border-[color:var(--border)]/60 bg-[color:var(--background)]/60 p-4">
-                    <div className="mt-1 flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-[color:var(--primary)]/10 text-[color:var(--primary)]">
+                  <div className="flex items-start gap-3">
+                    <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl border border-[color:var(--border)]/70 bg-[color:var(--background)] text-[color:var(--muted-foreground)]">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 24 24"
@@ -543,7 +599,7 @@ export default async function WorkshopPage({
                         strokeWidth="1.5"
                         strokeLinecap="round"
                         strokeLinejoin="round"
-                        className="h-4 w-4"
+                        className="h-5 w-5"
                         aria-hidden
                       >
                         <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
@@ -552,9 +608,9 @@ export default async function WorkshopPage({
                         <path d="M16 3.13a4 4 0 0 1 0 7.75" />
                       </svg>
                     </div>
-                    <div>
-                      <p className="text-xs uppercase tracking-[0.2em] text-[color:var(--muted-foreground)]">Capacity</p>
-                      <p className="mt-1 text-[color:var(--foreground)]">
+                    <div className="min-w-0 text-sm">
+                      <p className="font-semibold text-[color:var(--foreground)]">Capacity</p>
+                      <p className="text-[color:var(--muted-foreground)]">
                         {capacityInfo.registered}/{capacityInfo.capacity} registered &bull; {capacityInfo.remaining} spots remaining
                       </p>
                     </div>
@@ -563,7 +619,7 @@ export default async function WorkshopPage({
               </div>
 
               {(registerUrl || volunteerUrl) && (
-                <div className="mt-8 flex flex-wrap gap-3">
+                <div className="mt-6 flex flex-wrap gap-3">
                   {registerUrl ? (
                     <a
                       href={registerUrl}
@@ -589,8 +645,10 @@ export default async function WorkshopPage({
             </section>
 
             {workshop.body ? (
-              <section className="prose prose-neutral max-w-none text-[color:var(--foreground)]/85">
-                <PortableText value={workshop.body} components={portableComponents} />
+              <section className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--card)] p-6 shadow-sm">
+                <div className="prose prose-neutral max-w-none text-[color:var(--foreground)]/85">
+                  <PortableText value={workshop.body} components={portableComponents} />
+                </div>
               </section>
             ) : null}
 

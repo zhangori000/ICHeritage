@@ -62,6 +62,44 @@ export type Workshop = {
     alt?: string;
     _type: "image";
   };
+  hosts?: Array<{
+    name?: string;
+    role?: string;
+    avatar?: {
+      asset?: {
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      };
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      alt?: string;
+      _type: "image";
+    };
+    socialLinks?: Array<{
+      label?: string;
+      url?: string;
+      _type: "link";
+      _key: string;
+    }>;
+    _type: "host";
+    _key: string;
+  }>;
+  contact?: {
+    ctaLabel?: string;
+    instructions?: string;
+    email?: string;
+    phone?: string;
+    responseNote?: string;
+  };
+  externalLinks?: Array<{
+    label?: string;
+    href?: string;
+    _type: "link";
+    _key: string;
+  }>;
   body?: Array<{
     children?: Array<{
       marks?: Array<string>;
@@ -2461,7 +2499,7 @@ export type WORKSHOPS_QUERYResult = Array<{
   } | null;
 }>;
 // Variable: WORKSHOP_QUERY
-// Query: *[_type == "workshop" && slug.current == $slug][0]{    _id,    title,    "slug": slug.current,    summary,    categories[]->{      _id,      title,      slug,      icon,      description    },    start,    end,    location,    capacity,    registeredCount,    needsVolunteers,    registerUrl,    volunteerUrl,    heroImage,    body  }
+// Query: *[_type == "workshop" && slug.current == $slug][0]{    _id,    title,    "slug": slug.current,    summary,    categories[]->{      _id,      title,      slug,      icon,      description    },    start,    end,    location,    capacity,    registeredCount,    needsVolunteers,    registerUrl,    volunteerUrl,    heroImage,    hosts[]{      _key,      name,      role,      avatar,      socialLinks[]{        _key,        label,        url      }    },    contact{      ctaLabel,      instructions,      email,      phone,      responseNote    },    externalLinks[]{      _key,      label,      href    },    body  }
 export type WORKSHOP_QUERYResult = {
   _id: string;
   title: string | null;
@@ -2495,6 +2533,41 @@ export type WORKSHOP_QUERYResult = {
     alt?: string;
     _type: "image";
   } | null;
+  hosts: Array<{
+    _key: string;
+    name: string | null;
+    role: string | null;
+    avatar: {
+      asset?: {
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      };
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      alt?: string;
+      _type: "image";
+    } | null;
+    socialLinks: Array<{
+      _key: string;
+      label: string | null;
+      url: string | null;
+    }> | null;
+  }> | null;
+  contact: {
+    ctaLabel: string | null;
+    instructions: string | null;
+    email: string | null;
+    phone: string | null;
+    responseNote: string | null;
+  } | null;
+  externalLinks: Array<{
+    _key: string;
+    label: string | null;
+    href: string | null;
+  }> | null;
   body: Array<{
     children?: Array<{
       marks?: Array<string>;
@@ -2603,7 +2676,7 @@ declare module "@sanity/client" {
     "\n*[_type == \"page\" && slug.current == $slug][0]{\n  _id,\n  _type,\n  title,\n  slug,\n  content[]{\n    ...,\n    _type == \"heroBanner\" => {\n      ...,\n      titleColor,\n      kickerColor,\n      bodyColor,\n      overlayOpacity\n    },\n    _type == \"faqs\" => {\n      ...,\n      faqs[]->\n    },\n    _type == \"workshopsDirectory\" => {\n      ...,\n      categoryCards[]->{\n        _id,\n        title,\n        slug,\n        icon,\n        description\n      },\n      \"workshops\": *[_type == \"workshop\" && defined(slug.current)]\n        | order(start asc){\n          _id,\n          title,\n          \"slug\": slug.current,\n          summary,\n          categories[]->{\n            _id,\n            title,\n            slug,\n            icon,\n            description\n          },\n          start,\n          end,\n          location,\n          capacity,\n          registeredCount,\n          needsVolunteers,\n          registerUrl,\n          volunteerUrl,\n          heroImage\n        }\n    }\n  }\n}\n": PAGE_QUERYResult;
     "\n*[_id == \"siteSettings\"][0]{\n  homePage->{\n    _id,\n    _type,\n    title,\n    slug,\n    content[]{\n      ...,\n      _type == \"heroBanner\" => {\n        ...,\n        titleColor,\n        kickerColor,\n        bodyColor,\n        overlayOpacity\n      },\n      _type == \"faqs\" => { ..., faqs[]-> },\n      _type == \"workshopsDirectory\" => {\n        ...,\n        categoryCards[]->{\n          _id,\n          title,\n          slug,\n          icon,\n          description\n        },\n        \"workshops\": *[_type == \"workshop\" && defined(slug.current)]\n          | order(start asc){\n            _id,\n            title,\n            \"slug\": slug.current,\n            summary,\n            categories[]->{\n              _id,\n              title,\n              slug,\n              icon,\n              description\n            },\n            start,\n            end,\n            location,\n            capacity,\n            registeredCount,\n            needsVolunteers,\n            registerUrl,\n            volunteerUrl,\n            heroImage\n          }\n      }\n    }\n  }\n}\n": HOME_PAGE_QUERYResult;
     "\n  *[_type == \"workshop\" && defined(slug.current)]\n    | order(start asc){\n      _id,\n      title,\n      \"slug\": slug.current,\n      summary,\n      categories,\n      start,\n      end,\n      location,\n      capacity,\n      registeredCount,\n      needsVolunteers,\n      registerUrl,\n      volunteerUrl,\n      heroImage,\n      categories[]->{\n        _id,\n        title,\n        slug,\n        icon,\n        description\n      }\n    }\n": WORKSHOPS_QUERYResult;
-    "\n  *[_type == \"workshop\" && slug.current == $slug][0]{\n    _id,\n    title,\n    \"slug\": slug.current,\n    summary,\n    categories[]->{\n      _id,\n      title,\n      slug,\n      icon,\n      description\n    },\n    start,\n    end,\n    location,\n    capacity,\n    registeredCount,\n    needsVolunteers,\n    registerUrl,\n    volunteerUrl,\n    heroImage,\n    body\n  }\n": WORKSHOP_QUERYResult;
+    "\n  *[_type == \"workshop\" && slug.current == $slug][0]{\n    _id,\n    title,\n    \"slug\": slug.current,\n    summary,\n    categories[]->{\n      _id,\n      title,\n      slug,\n      icon,\n      description\n    },\n    start,\n    end,\n    location,\n    capacity,\n    registeredCount,\n    needsVolunteers,\n    registerUrl,\n    volunteerUrl,\n    heroImage,\n    hosts[]{\n      _key,\n      name,\n      role,\n      avatar,\n      socialLinks[]{\n        _key,\n        label,\n        url\n      }\n    },\n    contact{\n      ctaLabel,\n      instructions,\n      email,\n      phone,\n      responseNote\n    },\n    externalLinks[]{\n      _key,\n      label,\n      href\n    },\n    body\n  }\n": WORKSHOP_QUERYResult;
     "\n  *[_type == \"workshop\" && defined(slug.current)]{\n    \"slug\": slug.current\n  }\n": WORKSHOP_SLUGS_QUERYResult;
     "\n*[_id == \"siteSettings\"][0]{\n  logo,\n  orgName,\n  footerBlurb,\n  social{\n    facebook, twitter, instagram, youtube\n  },\n  quickLinks[]{\n    _key, label, href\n  },\n  contactEmail,\n  contactPhone,\n  address,\n  newsletter{\n    enabled, blurb\n  }\n}\n": SITE_SETTINGS_QUERYResult;
   }

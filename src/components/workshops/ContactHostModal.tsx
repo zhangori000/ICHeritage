@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 type ContactHostModalProps = {
   buttonLabel: string;
@@ -19,14 +19,46 @@ export function ContactHostModal({
   responseNote,
   hostNames,
 }: ContactHostModalProps) {
-  const [open, setOpen] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const closeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const clearCloseTimeout = useCallback(() => {
+    if (closeTimeoutRef.current) {
+      clearTimeout(closeTimeoutRef.current);
+      closeTimeoutRef.current = null;
+    }
+  }, []);
+
+  const closeModal = useCallback(() => {
+    clearCloseTimeout();
+    setIsVisible(false);
+    closeTimeoutRef.current = setTimeout(() => {
+      setIsMounted(false);
+    }, 200);
+  }, [clearCloseTimeout]);
+
+  const handleOpen = useCallback(() => {
+    clearCloseTimeout();
+    setIsMounted(true);
+  }, [clearCloseTimeout]);
 
   useEffect(() => {
-    if (!open) return;
+    if (!isMounted) return;
+
+    const frame = requestAnimationFrame(() => {
+      setIsVisible(true);
+    });
+
+    return () => cancelAnimationFrame(frame);
+  }, [isMounted]);
+
+  useEffect(() => {
+    if (!isMounted) return;
 
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
-        setOpen(false);
+        closeModal();
       }
     };
 
@@ -38,7 +70,9 @@ export function ContactHostModal({
       document.removeEventListener('keydown', handleKeyDown);
       document.body.style.overflow = previousOverflow;
     };
-  }, [open]);
+  }, [closeModal, isMounted]);
+
+  useEffect(() => clearCloseTimeout, [clearCloseTimeout]);
 
   const contactLineParts = [] as string[];
   if (email) contactLineParts.push(email);
@@ -50,13 +84,13 @@ export function ContactHostModal({
     <>
       <button
         type="button"
-        onClick={() => setOpen(true)}
+        onClick={handleOpen}
         className="flex w-full items-center justify-center gap-2 rounded-full border border-[color:var(--border)] bg-[color:var(--background)] px-4 py-2.5 text-sm font-semibold text-[color:var(--foreground)] transition hover:border-[color:var(--primary)] hover:text-[color:var(--primary)]"
       >
         {buttonLabel}
       </button>
 
-      {open ? (
+      {isMounted ? (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center px-4"
           role="dialog"
@@ -64,10 +98,16 @@ export function ContactHostModal({
           aria-label="Contact the host"
         >
           <div
-            className="absolute inset-0 bg-black/50"
-            onClick={() => setOpen(false)}
+            className={`absolute inset-0 bg-black/50 transition-opacity duration-200 ${
+              isVisible ? 'opacity-100' : 'opacity-0'
+            }`}
+            onClick={closeModal}
           />
-          <div className="relative z-10 w-full max-w-xl overflow-hidden rounded-3xl border border-[color:var(--border)] bg-[color:var(--card)] shadow-2xl">
+          <div
+            className={`relative z-10 w-full max-w-xl overflow-hidden rounded-2xl border border-[color:var(--border)] bg-[color:var(--card)] shadow-2xl transition-all duration-200 ${
+              isVisible ? 'translate-y-0 scale-100 opacity-100' : 'translate-y-4 scale-[0.97] opacity-0'
+            }`}
+          >
             <div className="flex items-start gap-4 border-b border-[color:var(--border)] bg-[color:var(--muted)]/20 px-6 py-5">
               <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-2xl bg-[color:var(--primary)]/10 text-[color:var(--primary)]">
                 <svg
@@ -101,7 +141,7 @@ export function ContactHostModal({
               </div>
               <button
                 type="button"
-                onClick={() => setOpen(false)}
+                onClick={closeModal}
                 className="ml-auto inline-flex h-9 w-9 items-center justify-center rounded-full text-[color:var(--muted-foreground)] transition hover:bg-[color:var(--muted)]/30 hover:text-[color:var(--foreground)]"
                 aria-label="Close modal"
               >
@@ -123,7 +163,7 @@ export function ContactHostModal({
                 <textarea
                   required
                   placeholder="What's your question for the host?"
-                  className="min-h-[120px] rounded-2xl border border-[color:var(--border)] bg-[color:var(--background)] px-3 py-3 text-sm text-[color:var(--foreground)] focus:border-[color:var(--primary)] focus:outline-none focus:ring-2 focus:ring-[color:var(--primary)]/40"
+                  className="min-h-[120px] rounded-2xl border border-[color:var(--border)] bg-[color:var(--background)] px-3 py-3 text-sm text-[color:var(--foreground)] focus:border-[color:var(--border)] focus:outline-none focus-soft"
                 />
               </label>
               <label className="mt-4 flex flex-col gap-2 text-sm text-[color:var(--foreground)]">
@@ -131,7 +171,7 @@ export function ContactHostModal({
                 <input
                   required
                   placeholder="Email or phone number"
-                  className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--background)] px-3 py-3 text-sm text-[color:var(--foreground)] focus:border-[color:var(--primary)] focus:outline-none focus:ring-2 focus:ring-[color:var(--primary)]/40"
+                  className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--background)] px-3 py-3 text-sm text-[color:var(--foreground)] focus:border-[color:var(--border)] focus:outline-none focus-soft"
                 />
               </label>
               {contactLine ? (

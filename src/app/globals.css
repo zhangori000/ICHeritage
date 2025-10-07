@@ -46,3 +46,26 @@
 .font-serif {
   font-family: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
 }
+
+textarea.rsvp-notes {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+
+textarea.rsvp-notes::-webkit-scrollbar {
+  width: 6px;
+}
+
+textarea.rsvp-notes::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+textarea.rsvp-notes::-webkit-scrollbar-thumb {
+  background-color: var(--border);
+  border-radius: 9999px;
+}
+
+.focus-soft:focus-visible {
+  outline: none;
+  box-shadow: inset 0 0 0 2px rgba(167, 52, 56, 0.25);
+}
