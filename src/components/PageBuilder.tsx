@@ -171,12 +171,17 @@ export function PageBuilder({
                 <LeadershipSection {...block} />
               </DragHandle>
             );
-          case "workshopsDirectory":
+          case "workshopsDirectory": {
+            const { categoryCards, ...rest } = block;
             return (
               <DragHandle key={block._key}>
-                <WorkshopsDirectory {...block} />
+                <WorkshopsDirectory
+                  {...rest}
+                  categoryCards={categoryCards ?? undefined}
+                />
               </DragHandle>
             );
+          }
           case "podcastHighlights":
             return (
               <DragHandle key={block._key}>
