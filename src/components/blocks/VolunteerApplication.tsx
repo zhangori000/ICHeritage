@@ -18,10 +18,14 @@ type VolunteerApplicationBlock = {
   }> | null;
   requirementsHeading?: string | null;
   requirementsIntro?: string | null;
-  requirements?: Array<{
-    _key?: string;
-    text?: string | null;
-  }> | null;
+  requirements?: Array<
+    | {
+        _key?: string;
+        text?: string | null;
+      }
+    | string
+    | null
+  > | null;
   tracks?: Array<{
     _key?: string;
     title?: string | null;
@@ -263,11 +267,16 @@ export function VolunteerApplication(block: VolunteerApplicationBlock) {
 
   const requirementItems = Array.isArray(requirements)
     ? requirements
-        .map((item) => ({
-          _key: item?._key ?? item?.text ?? crypto.randomUUID(),
-          text: clean(item?.text),
-        }))
-        .filter((item) => item.text)
+        .map((item) => {
+          if (!item) return null;
+          if (typeof item === "string") {
+            const text = clean(item);
+            return text ? { _key: crypto.randomUUID(), text } : null;
+          }
+          const text = clean(item.text);
+          return text ? { _key: item._key ?? crypto.randomUUID(), text } : null;
+        })
+        .filter((item): item is { _key: string; text: string } => Boolean(item))
     : [];
 
   const trackCards = Array.isArray(tracks)

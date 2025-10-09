@@ -106,7 +106,7 @@ const toneStyles: Record<
   },
 };
 
-const iconMap: Record<string, React.ReactNode> = {
+const iconMap: Record<string, React.ReactElement<React.SVGProps<SVGSVGElement>>> = {
   "building-2": (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -231,7 +231,7 @@ const iconMap: Record<string, React.ReactNode> = {
   ),
 };
 
-const renderIcon = (icon?: string | null, tone: NonNullable<Track["tone"]> = "primary") => {
+const renderIcon = (icon?: string | null) => {
   const name = clean(icon).trim().toLowerCase();
   if (name && iconMap[name]) {
     return iconMap[name];
@@ -251,8 +251,8 @@ const renderCommitmentIcon = (
   const icon = clean(item?.icon).trim().toLowerCase();
   if (icon && iconMap[icon]) {
     const element = iconMap[icon];
-    return React.cloneElement(element as React.ReactElement, {
-      className: "h-4 w-4 flex-shrink-0",
+    return React.cloneElement(element, {
+      className: ["h-4 w-4 flex-shrink-0", element.props.className].filter(Boolean).join(" "),
     });
   }
   return <div className={`h-2 w-2 rounded-full ${toneStyles[tone].bulletDot} flex-shrink-0`} />;
@@ -334,7 +334,7 @@ export function VolunteerTracks(block: VolunteerTracksBlock) {
                   cta,
                 } = track ?? {};
 
-                const styles = toneStyles[tone] ?? toneStyles.primary;
+                const styles = toneStyles[tone ?? "primary"] ?? toneStyles.primary;
                 const cleanedTitle = clean(title);
                 const cleanedDescription = clean(description);
                 const keyAreasList = Array.isArray(keyAreas)
@@ -358,7 +358,7 @@ export function VolunteerTracks(block: VolunteerTracksBlock) {
                             <div
                               className={`rounded-full p-4 ${styles.iconRing}`}
                             >
-                              {renderIcon(icon, tone)}
+                              {renderIcon(icon)}
                             </div>
                             <div className="space-y-2">
                               {badgeLabel ? (
@@ -419,7 +419,7 @@ export function VolunteerTracks(block: VolunteerTracksBlock) {
                                 key={`${_key}-commitment-${item?._key ?? itemIndex}`}
                                 className="flex items-center gap-3 text-sm"
                               >
-                                {renderCommitmentIcon(item, tone)}
+                                {renderCommitmentIcon(item, tone ?? "primary")}
                                 <span>{clean(item?.text)}</span>
                               </div>
                             ))}

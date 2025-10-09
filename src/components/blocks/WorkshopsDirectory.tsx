@@ -241,7 +241,10 @@ export function WorkshopsDirectory(block: WorkshopsDirectoryBlock) {
 
   const anchor = sectionId?.trim() ? sectionId.trim() : undefined;
   const today = React.useMemo(() => dayjs(), []);
-  const safeWorkshops = Array.isArray(workshops) ? workshops : [];
+  const safeWorkshops = React.useMemo(
+    () => (Array.isArray(workshops) ? workshops : []),
+    [workshops]
+  );
   const allCategories = React.useMemo(
     () => getCategories(safeWorkshops, categoryCards),
     [safeWorkshops, categoryCards]

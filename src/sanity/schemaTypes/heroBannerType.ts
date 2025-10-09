@@ -93,11 +93,9 @@ export const heroBannerType = defineType({
               if (href.startsWith("/")) return true;
 
               try {
-                // new URL throws if not absolute
-                // eslint-disable-next-line no-new
                 new URL(href);
                 return true;
-              } catch (error) {
+              } catch {
                 return "Use a relative path (starting with /) or a full URL.";
               }
             }),
@@ -122,10 +120,9 @@ export const heroBannerType = defineType({
               if (href.startsWith("/")) return true;
 
               try {
-                // eslint-disable-next-line no-new
                 new URL(href);
                 return true;
-              } catch (error) {
+              } catch {
                 return "Use a relative path (starting with /) or a full URL.";
               }
             }),
