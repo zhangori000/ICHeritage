@@ -8,7 +8,7 @@ import type { SITE_SETTINGS_QUERYResult } from "@/sanity/types";
 import { urlFor } from "@/sanity/lib/image";
 
 /* ------------------------------------------------------------------ */
-/* Nav model (matches your latest: Program w/ 2 children, no Init.)    */
+/* Nav model (matches your latest: Program menu + dedicated Volunteer) */
 /* ------------------------------------------------------------------ */
 const NAV_ITEMS: Array<
   | { id: string; label: string; href: string }
@@ -28,13 +28,9 @@ const NAV_ITEMS: Array<
         label: "Start a chapter",
         href: "/start-a-chapter",
       },
-      {
-        id: "nav-program-volunteer",
-        label: "Volunteer",
-        href: "/volunteer",
-      },
     ],
   },
+  { id: "nav-volunteer", label: "Volunteer", href: "/volunteer" },
   { id: "nav-workshops", label: "Workshops", href: "/workshops" },
   { id: "nav-brands", label: "Brands", href: "/partners" },
   { id: "nav-about", label: "About", href: "/about" },

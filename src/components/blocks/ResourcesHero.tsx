@@ -1,9 +1,21 @@
 import Image from "next/image";
 import Link from "next/link";
+import * as React from "react";
 import { stegaClean } from "next-sanity";
 
 import type { PAGE_QUERYResult } from "@/sanity/types";
 import { urlFor } from "@/sanity/lib/image";
+
+type ColorLike =
+  | {
+      _type?: "color";
+      hex?: string;
+      alpha?: number | null;
+      rgb?: { r?: number; g?: number; b?: number; a?: number | null };
+      hsl?: { h?: number; s?: number; l?: number; a?: number | null };
+    }
+  | null
+  | undefined;
 
 type ResourcesHeroBlock = Extract<
   NonNullable<NonNullable<PAGE_QUERYResult>["content"]>[number],
@@ -23,6 +35,11 @@ type ExtendedResourcesHeroBlock = ResourcesHeroBlock & {
   overlayOpacity?: number | null;
   primaryCta?: CTA;
   secondaryCta?: CTA;
+  headingColor?: ColorLike;
+  taglineColor?: ColorLike;
+  highlightTitleColor?: ColorLike;
+  highlightBodyColor?: ColorLike;
+  enablePetalAnimation?: boolean | null;
 };
 
 type IconProps = { tone?: Tone | null; name?: IconName };
@@ -174,6 +191,38 @@ function clean(value: string | null | undefined) {
   return typeof value === "string" ? stegaClean(value) : value ?? "";
 }
 
+function toCssColor(color: ColorLike, fallback: string) {
+  if (!color) return fallback;
+  if (color.hex) return color.hex;
+  if (
+    color.rgb &&
+    typeof color.rgb.r === "number" &&
+    typeof color.rgb.g === "number" &&
+    typeof color.rgb.b === "number"
+  ) {
+    const a = typeof color.rgb.a === "number" ? color.rgb.a : 1;
+    return `rgba(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${a})`;
+  }
+  if (
+    color.hsl &&
+    typeof color.hsl.h === "number" &&
+    typeof color.hsl.s === "number" &&
+    typeof color.hsl.l === "number"
+  ) {
+    const a = typeof color.hsl.a === "number" ? color.hsl.a : 1;
+    return `hsla(${color.hsl.h}, ${color.hsl.s}%, ${color.hsl.l}%, ${a})`;
+  }
+  return fallback;
+}
+
+const PETAL_COUNT = 36;
+const PETAL_COLORS = [
+  "rgba(255,240,246,0.9)",
+  "rgba(255,220,235,0.75)",
+  "rgba(255,228,240,0.85)",
+  "rgba(255,255,255,0.9)",
+];
+
 export function ResourcesHero(block: ExtendedResourcesHeroBlock) {
   const {
     heading,
@@ -184,6 +233,11 @@ export function ResourcesHero(block: ExtendedResourcesHeroBlock) {
     overlayOpacity,
     primaryCta,
     secondaryCta,
+    headingColor,
+    taglineColor,
+    highlightTitleColor,
+    highlightBodyColor,
+    enablePetalAnimation,
   } = block;
 
   const safeHeading = clean(heading);
@@ -209,6 +263,70 @@ export function ResourcesHero(block: ExtendedResourcesHeroBlock) {
 
   const hasBackgroundImage = Boolean(backgroundImage && (backgroundImage as { asset?: { _ref?: string } }).asset?._ref);
   const overlay = Math.max(0, Math.min(100, (overlayOpacity ?? (hasBackgroundImage ? 85 : 0)))) / 100;
+  const headingCss = toCssColor(headingColor, "var(--foreground)");
+  const taglineCss = toCssColor(taglineColor, "var(--muted-foreground)");
+  const highlightTitleCss = toCssColor(highlightTitleColor, "var(--foreground)");
+  const highlightBodyCss = toCssColor(highlightBodyColor, "var(--muted-foreground)");
+
+  const petalRefs = React.useRef<(HTMLSpanElement | null)[]>([]);
+  const petals = React.useMemo(() => Array.from({ length: PETAL_COUNT }, (_, index) => index), []);
+
+  React.useEffect(() => {
+    if (!enablePetalAnimation) return undefined;
+    let ctx: { revert(): void } | undefined;
+    let cancelled = false;
+
+    const init = async () => {
+      const { gsap } = await import("gsap");
+      if (cancelled) return;
+
+      const randomize = (petal: HTMLElement) => {
+        const startX = Math.random() * 120 - 10;
+        const startY = -20 - Math.random() * 20;
+        const scale = 0.5 + Math.random() * 0.7;
+        gsap.set(petal, {
+          x: `${startX}vw`,
+          y: `${startY}vh`,
+          opacity: 0,
+          rotation: Math.random() * 360,
+          scale,
+          filter: `blur(${Math.random() * 1.4}px)`,
+        });
+      };
+
+      ctx = gsap.context(() => {
+        petalRefs.current.forEach((petal) => {
+          if (!petal) return;
+          randomize(petal);
+          const drift = 20 + Math.random() * 60;
+          const horizontalDirection = Math.random() > 0.5 ? 1 : -1;
+          const duration = 18 + Math.random() * 8;
+          gsap.to(petal, {
+            y: "110vh",
+            x: `+=${horizontalDirection * drift}vw`,
+            opacity: 0.55 + Math.random() * 0.4,
+            rotation: "+=220",
+            ease: "sine.inOut",
+            duration,
+            delay: Math.random() * 6,
+            repeat: -1,
+            repeatDelay: Math.random() * 2,
+            onRepeat: () => {
+              if (!petal) return;
+              randomize(petal);
+            },
+          });
+        });
+      });
+    };
+
+    init();
+
+    return () => {
+      cancelled = true;
+      ctx?.revert();
+    };
+  }, [enablePetalAnimation]);
 
   const renderButton = (cta: { label: string; href: string }, variant: "primary" | "secondary") => {
     const classes =
@@ -259,29 +377,55 @@ export function ResourcesHero(block: ExtendedResourcesHeroBlock) {
   return (
     <section className="relative overflow-hidden bg-[color:var(--background)] py-20 lg:py-32">
       {hasBackgroundImage && backgroundImage ? (
-        <div className="absolute inset-0" aria-hidden>
+        <div className="absolute inset-0 z-0" aria-hidden>
           <Image
             src={urlFor(backgroundImage).width(2400).height(1350).fit("crop").url()}
             alt={clean((backgroundImage as { alt?: string }).alt) || ""}
             fill
-            className="object-cover"
+            className="object-cover z-0"
             priority
           />
-          <div className="absolute inset-0" style={{ backgroundColor: "var(--background)", opacity: overlay }} />
+          <div
+            className="absolute inset-0 z-[1]"
+            style={{ backgroundColor: "var(--background)", opacity: overlay }}
+          />
         </div>
       ) : null}
 
-      <div className="relative z-10">
+      {enablePetalAnimation ? (
+        <div className="pointer-events-none absolute inset-0 z-10 overflow-hidden">
+          {petals.map((index) => (
+            <span
+              key={index}
+              ref={(el) => {
+                petalRefs.current[index] = el;
+              }}
+              className="absolute left-0 top-0 h-10 w-6 origin-center rounded-full opacity-0"
+              style={{
+                background: `radial-gradient(circle at 30% 30%, ${PETAL_COLORS[index % PETAL_COLORS.length]} 0%, rgba(255,255,255,0) 70%)`,
+              }}
+            />
+          ))}
+        </div>
+      ) : null}
+
+      <div className="relative z-20">
         <div className="container mx-auto px-4">
           <div className="mx-auto flex max-w-5xl flex-col text-center">
             <div className="space-y-6">
               {safeHeading ? (
-                <h1 className="font-serif text-4xl font-bold text-[color:var(--foreground)] text-balance md:text-5xl lg:text-6xl">
+                <h1
+                  className="font-serif text-4xl font-bold text-balance md:text-5xl lg:text-6xl"
+                  style={{ color: headingCss }}
+                >
                   {safeHeading}
                 </h1>
               ) : null}
               {safeTagline ? (
-                <p className="text-xl text-[color:var(--muted-foreground)] leading-relaxed text-pretty md:text-2xl">
+                <p
+                  className="text-xl leading-relaxed text-pretty md:text-2xl"
+                  style={{ color: taglineCss }}
+                >
                   {safeTagline}
                 </p>
               ) : null}
@@ -296,12 +440,15 @@ export function ResourcesHero(block: ExtendedResourcesHeroBlock) {
                   >
                     <Icon tone={card.tone} name={card.icon} />
                     {card.title ? (
-                      <h3 className="font-serif text-lg font-semibold text-[color:var(--foreground)]">
+                      <h3
+                        className="font-serif text-lg font-semibold"
+                        style={{ color: highlightTitleCss }}
+                      >
                         {clean(card.title)}
                       </h3>
                     ) : null}
                     {card.description ? (
-                      <p className="text-sm text-[color:var(--muted-foreground)] leading-relaxed">
+                      <p className="text-sm leading-relaxed" style={{ color: highlightBodyCss }}>
                         {clean(card.description)}
                       </p>
                     ) : null}

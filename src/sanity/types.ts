@@ -293,6 +293,112 @@ export type Newsletter = {
   }>;
 };
 
+export type VolunteerApplication = {
+  _type: "volunteerApplication";
+  sectionId?: string;
+  heading?: string;
+  intro?: string;
+  processHeading?: string;
+  processSubheading?: string;
+  steps?: Array<{
+    title?: string;
+    description?: string;
+    timeEstimate?: string;
+    _key: string;
+  }>;
+  requirementsHeading?: string;
+  requirementsIntro?: string;
+  requirements?: Array<string>;
+  tracks?: Array<{
+    title?: string;
+    description?: string;
+    tone?: "primary" | "secondary" | "accent";
+    highlights?: Array<{
+      icon?: "clock" | "users" | "calendar" | "map" | "sparkles" | "globe";
+      label?: string;
+      _key: string;
+    }>;
+    cta?: {
+      label?: string;
+      href?: string;
+    };
+    _key: string;
+  }>;
+  supportHeading?: string;
+  supportBody?: string;
+  supportLinks?: Array<{
+    label?: string;
+    href?: string;
+    _key: string;
+  }>;
+};
+
+export type VolunteerBenefits = {
+  _type: "volunteerBenefits";
+  sectionId?: string;
+  heading?: string;
+  intro?: string;
+  benefits?: Array<{
+    icon?: string;
+    tone?: "primary" | "secondary" | "accent";
+    title?: string;
+    description?: string;
+    points?: Array<string>;
+    _type: "benefit";
+    _key: string;
+  }>;
+  testimonialsHeading?: string;
+  testimonialsIntro?: string;
+  testimonials?: Array<{
+    quote?: string;
+    name?: string;
+    role?: string;
+    _type: "testimonial";
+    _key: string;
+  }>;
+};
+
+export type VolunteerTracks = {
+  _type: "volunteerTracks";
+  sectionId?: string;
+  heading?: string;
+  intro?: string;
+  tracks?: Array<{
+    badgeLabel?: string;
+    tone?: "primary" | "secondary" | "accent" | "muted";
+    icon?: string;
+    title?: string;
+    description?: string;
+    keyAreasHeading?: string;
+    keyAreas?: Array<string>;
+    commitmentHeading?: string;
+    commitmentItems?: Array<{
+      icon?: string;
+      text?: string;
+      _type: "commitment";
+      _key: string;
+    }>;
+    benefitsHeading?: string;
+    benefits?: Array<string>;
+    cta?: {
+      label?: string;
+      href?: string;
+    };
+    _type: "track";
+    _key: string;
+  }>;
+  callout?: {
+    heading?: string;
+    body?: string;
+    links?: Array<{
+      label?: string;
+      href?: string;
+      _type: "link";
+      _key: string;
+    }>;
+  };
+};
+
 export type WorkshopsDirectory = {
   _type: "workshopsDirectory";
   sectionId?: string;
@@ -602,6 +708,8 @@ export type ResourcesHero = {
     _type: "image";
   };
   overlayOpacity?: number;
+  headingColor?: Color;
+  taglineColor?: Color;
   highlights?: Array<{
     title?: string;
     description?: string;
@@ -609,6 +717,9 @@ export type ResourcesHero = {
     tone?: "primary" | "secondary" | "accent";
     _key: string;
   }>;
+  highlightTitleColor?: Color;
+  highlightBodyColor?: Color;
+  enablePetalAnimation?: boolean;
   ctaLabel?: string;
   primaryCta?: {
     label?: string;
@@ -816,7 +927,13 @@ export type PageBuilder = Array<{
   _key: string;
 } & PodcastHighlights | {
   _key: string;
-} & WorkshopsDirectory>;
+} & WorkshopsDirectory | {
+  _key: string;
+} & VolunteerTracks | {
+  _key: string;
+} & VolunteerBenefits | {
+  _key: string;
+} & VolunteerApplication>;
 
 export type Page = {
   _id: string;
@@ -1158,7 +1275,7 @@ export type SanityAssetSourceData = {
   url?: string;
 };
 
-export type AllSanitySchemaTypes = WorkshopCategory | Workshop | ColorChoice | HeroBanner | SiteSettings | Newsletter | WorkshopsDirectory | PodcastHighlights | LeadershipSection | StoriesImpact | MissionStatement | AboutOverview | ChapterRequirements | ChapterApplication | SplitImage | NewsletterArchive | ResourcesHero | InitiativesGrid | Hero | Features | Faqs | Faq | PageBuilder | Page | Event | Category | BlockContent | BlogPost | Author | Color | RgbaColor | HsvaColor | HslaColor | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageHotspot | SanityImageCrop | SanityFileAsset | SanityImageAsset | SanityImageMetadata | Geopoint | Slug | SanityAssetSourceData;
+export type AllSanitySchemaTypes = WorkshopCategory | Workshop | ColorChoice | HeroBanner | SiteSettings | Newsletter | VolunteerApplication | VolunteerBenefits | VolunteerTracks | WorkshopsDirectory | PodcastHighlights | LeadershipSection | StoriesImpact | MissionStatement | AboutOverview | ChapterRequirements | ChapterApplication | SplitImage | NewsletterArchive | ResourcesHero | InitiativesGrid | Hero | Features | Faqs | Faq | PageBuilder | Page | Event | Category | BlockContent | BlogPost | Author | Color | RgbaColor | HsvaColor | HslaColor | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageHotspot | SanityImageCrop | SanityFileAsset | SanityImageAsset | SanityImageMetadata | Geopoint | Slug | SanityAssetSourceData;
 export declare const internalGroqTypeReferenceTo: unique symbol;
 // Source: ./src/sanity/lib/queries.ts
 // Variable: BLOG_POSTS_QUERY
@@ -1377,7 +1494,7 @@ export type EVENT_QUERYResult = {
   } | null;
 } | null;
 // Variable: PAGE_QUERY
-// Query: *[_type == "page" && slug.current == $slug][0]{  _id,  _type,  title,  slug,  content[]{    ...,    _type == "heroBanner" => {      ...,      titleColor,      kickerColor,      bodyColor,      overlayOpacity    },    _type == "faqs" => {      ...,      faqs[]->    },    _type == "workshopsDirectory" => {      ...,      categoryCards[]->{        _id,        title,        slug,        icon,        description      },      "workshops": *[_type == "workshop" && defined(slug.current)]        | order(start asc){          _id,          title,          "slug": slug.current,          summary,          categories[]->{            _id,            title,            slug,            icon,            description          },          start,          end,          location,          capacity,          registeredCount,          needsVolunteers,          registerUrl,          volunteerUrl,          heroImage        }    }  }}
+// Query: *[_type == "page" && slug.current == $slug][0]{  _id,  _type,  title,  slug,  content[]{    ...,    _type == "heroBanner" => {      ...,      titleColor,      kickerColor,      bodyColor,      overlayOpacity    },    _type == "faqs" => {      ...,      faqs[]->    },    _type == "workshopsDirectory" => {      ...,      categoryCards[]->{        _id,        title,        slug,        icon,        description      },      "workshops": *[_type == "workshop"]        | order(start asc){          _id,          title,          "slug": slug.current,          summary,          categories[]->{            _id,            title,            slug,            icon,            description          },          start,          end,          location,          capacity,          registeredCount,          needsVolunteers,          registerUrl,          volunteerUrl,          heroImage        }    }  }}
 export type PAGE_QUERYResult = {
   _id: string;
   _type: "page";
@@ -1809,6 +1926,8 @@ export type PAGE_QUERYResult = {
       _type: "image";
     };
     overlayOpacity?: number;
+    headingColor?: Color;
+    taglineColor?: Color;
     highlights?: Array<{
       title?: string;
       description?: string;
@@ -1816,6 +1935,9 @@ export type PAGE_QUERYResult = {
       tone?: "accent" | "primary" | "secondary";
       _key: string;
     }>;
+    highlightTitleColor?: Color;
+    highlightBodyColor?: Color;
+    enablePetalAnimation?: boolean;
     ctaLabel?: string;
     primaryCta?: {
       label?: string;
@@ -1863,6 +1985,109 @@ export type PAGE_QUERYResult = {
         value?: string;
         label?: string;
         color?: "accent" | "primary" | "secondary";
+        _key: string;
+      }>;
+    };
+  } | {
+    _key: string;
+    _type: "volunteerApplication";
+    sectionId?: string;
+    heading?: string;
+    intro?: string;
+    processHeading?: string;
+    processSubheading?: string;
+    steps?: Array<{
+      title?: string;
+      description?: string;
+      timeEstimate?: string;
+      _key: string;
+    }>;
+    requirementsHeading?: string;
+    requirementsIntro?: string;
+    requirements?: Array<string>;
+    tracks?: Array<{
+      title?: string;
+      description?: string;
+      tone?: "accent" | "primary" | "secondary";
+      highlights?: Array<{
+        icon?: "calendar" | "clock" | "globe" | "map" | "sparkles" | "users";
+        label?: string;
+        _key: string;
+      }>;
+      cta?: {
+        label?: string;
+        href?: string;
+      };
+      _key: string;
+    }>;
+    supportHeading?: string;
+    supportBody?: string;
+    supportLinks?: Array<{
+      label?: string;
+      href?: string;
+      _key: string;
+    }>;
+  } | {
+    _key: string;
+    _type: "volunteerBenefits";
+    sectionId?: string;
+    heading?: string;
+    intro?: string;
+    benefits?: Array<{
+      icon?: string;
+      tone?: "accent" | "primary" | "secondary";
+      title?: string;
+      description?: string;
+      points?: Array<string>;
+      _type: "benefit";
+      _key: string;
+    }>;
+    testimonialsHeading?: string;
+    testimonialsIntro?: string;
+    testimonials?: Array<{
+      quote?: string;
+      name?: string;
+      role?: string;
+      _type: "testimonial";
+      _key: string;
+    }>;
+  } | {
+    _key: string;
+    _type: "volunteerTracks";
+    sectionId?: string;
+    heading?: string;
+    intro?: string;
+    tracks?: Array<{
+      badgeLabel?: string;
+      tone?: "accent" | "muted" | "primary" | "secondary";
+      icon?: string;
+      title?: string;
+      description?: string;
+      keyAreasHeading?: string;
+      keyAreas?: Array<string>;
+      commitmentHeading?: string;
+      commitmentItems?: Array<{
+        icon?: string;
+        text?: string;
+        _type: "commitment";
+        _key: string;
+      }>;
+      benefitsHeading?: string;
+      benefits?: Array<string>;
+      cta?: {
+        label?: string;
+        href?: string;
+      };
+      _type: "track";
+      _key: string;
+    }>;
+    callout?: {
+      heading?: string;
+      body?: string;
+      links?: Array<{
+        label?: string;
+        href?: string;
+        _type: "link";
         _key: string;
       }>;
     };
@@ -1918,7 +2143,7 @@ export type PAGE_QUERYResult = {
   }> | null;
 } | null;
 // Variable: HOME_PAGE_QUERY
-// Query: *[_id == "siteSettings"][0]{  homePage->{    _id,    _type,    title,    slug,    content[]{      ...,      _type == "heroBanner" => {        ...,        titleColor,        kickerColor,        bodyColor,        overlayOpacity      },      _type == "faqs" => { ..., faqs[]-> },      _type == "workshopsDirectory" => {        ...,        categoryCards[]->{          _id,          title,          slug,          icon,          description        },        "workshops": *[_type == "workshop" && defined(slug.current)]          | order(start asc){            _id,            title,            "slug": slug.current,            summary,            categories[]->{              _id,              title,              slug,              icon,              description            },            start,            end,            location,            capacity,            registeredCount,            needsVolunteers,            registerUrl,            volunteerUrl,            heroImage          }      }    }  }}
+// Query: *[_id == "siteSettings"][0]{  homePage->{    _id,    _type,    title,    slug,    content[]{      ...,      _type == "heroBanner" => {        ...,        titleColor,        kickerColor,        bodyColor,        overlayOpacity      },      _type == "faqs" => { ..., faqs[]-> },      _type == "workshopsDirectory" => {        ...,        categoryCards[]->{          _id,          title,          slug,          icon,          description        },        "workshops": *[_type == "workshop"]          | order(start asc){            _id,            title,            "slug": slug.current,            summary,            categories[]->{              _id,              title,              slug,              icon,              description            },            start,            end,            location,            capacity,            registeredCount,            needsVolunteers,            registerUrl,            volunteerUrl,            heroImage          }      }    }  }}
 export type HOME_PAGE_QUERYResult = {
   homePage: null;
 } | {
@@ -2353,6 +2578,8 @@ export type HOME_PAGE_QUERYResult = {
         _type: "image";
       };
       overlayOpacity?: number;
+      headingColor?: Color;
+      taglineColor?: Color;
       highlights?: Array<{
         title?: string;
         description?: string;
@@ -2360,6 +2587,9 @@ export type HOME_PAGE_QUERYResult = {
         tone?: "accent" | "primary" | "secondary";
         _key: string;
       }>;
+      highlightTitleColor?: Color;
+      highlightBodyColor?: Color;
+      enablePetalAnimation?: boolean;
       ctaLabel?: string;
       primaryCta?: {
         label?: string;
@@ -2407,6 +2637,109 @@ export type HOME_PAGE_QUERYResult = {
           value?: string;
           label?: string;
           color?: "accent" | "primary" | "secondary";
+          _key: string;
+        }>;
+      };
+    } | {
+      _key: string;
+      _type: "volunteerApplication";
+      sectionId?: string;
+      heading?: string;
+      intro?: string;
+      processHeading?: string;
+      processSubheading?: string;
+      steps?: Array<{
+        title?: string;
+        description?: string;
+        timeEstimate?: string;
+        _key: string;
+      }>;
+      requirementsHeading?: string;
+      requirementsIntro?: string;
+      requirements?: Array<string>;
+      tracks?: Array<{
+        title?: string;
+        description?: string;
+        tone?: "accent" | "primary" | "secondary";
+        highlights?: Array<{
+          icon?: "calendar" | "clock" | "globe" | "map" | "sparkles" | "users";
+          label?: string;
+          _key: string;
+        }>;
+        cta?: {
+          label?: string;
+          href?: string;
+        };
+        _key: string;
+      }>;
+      supportHeading?: string;
+      supportBody?: string;
+      supportLinks?: Array<{
+        label?: string;
+        href?: string;
+        _key: string;
+      }>;
+    } | {
+      _key: string;
+      _type: "volunteerBenefits";
+      sectionId?: string;
+      heading?: string;
+      intro?: string;
+      benefits?: Array<{
+        icon?: string;
+        tone?: "accent" | "primary" | "secondary";
+        title?: string;
+        description?: string;
+        points?: Array<string>;
+        _type: "benefit";
+        _key: string;
+      }>;
+      testimonialsHeading?: string;
+      testimonialsIntro?: string;
+      testimonials?: Array<{
+        quote?: string;
+        name?: string;
+        role?: string;
+        _type: "testimonial";
+        _key: string;
+      }>;
+    } | {
+      _key: string;
+      _type: "volunteerTracks";
+      sectionId?: string;
+      heading?: string;
+      intro?: string;
+      tracks?: Array<{
+        badgeLabel?: string;
+        tone?: "accent" | "muted" | "primary" | "secondary";
+        icon?: string;
+        title?: string;
+        description?: string;
+        keyAreasHeading?: string;
+        keyAreas?: Array<string>;
+        commitmentHeading?: string;
+        commitmentItems?: Array<{
+          icon?: string;
+          text?: string;
+          _type: "commitment";
+          _key: string;
+        }>;
+        benefitsHeading?: string;
+        benefits?: Array<string>;
+        cta?: {
+          label?: string;
+          href?: string;
+        };
+        _type: "track";
+        _key: string;
+      }>;
+      callout?: {
+        heading?: string;
+        body?: string;
+        links?: Array<{
+          label?: string;
+          href?: string;
+          _type: "link";
           _key: string;
         }>;
       };
@@ -2463,7 +2796,7 @@ export type HOME_PAGE_QUERYResult = {
   } | null;
 } | null;
 // Variable: WORKSHOPS_QUERY
-// Query: *[_type == "workshop" && defined(slug.current)]    | order(start asc){      _id,      title,      "slug": slug.current,      summary,      categories,      start,      end,      location,      capacity,      registeredCount,      needsVolunteers,      registerUrl,      volunteerUrl,      heroImage,      categories[]->{        _id,        title,        slug,        icon,        description      }    }
+// Query: *[_type == "workshop"]    | order(start asc){      _id,      title,      "slug": slug.current,      summary,      categories,      start,      end,      location,      capacity,      registeredCount,      needsVolunteers,      registerUrl,      volunteerUrl,      heroImage,      categories[]->{        _id,        title,        slug,        icon,        description      }    }
 export type WORKSHOPS_QUERYResult = Array<{
   _id: string;
   title: string | null;
@@ -2673,9 +3006,9 @@ declare module "@sanity/client" {
     "\n  *[_type == \"newsletter\" && slug.current == $slug][0]{\n    _id,\n    title,\n    issueLabel,\n    publishedAt,\n    readTime,\n    excerpt,\n    coverImage,\n    body\n  }\n": NEWSLETTER_QUERYResult;
     "\n  *[_type == \"event\" && defined(slug.current)] | order(date asc)[0...20]{\n    _id,\n    title,\n    slug,\n    date,\n    location,\n    needsVolunteer\n  }\n": EVENTS_QUERYResult;
     "\n  *[_type == \"event\" && slug.current == $slug][0]{\n    _id,\n    title,\n    slug,\n    description,\n    date,\n    location,\n    link,\n    needsVolunteer,\n    image\n  }\n": EVENT_QUERYResult;
-    "\n*[_type == \"page\" && slug.current == $slug][0]{\n  _id,\n  _type,\n  title,\n  slug,\n  content[]{\n    ...,\n    _type == \"heroBanner\" => {\n      ...,\n      titleColor,\n      kickerColor,\n      bodyColor,\n      overlayOpacity\n    },\n    _type == \"faqs\" => {\n      ...,\n      faqs[]->\n    },\n    _type == \"workshopsDirectory\" => {\n      ...,\n      categoryCards[]->{\n        _id,\n        title,\n        slug,\n        icon,\n        description\n      },\n      \"workshops\": *[_type == \"workshop\" && defined(slug.current)]\n        | order(start asc){\n          _id,\n          title,\n          \"slug\": slug.current,\n          summary,\n          categories[]->{\n            _id,\n            title,\n            slug,\n            icon,\n            description\n          },\n          start,\n          end,\n          location,\n          capacity,\n          registeredCount,\n          needsVolunteers,\n          registerUrl,\n          volunteerUrl,\n          heroImage\n        }\n    }\n  }\n}\n": PAGE_QUERYResult;
-    "\n*[_id == \"siteSettings\"][0]{\n  homePage->{\n    _id,\n    _type,\n    title,\n    slug,\n    content[]{\n      ...,\n      _type == \"heroBanner\" => {\n        ...,\n        titleColor,\n        kickerColor,\n        bodyColor,\n        overlayOpacity\n      },\n      _type == \"faqs\" => { ..., faqs[]-> },\n      _type == \"workshopsDirectory\" => {\n        ...,\n        categoryCards[]->{\n          _id,\n          title,\n          slug,\n          icon,\n          description\n        },\n        \"workshops\": *[_type == \"workshop\" && defined(slug.current)]\n          | order(start asc){\n            _id,\n            title,\n            \"slug\": slug.current,\n            summary,\n            categories[]->{\n              _id,\n              title,\n              slug,\n              icon,\n              description\n            },\n            start,\n            end,\n            location,\n            capacity,\n            registeredCount,\n            needsVolunteers,\n            registerUrl,\n            volunteerUrl,\n            heroImage\n          }\n      }\n    }\n  }\n}\n": HOME_PAGE_QUERYResult;
-    "\n  *[_type == \"workshop\" && defined(slug.current)]\n    | order(start asc){\n      _id,\n      title,\n      \"slug\": slug.current,\n      summary,\n      categories,\n      start,\n      end,\n      location,\n      capacity,\n      registeredCount,\n      needsVolunteers,\n      registerUrl,\n      volunteerUrl,\n      heroImage,\n      categories[]->{\n        _id,\n        title,\n        slug,\n        icon,\n        description\n      }\n    }\n": WORKSHOPS_QUERYResult;
+    "\n*[_type == \"page\" && slug.current == $slug][0]{\n  _id,\n  _type,\n  title,\n  slug,\n  content[]{\n    ...,\n    _type == \"heroBanner\" => {\n      ...,\n      titleColor,\n      kickerColor,\n      bodyColor,\n      overlayOpacity\n    },\n    _type == \"faqs\" => {\n      ...,\n      faqs[]->\n    },\n    _type == \"workshopsDirectory\" => {\n      ...,\n      categoryCards[]->{\n        _id,\n        title,\n        slug,\n        icon,\n        description\n      },\n      \"workshops\": *[_type == \"workshop\"]\n        | order(start asc){\n          _id,\n          title,\n          \"slug\": slug.current,\n          summary,\n          categories[]->{\n            _id,\n            title,\n            slug,\n            icon,\n            description\n          },\n          start,\n          end,\n          location,\n          capacity,\n          registeredCount,\n          needsVolunteers,\n          registerUrl,\n          volunteerUrl,\n          heroImage\n        }\n    }\n  }\n}\n": PAGE_QUERYResult;
+    "\n*[_id == \"siteSettings\"][0]{\n  homePage->{\n    _id,\n    _type,\n    title,\n    slug,\n    content[]{\n      ...,\n      _type == \"heroBanner\" => {\n        ...,\n        titleColor,\n        kickerColor,\n        bodyColor,\n        overlayOpacity\n      },\n      _type == \"faqs\" => { ..., faqs[]-> },\n      _type == \"workshopsDirectory\" => {\n        ...,\n        categoryCards[]->{\n          _id,\n          title,\n          slug,\n          icon,\n          description\n        },\n        \"workshops\": *[_type == \"workshop\"]\n          | order(start asc){\n            _id,\n            title,\n            \"slug\": slug.current,\n            summary,\n            categories[]->{\n              _id,\n              title,\n              slug,\n              icon,\n              description\n            },\n            start,\n            end,\n            location,\n            capacity,\n            registeredCount,\n            needsVolunteers,\n            registerUrl,\n            volunteerUrl,\n            heroImage\n          }\n      }\n    }\n  }\n}\n": HOME_PAGE_QUERYResult;
+    "\n  *[_type == \"workshop\"]\n    | order(start asc){\n      _id,\n      title,\n      \"slug\": slug.current,\n      summary,\n      categories,\n      start,\n      end,\n      location,\n      capacity,\n      registeredCount,\n      needsVolunteers,\n      registerUrl,\n      volunteerUrl,\n      heroImage,\n      categories[]->{\n        _id,\n        title,\n        slug,\n        icon,\n        description\n      }\n    }\n": WORKSHOPS_QUERYResult;
     "\n  *[_type == \"workshop\" && slug.current == $slug][0]{\n    _id,\n    title,\n    \"slug\": slug.current,\n    summary,\n    categories[]->{\n      _id,\n      title,\n      slug,\n      icon,\n      description\n    },\n    start,\n    end,\n    location,\n    capacity,\n    registeredCount,\n    needsVolunteers,\n    registerUrl,\n    volunteerUrl,\n    heroImage,\n    hosts[]{\n      _key,\n      name,\n      role,\n      avatar,\n      socialLinks[]{\n        _key,\n        label,\n        url\n      }\n    },\n    contact{\n      ctaLabel,\n      instructions,\n      email,\n      phone,\n      responseNote\n    },\n    externalLinks[]{\n      _key,\n      label,\n      href\n    },\n    body\n  }\n": WORKSHOP_QUERYResult;
     "\n  *[_type == \"workshop\" && defined(slug.current)]{\n    \"slug\": slug.current\n  }\n": WORKSHOP_SLUGS_QUERYResult;
     "\n*[_id == \"siteSettings\"][0]{\n  logo,\n  orgName,\n  footerBlurb,\n  social{\n    facebook, twitter, instagram, youtube\n  },\n  quickLinks[]{\n    _key, label, href\n  },\n  contactEmail,\n  contactPhone,\n  address,\n  newsletter{\n    enabled, blurb\n  }\n}\n": SITE_SETTINGS_QUERYResult;

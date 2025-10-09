@@ -136,7 +136,7 @@ export const PAGE_QUERY = defineQuery(`
         icon,
         description
       },
-      "workshops": *[_type == "workshop" && defined(slug.current)]
+      "workshops": *[_type == "workshop"]
         | order(start asc){
           _id,
           title,
@@ -190,7 +190,7 @@ export const HOME_PAGE_QUERY = defineQuery(`
           icon,
           description
         },
-        "workshops": *[_type == "workshop" && defined(slug.current)]
+        "workshops": *[_type == "workshop"]
           | order(start asc){
             _id,
             title,
@@ -220,7 +220,7 @@ export const HOME_PAGE_QUERY = defineQuery(`
 `);
 
 export const WORKSHOPS_QUERY = defineQuery(`
-  *[_type == "workshop" && defined(slug.current)]
+  *[_type == "workshop"]
     | order(start asc){
       _id,
       title,

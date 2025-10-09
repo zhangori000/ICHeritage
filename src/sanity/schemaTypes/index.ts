@@ -23,6 +23,9 @@ import { storiesImpactType } from "./blocks/storiesImpactType";
 import { leadershipSectionType } from "./blocks/leadershipSectionType";
 import { podcastHighlightsType } from "./blocks/podcastHighlightsType";
 import { workshopsDirectoryType } from "./blocks/workshopsDirectoryType";
+import { volunteerTracksType } from "./blocks/volunteerTracksType";
+import { volunteerBenefitsType } from "./blocks/volunteerBenefitsType";
+import { volunteerApplicationType } from "./blocks/volunteerApplicationType";
 import newsletter from "./newsletter";
 import { siteSettingsType } from "./siteSettingsType";
 import { heroBannerType } from "./heroBannerType";
@@ -55,6 +58,9 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     leadershipSectionType,
     podcastHighlightsType,
     workshopsDirectoryType,
+    volunteerTracksType,
+    volunteerBenefitsType,
+    volunteerApplicationType,
     newsletter,
     siteSettingsType,
     heroBannerType,
