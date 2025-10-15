@@ -25,10 +25,6 @@ type VolunteerTracksBlock = {
     }> | null;
     benefitsHeading?: string | null;
     benefits?: Array<string | null> | null;
-    cta?: {
-      label?: string | null;
-      href?: string | null;
-    } | null;
   }> | null;
   callout?: {
     heading?: string | null;
@@ -54,9 +50,6 @@ const toneStyles: Record<
     iconRing: string;
     accentText: string;
     bulletDot: string;
-    cta: string;
-    ctaHover: string;
-    ctaText: string;
   }
 > = {
   primary: {
@@ -66,9 +59,6 @@ const toneStyles: Record<
     iconRing: "bg-[color:var(--primary-foreground)]/10 text-[color:var(--primary-foreground)]",
     accentText: "text-[color:var(--primary-foreground)]/90",
     bulletDot: "bg-[color:var(--primary-foreground)]",
-    cta: "bg-[color:var(--primary-foreground)]",
-    ctaHover: "hover:bg-[color:var(--primary-foreground)]/90",
-    ctaText: "text-[color:var(--primary)]",
   },
   secondary: {
     card: "bg-[color:var(--secondary)] text-[color:var(--secondary-foreground)]",
@@ -78,9 +68,6 @@ const toneStyles: Record<
       "bg-[color:var(--secondary-foreground)]/10 text-[color:var(--secondary-foreground)]",
     accentText: "text-[color:var(--secondary-foreground)]/90",
     bulletDot: "bg-[color:var(--secondary-foreground)]",
-    cta: "bg-[color:var(--secondary-foreground)]",
-    ctaHover: "hover:bg-[color:var(--secondary-foreground)]/90",
-    ctaText: "text-[color:var(--secondary)]",
   },
   accent: {
     card: "bg-[color:var(--accent)] text-[color:var(--accent-foreground)]",
@@ -89,9 +76,6 @@ const toneStyles: Record<
     iconRing: "bg-[color:var(--accent-foreground)]/10 text-[color:var(--accent-foreground)]",
     accentText: "text-[color:var(--accent-foreground)]/90",
     bulletDot: "bg-[color:var(--accent-foreground)]",
-    cta: "bg-[color:var(--accent-foreground)]",
-    ctaHover: "hover:bg-[color:var(--accent-foreground)]/90",
-    ctaText: "text-[color:var(--accent)]",
   },
   muted: {
     card: "bg-[color:var(--card)] text-[color:var(--foreground)]",
@@ -100,9 +84,6 @@ const toneStyles: Record<
     iconRing: "bg-[color:var(--accent)]/20 text-[color:var(--foreground)]",
     accentText: "text-[color:var(--muted-foreground)]",
     bulletDot: "bg-[color:var(--primary)]",
-    cta: "bg-[color:var(--primary)]",
-    ctaHover: "hover:bg-[color:var(--primary)]/90",
-    ctaText: "text-[color:var(--primary-foreground)]",
   },
 };
 
@@ -260,39 +241,6 @@ const renderCommitmentIcon = (
 
 const isInternalHref = (href?: string | null) => (href ? href.startsWith("/") : false);
 
-const CallToAction = ({
-  href,
-  label,
-  className,
-}: {
-  href?: string | null;
-  label?: string | null;
-  className: string;
-}) => {
-  const cleanedHref = href ?? "";
-  const cleanedLabel = clean(label);
-  if (!cleanedLabel) return null;
-  if (isInternalHref(cleanedHref)) {
-    return (
-      <Link href={cleanedHref} className={className}>
-        {cleanedLabel}
-        {iconMap["arrow-right"]}
-      </Link>
-    );
-  }
-  return (
-    <a
-      href={cleanedHref || "#"}
-      target={cleanedHref.startsWith("http") ? "_blank" : undefined}
-      rel={cleanedHref.startsWith("http") ? "noreferrer" : undefined}
-      className={className}
-    >
-      {cleanedLabel}
-      {iconMap["arrow-right"]}
-    </a>
-  );
-};
-
 export function VolunteerTracks(block: VolunteerTracksBlock) {
   const { sectionId, heading, intro, tracks, callout } = block;
   const anchor = sectionId?.trim() ? sectionId.trim() : undefined;
@@ -331,7 +279,6 @@ export function VolunteerTracks(block: VolunteerTracksBlock) {
                   commitmentItems,
                   benefitsHeading,
                   benefits,
-                  cta,
                 } = track ?? {};
 
                 const styles = toneStyles[tone ?? "primary"] ?? toneStyles.primary;
@@ -441,14 +388,6 @@ export function VolunteerTracks(block: VolunteerTracksBlock) {
                           </div>
                         </div>
                       ) : null}
-
-                      {cta?.label ? (
-                        <CallToAction
-                          href={cta?.href}
-                          label={cta?.label}
-                          className={`inline-flex w-full items-center justify-center gap-2 rounded-md px-6 py-2 text-sm font-medium shadow-xs transition-all ${styles.cta} ${styles.ctaHover} ${styles.ctaText}`}
-                        />
-                      ) : null}
                     </div>
                   </article>
                 );
@@ -473,7 +412,8 @@ export function VolunteerTracks(block: VolunteerTracksBlock) {
                   {callout.links.slice(0, 2).map((link, linkIndex) => {
                     const label = clean(link?.label);
                     if (!label) return null;
-                    const href = link?.href ?? "";
+                    const rawHref = link?.href ?? "";
+                    const href = rawHref && rawHref.startsWith("#") ? "/volunteer-opportunities" : rawHref;
                     const className =
                       "inline-flex w-full items-center justify-center gap-2 rounded-md border border-[color:var(--border)] px-6 py-2 text-sm font-medium text-[color:var(--foreground)] transition-all hover:bg-[color:var(--accent)]/10";
                     if (isInternalHref(href)) {

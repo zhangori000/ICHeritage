@@ -46,6 +46,8 @@ export const structure: StructureResolver = (S) =>
       // Events (your new type)
       S.documentTypeListItem("event").title("Events"),
 
+      S.documentTypeListItem("brand").title("Brands"),
+
       S.divider(),
 
       // Everything else (catch-all)
@@ -61,6 +63,7 @@ export const structure: StructureResolver = (S) =>
             "event",
             "newsletter",
             "siteSettings",
+            "brand",
           ].includes(item.getId()!)
       ),
     ]);

@@ -16,6 +16,8 @@ import { StoriesImpact } from "./blocks/StoriesImpact";
 import { LeadershipSection } from "./blocks/LeadershipSection";
 import { PodcastHighlights } from "./blocks/PodcastHighlights";
 import { WorkshopsDirectory } from "./blocks/WorkshopsDirectory";
+import { VolunteersDirectory } from "./blocks/VolunteersDirectory";
+import { BrandPromos } from "./blocks/BrandPromos";
 import { VolunteerTracks } from "./blocks/VolunteerTracks";
 import { VolunteerBenefits } from "./blocks/VolunteerBenefits";
 import { VolunteerApplication } from "./blocks/VolunteerApplication";
@@ -184,6 +186,30 @@ export function PageBuilder({
                   {...rest}
                   categoryCards={safeCategoryCards}
                   workshops={safeWorkshops}
+                />
+              </DragHandle>
+            );
+          }
+          case "volunteersDirectory": {
+            const { opportunities, ...rest } = block;
+            const safeOpportunities = Array.isArray(opportunities) ? opportunities : [];
+            return (
+              <DragHandle key={block._key}>
+                <VolunteersDirectory
+                  {...rest}
+                  opportunities={safeOpportunities}
+                />
+              </DragHandle>
+            );
+          }
+          case "brandPromos": {
+            const { brands, ...rest } = block;
+            const safeBrands = Array.isArray(brands) ? brands : [];
+            return (
+              <DragHandle key={block._key}>
+                <BrandPromos
+                  {...rest}
+                  brands={safeBrands}
                 />
               </DragHandle>
             );

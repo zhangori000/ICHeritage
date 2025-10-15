@@ -26,21 +26,6 @@ type VolunteerApplicationBlock = {
     | string
     | null
   > | null;
-  tracks?: Array<{
-    _key?: string;
-    title?: string | null;
-    description?: string | null;
-    highlights?: Array<{
-      _key?: string;
-      icon?: "clock" | "users" | "map" | "calendar" | "sparkles" | "globe" | null;
-      label?: string | null;
-    }> | null;
-    cta?: {
-      label?: string | null;
-      href?: string | null;
-    } | null;
-    tone?: "primary" | "secondary" | "accent" | null;
-  }> | null;
   supportHeading?: string | null;
   supportBody?: string | null;
   supportLinks?: Array<{
@@ -210,19 +195,15 @@ const arrowIcon = (
   </svg>
 );
 
-const DEFAULT_TRACK_LINKS: Record<string, string> = {
-  "organizational volunteers": "/forms/volunteer-organizational",
-  "workshop volunteers": "/forms/volunteer-workshop",
-};
-
 function renderSupportLink(link: { label: string; href: string }, key: string) {
-  const isInternal = link.href.startsWith("/");
+  const normalizedHref = link.href.startsWith("#") ? "/volunteer-opportunities" : link.href;
+  const isInternal = normalizedHref.startsWith("/");
   const className =
     "inline-flex items-center justify-center gap-2 rounded-md border border-[color:var(--border)] px-6 py-2 text-sm font-medium text-[color:var(--foreground)] transition-all hover:bg-[color:var(--accent)]/10";
 
   if (isInternal) {
     return (
-      <Link key={key} href={link.href} className={className}>
+      <Link key={key} href={normalizedHref} className={className}>
         {link.label}
         {arrowIcon}
       </Link>
@@ -230,7 +211,7 @@ function renderSupportLink(link: { label: string; href: string }, key: string) {
   }
 
   return (
-    <a key={key} href={link.href} className={className}>
+    <a key={key} href={normalizedHref || "#"} className={className}>
       {link.label}
       {arrowIcon}
     </a>
@@ -248,7 +229,6 @@ export function VolunteerApplication(block: VolunteerApplicationBlock) {
     requirementsHeading,
     requirementsIntro,
     requirements,
-    tracks,
     supportHeading,
     supportBody,
     supportLinks,
@@ -277,37 +257,6 @@ export function VolunteerApplication(block: VolunteerApplicationBlock) {
           return text ? { _key: item._key ?? crypto.randomUUID(), text } : null;
         })
         .filter((item): item is { _key: string; text: string } => Boolean(item))
-    : [];
-
-  const trackCards = Array.isArray(tracks)
-    ? tracks.map((card, idx) => {
-        const titleText = clean(card?.title);
-        const titleKey = titleText.toLowerCase();
-        const ctaHref = clean(card?.cta?.href) || DEFAULT_TRACK_LINKS[titleKey] || "#";
-
-        return {
-          _key: card?._key ?? card?.title ?? `track-${idx}`,
-          tone: card?.tone ?? (idx % 2 === 0 ? "primary" : "secondary"),
-          title: titleText,
-          description: clean(card?.description),
-          highlights: Array.isArray(card?.highlights)
-            ? card!.highlights!
-                .map((highlight) => ({
-                  _key: highlight?._key ?? highlight?.label ?? crypto.randomUUID(),
-                  icon: highlight?.icon ?? "clock",
-                  label: clean(highlight?.label),
-                }))
-                .filter((highlight) => highlight.label)
-            : [],
-          cta:
-            card?.cta?.label
-              ? {
-                  label: clean(card.cta.label),
-                  href: ctaHref,
-                }
-              : null,
-        };
-      })
     : [];
 
   const supportCtas = Array.isArray(supportLinks)
@@ -404,8 +353,8 @@ export function VolunteerApplication(block: VolunteerApplicationBlock) {
             </div>
           )}
 
-          <div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
-            <article className="flex flex-col gap-6 rounded-xl border border-[color:var(--border)] bg-[color:var(--card)] py-6 text-[color:var(--foreground)] shadow-sm">
+          <div className="grid grid-cols-1 gap-12">
+            <article className="flex flex-col gap-6 rounded-xl border border-[color:var(--border)] bg-[color:var(--card)] py-6 text-[color:var(--foreground)] shadow-sm lg:mx-auto lg:max-w-3xl">
               <div className="space-y-4 px-6">
                 {requirementsHeading ? (
                   <h3 className="font-serif text-2xl font-medium">{clean(requirementsHeading)}</h3>
@@ -429,72 +378,6 @@ export function VolunteerApplication(block: VolunteerApplicationBlock) {
                 </div>
               ) : null}
             </article>
-
-            <div className="space-y-6">
-              {trackCards.map((track) => {
-                const tone = track.tone ?? "primary";
-                const toneStyles =
-                  tone === "secondary"
-                    ? {
-                        card: "bg-[color:var(--secondary)] text-[color:var(--secondary-foreground)]",
-                        button:
-                          "inline-flex w-full items-center justify-center gap-2 rounded-md bg-[color:var(--secondary-foreground)] px-6 py-2 text-sm font-medium text-[color:var(--secondary)] transition-all hover:bg-[color:var(--secondary-foreground)]/90",
-                        iconColor: "text-[color:var(--secondary-foreground)]",
-                      }
-                    : tone === "accent"
-                    ? {
-                        card: "bg-[color:var(--accent)] text-[color:var(--accent-foreground)]",
-                        button:
-                          "inline-flex w-full items-center justify-center gap-2 rounded-md bg-[color:var(--accent-foreground)] px-6 py-2 text-sm font-medium text-[color:var(--accent)] transition-all hover:bg-[color:var(--accent-foreground)]/90",
-                        iconColor: "text-[color:var(--accent-foreground)]",
-                      }
-                    : {
-                        card: "bg-[color:var(--primary)] text-[color:var(--primary-foreground)]",
-                        button:
-                          "inline-flex w-full items-center justify-center gap-2 rounded-md bg-[color:var(--primary-foreground)] px-6 py-2 text-sm font-medium text-[color:var(--primary)] transition-all hover:bg-[color:var(--primary-foreground)]/90",
-                        iconColor: "text-[color:var(--primary-foreground)]",
-                      };
-
-                return (
-                  <article
-                    key={track._key}
-                    data-slot="card"
-                    className={`flex flex-col gap-6 rounded-xl border border-transparent py-6 shadow-sm ${toneStyles.card}`}
-                  >
-                    <div className="space-y-4 px-6">
-                      {track.title ? (
-                        <h3 className="font-serif text-2xl font-medium">{track.title}</h3>
-                      ) : null}
-                      {track.description ? (
-                        <p className="text-sm opacity-90 leading-relaxed">{track.description}</p>
-                      ) : null}
-                    </div>
-                    {track.highlights.length > 0 ? (
-                      <div className="space-y-2 px-6">
-                        {track.highlights.map((highlight) => {
-                          if (!highlight.label) return null;
-                          const icon = highlight.icon ? iconMap[highlight.icon] ?? iconMap.clock : iconMap.clock;
-                          return (
-                            <div key={highlight._key} className="flex items-center gap-2 text-sm opacity-90">
-                              <span className={toneStyles.iconColor}>{icon}</span>
-                              <span>{highlight.label}</span>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    ) : null}
-                    {track.cta ? (
-                      <div className="px-6">
-                        <a href={track.cta.href} className={toneStyles.button}>
-                          {track.cta.label}
-                          {arrowIcon}
-                        </a>
-                      </div>
-                    ) : null}
-                  </article>
-                );
-              })}
-            </div>
           </div>
 
           {(supportHeading || supportBody || supportCtas.length > 0) && (

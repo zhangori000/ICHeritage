@@ -148,26 +148,6 @@ export const volunteerTracksType = defineType({
               of: [{ type: "string" }],
               validation: (rule) => rule.min(1),
             }),
-            defineField({
-              name: "cta",
-              title: "Primary CTA",
-              type: "object",
-              fields: [
-                defineField({
-                  name: "label",
-                  title: "Label",
-                  type: "string",
-                  validation: (rule) => rule.required(),
-                }),
-                defineField({
-                  name: "href",
-                  title: "Link",
-                  type: "url",
-                  description:
-                    "Use a full URL or on-site path. Leave blank to create the destination later.",
-                }),
-              ],
-            }),
           ],
           preview: {
             select: {

@@ -9,6 +9,7 @@ type ContactHostModalProps = {
   phone?: string;
   responseNote?: string;
   hostNames: string[];
+  showContactDetails?: boolean;
 };
 
 export function ContactHostModal({
@@ -18,6 +19,7 @@ export function ContactHostModal({
   phone,
   responseNote,
   hostNames,
+  showContactDetails = true,
 }: ContactHostModalProps) {
   const [isMounted, setIsMounted] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
@@ -75,10 +77,10 @@ export function ContactHostModal({
   useEffect(() => clearCloseTimeout, [clearCloseTimeout]);
 
   const contactLineParts = [] as string[];
-  if (email) contactLineParts.push(email);
-  if (phone) contactLineParts.push(phone);
+  if (showContactDetails && email) contactLineParts.push(email);
+  if (showContactDetails && phone) contactLineParts.push(phone);
 
-  const contactLine = contactLineParts.join(' · ');
+  const contactLine = contactLineParts.join(' • ');
 
   return (
     <>
@@ -129,9 +131,7 @@ export function ContactHostModal({
                 </svg>
               </div>
               <div className="flex-1">
-                <p className="text-xs uppercase tracking-[0.2em] text-[color:var(--muted-foreground)]">
-                  Contact the host
-                </p>
+                <p className="text-xs uppercase tracking-[0.2em] text-[color:var(--muted-foreground)]">Contact the host</p>
                 <h3 className="mt-1 font-serif text-xl text-[color:var(--foreground)]">
                   {hostNames.length > 0 ? `Message ${hostNames.join(' & ')}` : 'Send a message'}
                 </h3>
@@ -174,12 +174,13 @@ export function ContactHostModal({
                   className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--background)] px-3 py-3 text-sm text-[color:var(--foreground)] focus:border-[color:var(--border)] focus:outline-none focus-soft"
                 />
               </label>
-              {contactLine ? (
+              {showContactDetails && contactLine ? (
                 <p className="mt-3 text-xs text-[color:var(--muted-foreground)]">
-                  The host will send replies to <span className="font-medium text-[color:var(--foreground)]">{contactLine}</span>.
+                  The host will send replies to{' '}
+                  <span className="font-medium text-[color:var(--foreground)]">{contactLine}</span>.
                 </p>
               ) : null}
-              {responseNote ? (
+              {showContactDetails && responseNote ? (
                 <p className="mt-1 text-xs text-[color:var(--muted-foreground)]">{responseNote}</p>
               ) : null}
               <button

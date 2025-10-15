@@ -159,6 +159,62 @@ export const PAGE_QUERY = defineQuery(`
           volunteerUrl,
           heroImage
         }
+    },
+    _type == "volunteersDirectory" => {
+      ...,
+      "opportunities": *[_type == "volunteerOpportunity"]
+        | order(title asc){
+          _id,
+          title,
+          "slug": slug.current,
+          summary,
+          trackLabel,
+          isUrgent,
+          isRemoteFriendly,
+          location,
+          commitmentSummary,
+          openings,
+          experienceLevel,
+          applyUrl,
+          heroImage,
+          contact{
+            ctaLabel
+          }
+        }
+    },
+    _type == "brandPromos" => {
+      ...,
+      brands[]->{
+        _id,
+        title,
+        kicker,
+        headline,
+        subhead,
+        footnote,
+        themeColor,
+        textColor,
+        imageOverlayStrength,
+        primaryCta{
+          label,
+          href
+        },
+        secondaryCta{
+          label,
+          href
+        },
+        promoLink{
+          href,
+          label
+        },
+        heroImage{
+          asset,
+          alt
+        },
+        logo{
+          asset,
+          alt
+        }
+      }
     }
   }
 }
@@ -214,9 +270,65 @@ export const HOME_PAGE_QUERY = defineQuery(`
             heroImage
           }
       }
+    },
+      _type == "volunteersDirectory" => {
+        ...,
+        "opportunities": *[_type == "volunteerOpportunity"]
+          | order(title asc){
+            _id,
+            title,
+            "slug": slug.current,
+            summary,
+            trackLabel,
+            isUrgent,
+            isRemoteFriendly,
+            location,
+            commitmentSummary,
+            openings,
+            experienceLevel,
+            applyUrl,
+            heroImage,
+            contact{
+              ctaLabel
+            }
+          }
+      },
+      _type == "brandPromos" => {
+        ...,
+        brands[]->{
+          _id,
+          title,
+          kicker,
+          headline,
+          subhead,
+        footnote,
+        themeColor,
+        textColor,
+        imageOverlayStrength,
+        primaryCta{
+          label,
+          href
+          },
+          secondaryCta{
+            label,
+            href
+          },
+        promoLink{
+          href,
+          label
+        },
+        heroImage{
+          asset,
+          alt
+        },
+        logo{
+          asset,
+          alt
+        }
+        }
+      }
     }
   }
-}
 `);
 
 export const WORKSHOPS_QUERY = defineQuery(`
@@ -297,6 +409,68 @@ export const WORKSHOP_QUERY = defineQuery(`
 
 export const WORKSHOP_SLUGS_QUERY = defineQuery(`
   *[_type == "workshop" && defined(slug.current)]{
+    "slug": slug.current
+  }
+`);
+
+export const VOLUNTEERS_QUERY = defineQuery(`
+  *[_type == "volunteerOpportunity"]
+    | order(title asc){
+      _id,
+      title,
+      "slug": slug.current,
+      summary,
+      trackLabel,
+      isUrgent,
+      isRemoteFriendly,
+      location,
+      commitmentSummary,
+      openings,
+      experienceLevel,
+      applyUrl,
+      heroImage,
+      contact{
+        ctaLabel
+      }
+    }
+`);
+
+export const VOLUNTEER_QUERY = defineQuery(`
+  *[_type == "volunteerOpportunity" && slug.current == $slug][0]{
+    _id,
+    title,
+    "slug": slug.current,
+    summary,
+    trackLabel,
+    isUrgent,
+    isRemoteFriendly,
+    location,
+    commitmentSummary,
+    openings,
+    experienceLevel,
+    applyUrl,
+    heroImage,
+    responsibilities,
+    qualifications,
+    benefits,
+    applicationProcess[]{
+      _key,
+      title,
+      description
+    },
+    contact{
+      ctaLabel,
+      instructions,
+      email,
+      phone,
+      responseNote
+    },
+    body
+  }
+`);
+
+export const VOLUNTEER_SLUGS_QUERY = defineQuery(`
+  *[_type in ["volunteerOpportunity", "volunteerOPportunity"] && defined(slug.current)]{
     "slug": slug.current
   }
 `);
