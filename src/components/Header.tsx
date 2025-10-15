@@ -8,16 +8,16 @@ import type { SITE_SETTINGS_QUERYResult } from "@/sanity/types";
 import { urlFor } from "@/sanity/lib/image";
 
 /* ------------------------------------------------------------------ */
-/* Nav model (matches your latest: Program w/ 2 children, no Init.)    */
+/* Nav model (matches your latest: Program menu + dedicated Volunteer) */
 /* ------------------------------------------------------------------ */
-const NAV_ITEMS: Array<
-  | { id: string; label: string; href: string }
-  | {
-      id: string;
-      label: "Program";
-      children: Array<{ id: string; label: string; href: string }>;
-    }
-> = [
+type NavLink = { id: string; label: string; href: string };
+type NavGroup = {
+  id: string;
+  label: string;
+  children: Array<{ id: string; label: string; href: string }>;
+};
+
+const NAV_ITEMS: Array<NavLink | NavGroup> = [
   { id: "nav-resources", label: "Resources", href: "/resources" },
   {
     id: "nav-program",
@@ -28,15 +28,22 @@ const NAV_ITEMS: Array<
         label: "Start a chapter",
         href: "/start-a-chapter",
       },
+    ],
+  },
+  {
+    id: "nav-volunteer",
+    label: "Volunteer",
+    children: [
+      { id: "nav-volunteer-about", label: "About Volunteers", href: "/volunteer" },
       {
-        id: "nav-program-volunteer",
-        label: "Volunteer",
-        href: "/volunteer",
+        id: "nav-volunteer-opportunities",
+        label: "Volunteer Opportunities",
+        href: "/volunteer-opportunities",
       },
     ],
   },
   { id: "nav-workshops", label: "Workshops", href: "/workshops" },
-  { id: "nav-brands", label: "Brands", href: "/partners" },
+  { id: "nav-brands", label: "Brands", href: "/brands" },
   { id: "nav-about", label: "About", href: "/about" },
 ];
 
@@ -122,6 +129,7 @@ export function Header({ settings }: HeaderProps) {
                 }
 
                 // Dropdown (Program) — group hover keeps panel open
+                const menuId = `${item.id}-menu`;
                 return (
                   <div key={item.id} className="relative group">
                     <button
@@ -129,13 +137,13 @@ export function Header({ settings }: HeaderProps) {
                       className="text-sm font-medium transition-colors px-3 py-2 rounded-md text-[var(--muted-foreground)] hover:text-[var(--primary)]"
                       aria-haspopup="menu"
                       aria-expanded="false"
-                      aria-controls="program-menu"
+                      aria-controls={menuId}
                     >
                       {item.label}
                     </button>
 
                     <div
-                      id="program-menu"
+                      id={menuId}
                       role="menu"
                       className={[
                         "absolute left-0 mt-2 w-56 rounded-md border shadow-lg p-2 origin-top",

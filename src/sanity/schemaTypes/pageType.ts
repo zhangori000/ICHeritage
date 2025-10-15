@@ -22,13 +22,6 @@ export const pageType = defineType({
       name: "content",
       type: "pageBuilder",
     }),
-    defineField({
-      name: "mainImage",
-      type: "image",
-      options: {
-        hotspot: true,
-      },
-    }),
   ],
   preview: {
     select: {

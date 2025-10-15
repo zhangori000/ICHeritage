@@ -120,7 +120,7 @@ export function HeroBanner({
             {title ? (
               <h1
                 className={[
-                  "font-serif text-5xl md:text-6xl lg:text-7xl font-bold leading-tight text-balance",
+                  "font-serif text-5xl md:text-6xl lg:text-7xl font-medium leading-tight text-balance",
                   textShadow,
                 ].join(" ")}
                 style={{ color: titleCss }}

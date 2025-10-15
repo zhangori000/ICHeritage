@@ -16,7 +16,7 @@ const validateHrefValue = (href?: string | null) => {
   try {
     new URL(trimmed);
     return true;
-  } catch (error) {
+  } catch {
     return "Enter a path starting with / or a full URL.";
   }
 };

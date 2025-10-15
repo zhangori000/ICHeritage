@@ -21,16 +21,16 @@
                     "sanity:promote:import":  "npx sanity@latest dataset import sanity-dev-export.tar.gz production --replace \u0026\u0026 node -e \"try { require(\u0027fs\u0027).unlinkSync(\u0027sanity-dev-export.tar.gz\u0027); } catch (e) {}\""
                 },
     "dependencies":  {
-                         "@sanity/color-input":  "^4.0.6",
+        "@sanity/color-input":  "^4.0.6",
                          "@sanity/image-url":  "^1.2.0",
-                         "@sanity/vision":  "^4.8.1",
+        "@sanity/vision":  "^4.10.2",
         "dayjs":  "^1.11.18",
         "gsap": "^3.12.5",
-                         "next":  "15.5.3",
-                         "next-sanity":  "^10.1.4",
-                         "react":  "19.1.0",
-                         "react-dom":  "19.1.0",
-                         "sanity":  "^4.8.1",
+        "next":  "15.5.3",
+        "next-sanity":  "^10.1.4",
+        "react":  "19.1.0",
+        "react-dom":  "19.1.0",
+        "sanity":  "^4.10.2",
                          "styled-components":  "^6.1.19"
                      },
     "devDependencies":  {

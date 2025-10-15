@@ -23,12 +23,19 @@ import { storiesImpactType } from "./blocks/storiesImpactType";
 import { leadershipSectionType } from "./blocks/leadershipSectionType";
 import { podcastHighlightsType } from "./blocks/podcastHighlightsType";
 import { workshopsDirectoryType } from "./blocks/workshopsDirectoryType";
+import { volunteersDirectoryType } from "./blocks/volunteersDirectoryType";
+import { brandPromosType } from "./blocks/brandPromosType";
+import { volunteerTracksType } from "./blocks/volunteerTracksType";
+import { volunteerBenefitsType } from "./blocks/volunteerBenefitsType";
+import { volunteerApplicationType } from "./blocks/volunteerApplicationType";
 import newsletter from "./newsletter";
 import { siteSettingsType } from "./siteSettingsType";
 import { heroBannerType } from "./heroBannerType";
 import { colorChoiceType } from "./parts/colorChoice";
 import { workshopType } from "./workshop";
 import { workshopCategoryType } from "./workshopCategory";
+import { volunteerOpportunityType } from "./volunteerOpportunity";
+import { brandType } from "./brand";
 
 export const schema: { types: SchemaTypeDefinition[] } = {
   types: [
@@ -55,11 +62,18 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     leadershipSectionType,
     podcastHighlightsType,
     workshopsDirectoryType,
+    volunteersDirectoryType,
+    brandPromosType,
+    volunteerTracksType,
+    volunteerBenefitsType,
+    volunteerApplicationType,
     newsletter,
     siteSettingsType,
     heroBannerType,
     colorChoiceType,
     workshopType,
     workshopCategoryType,
+    volunteerOpportunityType,
+    brandType,
   ],
 };

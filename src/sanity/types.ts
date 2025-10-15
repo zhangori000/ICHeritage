@@ -13,6 +13,150 @@
  */
 
 // Source: schema.json
+export type Brand = {
+  _id: string;
+  _type: "brand";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title?: string;
+  slug?: Slug;
+  kicker?: string;
+  headline?: string;
+  subhead?: string;
+  themeColor?: Color;
+  textColor?: Color;
+  imageOverlayStrength?: number;
+  primaryCta?: {
+    label?: string;
+    href?: string;
+  };
+  secondaryCta?: {
+    label?: string;
+    href?: string;
+  };
+  heroImage?: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+  };
+  logo?: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+  };
+  footnote?: string;
+  promoLink?: {
+    href?: string;
+    label?: string;
+  };
+};
+
+export type VolunteerOpportunity = {
+  _id: string;
+  _type: "volunteerOpportunity";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title?: string;
+  slug?: Slug;
+  summary?: string;
+  trackLabel?: string;
+  commitmentSummary?: string;
+  location?: string;
+  openings?: number;
+  experienceLevel?: string;
+  isUrgent?: boolean;
+  isRemoteFriendly?: boolean;
+  heroImage?: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+  };
+  applyUrl?: string;
+  responsibilities?: Array<string>;
+  qualifications?: Array<string>;
+  benefits?: Array<string>;
+  applicationProcess?: Array<{
+    title?: string;
+    description?: string;
+    _type: "step";
+    _key: string;
+  }>;
+  contact?: {
+    ctaLabel?: string;
+    instructions?: string;
+    email?: string;
+    phone?: string;
+    responseNote?: string;
+  };
+  body?: Array<{
+    children?: Array<{
+      marks?: Array<string>;
+      text?: string;
+      _type: "span";
+      _key: string;
+    }>;
+    style?: "normal" | "h1" | "h2" | "h3" | "h4" | "blockquote";
+    listItem?: "bullet" | "number";
+    markDefs?: Array<{
+      href?: string;
+      newTab?: boolean;
+      _type: "link";
+      _key: string;
+    }>;
+    level?: number;
+    _type: "block";
+    _key: string;
+  } | {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+    _key: string;
+  } | {
+    filename?: string;
+    language?: "javascript" | "typescript" | "json" | "shell" | "markdown";
+    code?: string;
+    _type: "codeBlock";
+    _key: string;
+  } | {
+    style?: string;
+    _type: "divider";
+    _key: string;
+  }>;
+};
+
 export type WorkshopCategory = {
   _id: string;
   _type: "workshopCategory";
@@ -291,6 +435,130 @@ export type Newsletter = {
     _type: "divider";
     _key: string;
   }>;
+};
+
+export type VolunteerApplication = {
+  _type: "volunteerApplication";
+  sectionId?: string;
+  heading?: string;
+  intro?: string;
+  processHeading?: string;
+  processSubheading?: string;
+  steps?: Array<{
+    title?: string;
+    description?: string;
+    timeEstimate?: string;
+    _key: string;
+  }>;
+  requirementsHeading?: string;
+  requirementsIntro?: string;
+  requirements?: Array<string>;
+  tracks?: Array<{
+    title?: string;
+    description?: string;
+    tone?: "primary" | "secondary" | "accent";
+    highlights?: Array<{
+      icon?: "clock" | "users" | "calendar" | "map" | "sparkles" | "globe";
+      label?: string;
+      _key: string;
+    }>;
+    cta?: {
+      label?: string;
+      href?: string;
+    };
+    _key: string;
+  }>;
+  supportHeading?: string;
+  supportBody?: string;
+  supportLinks?: Array<{
+    label?: string;
+    href?: string;
+    _key: string;
+  }>;
+};
+
+export type VolunteerBenefits = {
+  _type: "volunteerBenefits";
+  sectionId?: string;
+  heading?: string;
+  intro?: string;
+  benefits?: Array<{
+    icon?: string;
+    tone?: "primary" | "secondary" | "accent";
+    title?: string;
+    description?: string;
+    points?: Array<string>;
+    _type: "benefit";
+    _key: string;
+  }>;
+  testimonialsHeading?: string;
+  testimonialsIntro?: string;
+  testimonials?: Array<{
+    quote?: string;
+    name?: string;
+    role?: string;
+    _type: "testimonial";
+    _key: string;
+  }>;
+};
+
+export type VolunteerTracks = {
+  _type: "volunteerTracks";
+  sectionId?: string;
+  heading?: string;
+  intro?: string;
+  tracks?: Array<{
+    badgeLabel?: string;
+    tone?: "primary" | "secondary" | "accent" | "muted";
+    icon?: string;
+    title?: string;
+    description?: string;
+    keyAreasHeading?: string;
+    keyAreas?: Array<string>;
+    commitmentHeading?: string;
+    commitmentItems?: Array<{
+      icon?: string;
+      text?: string;
+      _type: "commitment";
+      _key: string;
+    }>;
+    benefitsHeading?: string;
+    benefits?: Array<string>;
+    _type: "track";
+    _key: string;
+  }>;
+  callout?: {
+    heading?: string;
+    body?: string;
+    links?: Array<{
+      label?: string;
+      href?: string;
+      _type: "link";
+      _key: string;
+    }>;
+  };
+};
+
+export type BrandPromos = {
+  _type: "brandPromos";
+  sectionId?: string;
+  heading?: string;
+  intro?: string;
+  brands?: Array<{
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    _key: string;
+    [internalGroqTypeReferenceTo]?: "brand";
+  }>;
+};
+
+export type VolunteersDirectory = {
+  _type: "volunteersDirectory";
+  sectionId?: string;
+  heading?: string;
+  intro?: string;
+  searchPlaceholder?: string;
 };
 
 export type WorkshopsDirectory = {
@@ -602,6 +870,8 @@ export type ResourcesHero = {
     _type: "image";
   };
   overlayOpacity?: number;
+  headingColor?: Color;
+  taglineColor?: Color;
   highlights?: Array<{
     title?: string;
     description?: string;
@@ -609,6 +879,9 @@ export type ResourcesHero = {
     tone?: "primary" | "secondary" | "accent";
     _key: string;
   }>;
+  highlightTitleColor?: Color;
+  highlightBodyColor?: Color;
+  enablePetalAnimation?: boolean;
   ctaLabel?: string;
   primaryCta?: {
     label?: string;
@@ -816,7 +1089,17 @@ export type PageBuilder = Array<{
   _key: string;
 } & PodcastHighlights | {
   _key: string;
-} & WorkshopsDirectory>;
+} & WorkshopsDirectory | {
+  _key: string;
+} & VolunteersDirectory | {
+  _key: string;
+} & BrandPromos | {
+  _key: string;
+} & VolunteerTracks | {
+  _key: string;
+} & VolunteerBenefits | {
+  _key: string;
+} & VolunteerApplication>;
 
 export type Page = {
   _id: string;
@@ -827,18 +1110,6 @@ export type Page = {
   title?: string;
   slug?: Slug;
   content?: PageBuilder;
-  mainImage?: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    _type: "image";
-  };
 };
 
 export type Event = {
@@ -1158,7 +1429,7 @@ export type SanityAssetSourceData = {
   url?: string;
 };
 
-export type AllSanitySchemaTypes = WorkshopCategory | Workshop | ColorChoice | HeroBanner | SiteSettings | Newsletter | WorkshopsDirectory | PodcastHighlights | LeadershipSection | StoriesImpact | MissionStatement | AboutOverview | ChapterRequirements | ChapterApplication | SplitImage | NewsletterArchive | ResourcesHero | InitiativesGrid | Hero | Features | Faqs | Faq | PageBuilder | Page | Event | Category | BlockContent | BlogPost | Author | Color | RgbaColor | HsvaColor | HslaColor | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageHotspot | SanityImageCrop | SanityFileAsset | SanityImageAsset | SanityImageMetadata | Geopoint | Slug | SanityAssetSourceData;
+export type AllSanitySchemaTypes = Brand | VolunteerOpportunity | WorkshopCategory | Workshop | ColorChoice | HeroBanner | SiteSettings | Newsletter | VolunteerApplication | VolunteerBenefits | VolunteerTracks | BrandPromos | VolunteersDirectory | WorkshopsDirectory | PodcastHighlights | LeadershipSection | StoriesImpact | MissionStatement | AboutOverview | ChapterRequirements | ChapterApplication | SplitImage | NewsletterArchive | ResourcesHero | InitiativesGrid | Hero | Features | Faqs | Faq | PageBuilder | Page | Event | Category | BlockContent | BlogPost | Author | Color | RgbaColor | HsvaColor | HslaColor | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageHotspot | SanityImageCrop | SanityFileAsset | SanityImageAsset | SanityImageMetadata | Geopoint | Slug | SanityAssetSourceData;
 export declare const internalGroqTypeReferenceTo: unique symbol;
 // Source: ./src/sanity/lib/queries.ts
 // Variable: BLOG_POSTS_QUERY
@@ -1377,7 +1648,7 @@ export type EVENT_QUERYResult = {
   } | null;
 } | null;
 // Variable: PAGE_QUERY
-// Query: *[_type == "page" && slug.current == $slug][0]{  _id,  _type,  title,  slug,  content[]{    ...,    _type == "heroBanner" => {      ...,      titleColor,      kickerColor,      bodyColor,      overlayOpacity    },    _type == "faqs" => {      ...,      faqs[]->    },    _type == "workshopsDirectory" => {      ...,      categoryCards[]->{        _id,        title,        slug,        icon,        description      },      "workshops": *[_type == "workshop" && defined(slug.current)]        | order(start asc){          _id,          title,          "slug": slug.current,          summary,          categories[]->{            _id,            title,            slug,            icon,            description          },          start,          end,          location,          capacity,          registeredCount,          needsVolunteers,          registerUrl,          volunteerUrl,          heroImage        }    }  }}
+// Query: *[_type == "page" && slug.current == $slug][0]{  _id,  _type,  title,  slug,  content[]{    ...,    _type == "heroBanner" => {      ...,      titleColor,      kickerColor,      bodyColor,      overlayOpacity    },    _type == "faqs" => {      ...,      faqs[]->    },    _type == "workshopsDirectory" => {      ...,      categoryCards[]->{        _id,        title,        slug,        icon,        description      },      "workshops": *[_type == "workshop"]        | order(start asc){          _id,          title,          "slug": slug.current,          summary,          categories[]->{            _id,            title,            slug,            icon,            description          },          start,          end,          location,          capacity,          registeredCount,          needsVolunteers,          registerUrl,          volunteerUrl,          heroImage        }    },    _type == "volunteersDirectory" => {      ...,      "opportunities": *[_type == "volunteerOpportunity"]        | order(title asc){          _id,          title,          "slug": slug.current,          summary,          trackLabel,          isUrgent,          isRemoteFriendly,          location,          commitmentSummary,          openings,          experienceLevel,          applyUrl,          heroImage,          contact{            ctaLabel          }        }    },    _type == "brandPromos" => {      ...,      brands[]->{        _id,        title,        kicker,        headline,        subhead,        footnote,        themeColor,        textColor,        imageOverlayStrength,        primaryCta{          label,          href        },        secondaryCta{          label,          href        },        promoLink{          href,          label        },        heroImage{          asset,          alt        },        logo{          asset,          alt        }      }    }  }}
 export type PAGE_QUERYResult = {
   _id: string;
   _type: "page";
@@ -1401,6 +1672,53 @@ export type PAGE_QUERYResult = {
       description?: string;
       _key: string;
     }>;
+  } | {
+    _key: string;
+    _type: "brandPromos";
+    sectionId?: string;
+    heading?: string;
+    intro?: string;
+    brands: Array<{
+      _id: string;
+      title: string | null;
+      kicker: string | null;
+      headline: string | null;
+      subhead: string | null;
+      footnote: string | null;
+      themeColor: Color | null;
+      textColor: Color | null;
+      imageOverlayStrength: number | null;
+      primaryCta: {
+        label: string | null;
+        href: string | null;
+      } | null;
+      secondaryCta: {
+        label: string | null;
+        href: string | null;
+      } | null;
+      promoLink: {
+        href: string | null;
+        label: string | null;
+      } | null;
+      heroImage: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+      logo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+    }> | null;
   } | {
     _key: string;
     _type: "chapterApplication";
@@ -1809,6 +2127,8 @@ export type PAGE_QUERYResult = {
       _type: "image";
     };
     overlayOpacity?: number;
+    headingColor?: Color;
+    taglineColor?: Color;
     highlights?: Array<{
       title?: string;
       description?: string;
@@ -1816,6 +2136,9 @@ export type PAGE_QUERYResult = {
       tone?: "accent" | "primary" | "secondary";
       _key: string;
     }>;
+    highlightTitleColor?: Color;
+    highlightBodyColor?: Color;
+    enablePetalAnimation?: boolean;
     ctaLabel?: string;
     primaryCta?: {
       label?: string;
@@ -1863,6 +2186,142 @@ export type PAGE_QUERYResult = {
         value?: string;
         label?: string;
         color?: "accent" | "primary" | "secondary";
+        _key: string;
+      }>;
+    };
+  } | {
+    _key: string;
+    _type: "volunteerApplication";
+    sectionId?: string;
+    heading?: string;
+    intro?: string;
+    processHeading?: string;
+    processSubheading?: string;
+    steps?: Array<{
+      title?: string;
+      description?: string;
+      timeEstimate?: string;
+      _key: string;
+    }>;
+    requirementsHeading?: string;
+    requirementsIntro?: string;
+    requirements?: Array<string>;
+    tracks?: Array<{
+      title?: string;
+      description?: string;
+      tone?: "accent" | "primary" | "secondary";
+      highlights?: Array<{
+        icon?: "calendar" | "clock" | "globe" | "map" | "sparkles" | "users";
+        label?: string;
+        _key: string;
+      }>;
+      cta?: {
+        label?: string;
+        href?: string;
+      };
+      _key: string;
+    }>;
+    supportHeading?: string;
+    supportBody?: string;
+    supportLinks?: Array<{
+      label?: string;
+      href?: string;
+      _key: string;
+    }>;
+  } | {
+    _key: string;
+    _type: "volunteerBenefits";
+    sectionId?: string;
+    heading?: string;
+    intro?: string;
+    benefits?: Array<{
+      icon?: string;
+      tone?: "accent" | "primary" | "secondary";
+      title?: string;
+      description?: string;
+      points?: Array<string>;
+      _type: "benefit";
+      _key: string;
+    }>;
+    testimonialsHeading?: string;
+    testimonialsIntro?: string;
+    testimonials?: Array<{
+      quote?: string;
+      name?: string;
+      role?: string;
+      _type: "testimonial";
+      _key: string;
+    }>;
+  } | {
+    _key: string;
+    _type: "volunteersDirectory";
+    sectionId?: string;
+    heading?: string;
+    intro?: string;
+    searchPlaceholder?: string;
+    opportunities: Array<{
+      _id: string;
+      title: string | null;
+      slug: string | null;
+      summary: string | null;
+      trackLabel: string | null;
+      isUrgent: boolean | null;
+      isRemoteFriendly: boolean | null;
+      location: string | null;
+      commitmentSummary: string | null;
+      openings: number | null;
+      experienceLevel: string | null;
+      applyUrl: string | null;
+      heroImage: {
+        asset?: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        };
+        media?: unknown;
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        alt?: string;
+        _type: "image";
+      } | null;
+      contact: {
+        ctaLabel: string | null;
+      } | null;
+    }>;
+  } | {
+    _key: string;
+    _type: "volunteerTracks";
+    sectionId?: string;
+    heading?: string;
+    intro?: string;
+    tracks?: Array<{
+      badgeLabel?: string;
+      tone?: "accent" | "muted" | "primary" | "secondary";
+      icon?: string;
+      title?: string;
+      description?: string;
+      keyAreasHeading?: string;
+      keyAreas?: Array<string>;
+      commitmentHeading?: string;
+      commitmentItems?: Array<{
+        icon?: string;
+        text?: string;
+        _type: "commitment";
+        _key: string;
+      }>;
+      benefitsHeading?: string;
+      benefits?: Array<string>;
+      _type: "track";
+      _key: string;
+    }>;
+    callout?: {
+      heading?: string;
+      body?: string;
+      links?: Array<{
+        label?: string;
+        href?: string;
+        _type: "link";
         _key: string;
       }>;
     };
@@ -1918,7 +2377,7 @@ export type PAGE_QUERYResult = {
   }> | null;
 } | null;
 // Variable: HOME_PAGE_QUERY
-// Query: *[_id == "siteSettings"][0]{  homePage->{    _id,    _type,    title,    slug,    content[]{      ...,      _type == "heroBanner" => {        ...,        titleColor,        kickerColor,        bodyColor,        overlayOpacity      },      _type == "faqs" => { ..., faqs[]-> },      _type == "workshopsDirectory" => {        ...,        categoryCards[]->{          _id,          title,          slug,          icon,          description        },        "workshops": *[_type == "workshop" && defined(slug.current)]          | order(start asc){            _id,            title,            "slug": slug.current,            summary,            categories[]->{              _id,              title,              slug,              icon,              description            },            start,            end,            location,            capacity,            registeredCount,            needsVolunteers,            registerUrl,            volunteerUrl,            heroImage          }      }    }  }}
+// Query: *[_id == "siteSettings"][0]{  homePage->{    _id,    _type,    title,    slug,    content[]{      ...,      _type == "heroBanner" => {        ...,        titleColor,        kickerColor,        bodyColor,        overlayOpacity      },      _type == "faqs" => { ..., faqs[]-> },      _type == "workshopsDirectory" => {        ...,        categoryCards[]->{          _id,          title,          slug,          icon,          description        },        "workshops": *[_type == "workshop"]          | order(start asc){            _id,            title,            "slug": slug.current,            summary,            categories[]->{              _id,              title,              slug,              icon,              description            },            start,            end,            location,            capacity,            registeredCount,            needsVolunteers,            registerUrl,            volunteerUrl,            heroImage          }      }    },      _type == "volunteersDirectory" => {        ...,        "opportunities": *[_type == "volunteerOpportunity"]          | order(title asc){            _id,            title,            "slug": slug.current,            summary,            trackLabel,            isUrgent,            isRemoteFriendly,            location,            commitmentSummary,            openings,            experienceLevel,            applyUrl,            heroImage,            contact{              ctaLabel            }          }      },      _type == "brandPromos" => {        ...,        brands[]->{          _id,          title,          kicker,          headline,          subhead,        footnote,        themeColor,        textColor,        imageOverlayStrength,        primaryCta{          label,          href          },          secondaryCta{            label,            href          },        promoLink{          href,          label        },        heroImage{          asset,          alt        },        logo{          asset,          alt        }        }      }    }  }
 export type HOME_PAGE_QUERYResult = {
   homePage: null;
 } | {
@@ -1944,6 +2403,19 @@ export type HOME_PAGE_QUERYResult = {
         label?: string;
         description?: string;
         _key: string;
+      }>;
+    } | {
+      _key: string;
+      _type: "brandPromos";
+      sectionId?: string;
+      heading?: string;
+      intro?: string;
+      brands?: Array<{
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
+        _key: string;
+        [internalGroqTypeReferenceTo]?: "brand";
       }>;
     } | {
       _key: string;
@@ -2353,6 +2825,8 @@ export type HOME_PAGE_QUERYResult = {
         _type: "image";
       };
       overlayOpacity?: number;
+      headingColor?: Color;
+      taglineColor?: Color;
       highlights?: Array<{
         title?: string;
         description?: string;
@@ -2360,6 +2834,9 @@ export type HOME_PAGE_QUERYResult = {
         tone?: "accent" | "primary" | "secondary";
         _key: string;
       }>;
+      highlightTitleColor?: Color;
+      highlightBodyColor?: Color;
+      enablePetalAnimation?: boolean;
       ctaLabel?: string;
       primaryCta?: {
         label?: string;
@@ -2407,6 +2884,112 @@ export type HOME_PAGE_QUERYResult = {
           value?: string;
           label?: string;
           color?: "accent" | "primary" | "secondary";
+          _key: string;
+        }>;
+      };
+    } | {
+      _key: string;
+      _type: "volunteerApplication";
+      sectionId?: string;
+      heading?: string;
+      intro?: string;
+      processHeading?: string;
+      processSubheading?: string;
+      steps?: Array<{
+        title?: string;
+        description?: string;
+        timeEstimate?: string;
+        _key: string;
+      }>;
+      requirementsHeading?: string;
+      requirementsIntro?: string;
+      requirements?: Array<string>;
+      tracks?: Array<{
+        title?: string;
+        description?: string;
+        tone?: "accent" | "primary" | "secondary";
+        highlights?: Array<{
+          icon?: "calendar" | "clock" | "globe" | "map" | "sparkles" | "users";
+          label?: string;
+          _key: string;
+        }>;
+        cta?: {
+          label?: string;
+          href?: string;
+        };
+        _key: string;
+      }>;
+      supportHeading?: string;
+      supportBody?: string;
+      supportLinks?: Array<{
+        label?: string;
+        href?: string;
+        _key: string;
+      }>;
+    } | {
+      _key: string;
+      _type: "volunteerBenefits";
+      sectionId?: string;
+      heading?: string;
+      intro?: string;
+      benefits?: Array<{
+        icon?: string;
+        tone?: "accent" | "primary" | "secondary";
+        title?: string;
+        description?: string;
+        points?: Array<string>;
+        _type: "benefit";
+        _key: string;
+      }>;
+      testimonialsHeading?: string;
+      testimonialsIntro?: string;
+      testimonials?: Array<{
+        quote?: string;
+        name?: string;
+        role?: string;
+        _type: "testimonial";
+        _key: string;
+      }>;
+    } | {
+      _key: string;
+      _type: "volunteersDirectory";
+      sectionId?: string;
+      heading?: string;
+      intro?: string;
+      searchPlaceholder?: string;
+    } | {
+      _key: string;
+      _type: "volunteerTracks";
+      sectionId?: string;
+      heading?: string;
+      intro?: string;
+      tracks?: Array<{
+        badgeLabel?: string;
+        tone?: "accent" | "muted" | "primary" | "secondary";
+        icon?: string;
+        title?: string;
+        description?: string;
+        keyAreasHeading?: string;
+        keyAreas?: Array<string>;
+        commitmentHeading?: string;
+        commitmentItems?: Array<{
+          icon?: string;
+          text?: string;
+          _type: "commitment";
+          _key: string;
+        }>;
+        benefitsHeading?: string;
+        benefits?: Array<string>;
+        _type: "track";
+        _key: string;
+      }>;
+      callout?: {
+        heading?: string;
+        body?: string;
+        links?: Array<{
+          label?: string;
+          href?: string;
+          _type: "link";
           _key: string;
         }>;
       };
@@ -2463,7 +3046,7 @@ export type HOME_PAGE_QUERYResult = {
   } | null;
 } | null;
 // Variable: WORKSHOPS_QUERY
-// Query: *[_type == "workshop" && defined(slug.current)]    | order(start asc){      _id,      title,      "slug": slug.current,      summary,      categories,      start,      end,      location,      capacity,      registeredCount,      needsVolunteers,      registerUrl,      volunteerUrl,      heroImage,      categories[]->{        _id,        title,        slug,        icon,        description      }    }
+// Query: *[_type == "workshop"]    | order(start asc){      _id,      title,      "slug": slug.current,      summary,      categories,      start,      end,      location,      capacity,      registeredCount,      needsVolunteers,      registerUrl,      volunteerUrl,      heroImage,      categories[]->{        _id,        title,        slug,        icon,        description      }    }
 export type WORKSHOPS_QUERYResult = Array<{
   _id: string;
   title: string | null;
@@ -2615,10 +3198,154 @@ export type WORKSHOP_QUERYResult = {
 export type WORKSHOP_SLUGS_QUERYResult = Array<{
   slug: string | null;
 }>;
+// Variable: VOLUNTEERS_QUERY
+// Query: *[_type == "volunteerOpportunity"]    | order(title asc){      _id,      title,      "slug": slug.current,      summary,      trackLabel,      isUrgent,      isRemoteFriendly,      location,      commitmentSummary,      openings,      experienceLevel,      applyUrl,      heroImage,      contact{        ctaLabel      }    }
+export type VOLUNTEERS_QUERYResult = Array<{
+  _id: string;
+  title: string | null;
+  slug: string | null;
+  summary: string | null;
+  trackLabel: string | null;
+  isUrgent: boolean | null;
+  isRemoteFriendly: boolean | null;
+  location: string | null;
+  commitmentSummary: string | null;
+  openings: number | null;
+  experienceLevel: string | null;
+  applyUrl: string | null;
+  heroImage: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+  } | null;
+  contact: {
+    ctaLabel: string | null;
+  } | null;
+}>;
+// Variable: VOLUNTEER_QUERY
+// Query: *[_type == "volunteerOpportunity" && slug.current == $slug][0]{    _id,    title,    "slug": slug.current,    summary,    trackLabel,    isUrgent,    isRemoteFriendly,    location,    commitmentSummary,    openings,    experienceLevel,    applyUrl,    heroImage,    responsibilities,    qualifications,    benefits,    applicationProcess[]{      _key,      title,      description    },    contact{      ctaLabel,      instructions,      email,      phone,      responseNote    },    body  }
+export type VOLUNTEER_QUERYResult = {
+  _id: string;
+  title: string | null;
+  slug: string | null;
+  summary: string | null;
+  trackLabel: string | null;
+  isUrgent: boolean | null;
+  isRemoteFriendly: boolean | null;
+  location: string | null;
+  commitmentSummary: string | null;
+  openings: number | null;
+  experienceLevel: string | null;
+  applyUrl: string | null;
+  heroImage: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+  } | null;
+  responsibilities: Array<string> | null;
+  qualifications: Array<string> | null;
+  benefits: Array<string> | null;
+  applicationProcess: Array<{
+    _key: string;
+    title: string | null;
+    description: string | null;
+  }> | null;
+  contact: {
+    ctaLabel: string | null;
+    instructions: string | null;
+    email: string | null;
+    phone: string | null;
+    responseNote: string | null;
+  } | null;
+  body: Array<{
+    children?: Array<{
+      marks?: Array<string>;
+      text?: string;
+      _type: "span";
+      _key: string;
+    }>;
+    style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "normal";
+    listItem?: "bullet" | "number";
+    markDefs?: Array<{
+      href?: string;
+      newTab?: boolean;
+      _type: "link";
+      _key: string;
+    }>;
+    level?: number;
+    _type: "block";
+    _key: string;
+  } | {
+    filename?: string;
+    language?: "javascript" | "json" | "markdown" | "shell" | "typescript";
+    code?: string;
+    _type: "codeBlock";
+    _key: string;
+  } | {
+    style?: string;
+    _type: "divider";
+    _key: string;
+  } | {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+    _key: string;
+  }> | null;
+} | null;
+// Variable: VOLUNTEER_SLUGS_QUERY
+// Query: *[_type in ["volunteerOpportunity", "volunteerOPportunity"] && defined(slug.current)]{    "slug": slug.current  }
+export type VOLUNTEER_SLUGS_QUERYResult = Array<{
+  slug: string | null;
+}>;
 // Variable: SITE_SETTINGS_QUERY
 // Query: *[_id == "siteSettings"][0]{  logo,  orgName,  footerBlurb,  social{    facebook, twitter, instagram, youtube  },  quickLinks[]{    _key, label, href  },  contactEmail,  contactPhone,  address,  newsletter{    enabled, blurb  }}
 export type SITE_SETTINGS_QUERYResult = {
   logo: null;
+  orgName: null;
+  footerBlurb: null;
+  social: null;
+  quickLinks: null;
+  contactEmail: null;
+  contactPhone: null;
+  address: null;
+  newsletter: null;
+} | {
+  logo: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+  } | null;
   orgName: null;
   footerBlurb: null;
   social: null;
@@ -2673,11 +3400,14 @@ declare module "@sanity/client" {
     "\n  *[_type == \"newsletter\" && slug.current == $slug][0]{\n    _id,\n    title,\n    issueLabel,\n    publishedAt,\n    readTime,\n    excerpt,\n    coverImage,\n    body\n  }\n": NEWSLETTER_QUERYResult;
     "\n  *[_type == \"event\" && defined(slug.current)] | order(date asc)[0...20]{\n    _id,\n    title,\n    slug,\n    date,\n    location,\n    needsVolunteer\n  }\n": EVENTS_QUERYResult;
     "\n  *[_type == \"event\" && slug.current == $slug][0]{\n    _id,\n    title,\n    slug,\n    description,\n    date,\n    location,\n    link,\n    needsVolunteer,\n    image\n  }\n": EVENT_QUERYResult;
-    "\n*[_type == \"page\" && slug.current == $slug][0]{\n  _id,\n  _type,\n  title,\n  slug,\n  content[]{\n    ...,\n    _type == \"heroBanner\" => {\n      ...,\n      titleColor,\n      kickerColor,\n      bodyColor,\n      overlayOpacity\n    },\n    _type == \"faqs\" => {\n      ...,\n      faqs[]->\n    },\n    _type == \"workshopsDirectory\" => {\n      ...,\n      categoryCards[]->{\n        _id,\n        title,\n        slug,\n        icon,\n        description\n      },\n      \"workshops\": *[_type == \"workshop\" && defined(slug.current)]\n        | order(start asc){\n          _id,\n          title,\n          \"slug\": slug.current,\n          summary,\n          categories[]->{\n            _id,\n            title,\n            slug,\n            icon,\n            description\n          },\n          start,\n          end,\n          location,\n          capacity,\n          registeredCount,\n          needsVolunteers,\n          registerUrl,\n          volunteerUrl,\n          heroImage\n        }\n    }\n  }\n}\n": PAGE_QUERYResult;
-    "\n*[_id == \"siteSettings\"][0]{\n  homePage->{\n    _id,\n    _type,\n    title,\n    slug,\n    content[]{\n      ...,\n      _type == \"heroBanner\" => {\n        ...,\n        titleColor,\n        kickerColor,\n        bodyColor,\n        overlayOpacity\n      },\n      _type == \"faqs\" => { ..., faqs[]-> },\n      _type == \"workshopsDirectory\" => {\n        ...,\n        categoryCards[]->{\n          _id,\n          title,\n          slug,\n          icon,\n          description\n        },\n        \"workshops\": *[_type == \"workshop\" && defined(slug.current)]\n          | order(start asc){\n            _id,\n            title,\n            \"slug\": slug.current,\n            summary,\n            categories[]->{\n              _id,\n              title,\n              slug,\n              icon,\n              description\n            },\n            start,\n            end,\n            location,\n            capacity,\n            registeredCount,\n            needsVolunteers,\n            registerUrl,\n            volunteerUrl,\n            heroImage\n          }\n      }\n    }\n  }\n}\n": HOME_PAGE_QUERYResult;
-    "\n  *[_type == \"workshop\" && defined(slug.current)]\n    | order(start asc){\n      _id,\n      title,\n      \"slug\": slug.current,\n      summary,\n      categories,\n      start,\n      end,\n      location,\n      capacity,\n      registeredCount,\n      needsVolunteers,\n      registerUrl,\n      volunteerUrl,\n      heroImage,\n      categories[]->{\n        _id,\n        title,\n        slug,\n        icon,\n        description\n      }\n    }\n": WORKSHOPS_QUERYResult;
+    "\n*[_type == \"page\" && slug.current == $slug][0]{\n  _id,\n  _type,\n  title,\n  slug,\n  content[]{\n    ...,\n    _type == \"heroBanner\" => {\n      ...,\n      titleColor,\n      kickerColor,\n      bodyColor,\n      overlayOpacity\n    },\n    _type == \"faqs\" => {\n      ...,\n      faqs[]->\n    },\n    _type == \"workshopsDirectory\" => {\n      ...,\n      categoryCards[]->{\n        _id,\n        title,\n        slug,\n        icon,\n        description\n      },\n      \"workshops\": *[_type == \"workshop\"]\n        | order(start asc){\n          _id,\n          title,\n          \"slug\": slug.current,\n          summary,\n          categories[]->{\n            _id,\n            title,\n            slug,\n            icon,\n            description\n          },\n          start,\n          end,\n          location,\n          capacity,\n          registeredCount,\n          needsVolunteers,\n          registerUrl,\n          volunteerUrl,\n          heroImage\n        }\n    },\n    _type == \"volunteersDirectory\" => {\n      ...,\n      \"opportunities\": *[_type == \"volunteerOpportunity\"]\n        | order(title asc){\n          _id,\n          title,\n          \"slug\": slug.current,\n          summary,\n          trackLabel,\n          isUrgent,\n          isRemoteFriendly,\n          location,\n          commitmentSummary,\n          openings,\n          experienceLevel,\n          applyUrl,\n          heroImage,\n          contact{\n            ctaLabel\n          }\n        }\n    },\n    _type == \"brandPromos\" => {\n      ...,\n      brands[]->{\n        _id,\n        title,\n        kicker,\n        headline,\n        subhead,\n        footnote,\n        themeColor,\n        textColor,\n        imageOverlayStrength,\n        primaryCta{\n          label,\n          href\n        },\n        secondaryCta{\n          label,\n          href\n        },\n        promoLink{\n          href,\n          label\n        },\n        heroImage{\n          asset,\n          alt\n        },\n        logo{\n          asset,\n          alt\n        }\n      }\n    }\n  }\n}\n": PAGE_QUERYResult;
+    "\n*[_id == \"siteSettings\"][0]{\n  homePage->{\n    _id,\n    _type,\n    title,\n    slug,\n    content[]{\n      ...,\n      _type == \"heroBanner\" => {\n        ...,\n        titleColor,\n        kickerColor,\n        bodyColor,\n        overlayOpacity\n      },\n      _type == \"faqs\" => { ..., faqs[]-> },\n      _type == \"workshopsDirectory\" => {\n        ...,\n        categoryCards[]->{\n          _id,\n          title,\n          slug,\n          icon,\n          description\n        },\n        \"workshops\": *[_type == \"workshop\"]\n          | order(start asc){\n            _id,\n            title,\n            \"slug\": slug.current,\n            summary,\n            categories[]->{\n              _id,\n              title,\n              slug,\n              icon,\n              description\n            },\n            start,\n            end,\n            location,\n            capacity,\n            registeredCount,\n            needsVolunteers,\n            registerUrl,\n            volunteerUrl,\n            heroImage\n          }\n      }\n    },\n      _type == \"volunteersDirectory\" => {\n        ...,\n        \"opportunities\": *[_type == \"volunteerOpportunity\"]\n          | order(title asc){\n            _id,\n            title,\n            \"slug\": slug.current,\n            summary,\n            trackLabel,\n            isUrgent,\n            isRemoteFriendly,\n            location,\n            commitmentSummary,\n            openings,\n            experienceLevel,\n            applyUrl,\n            heroImage,\n            contact{\n              ctaLabel\n            }\n          }\n      },\n      _type == \"brandPromos\" => {\n        ...,\n        brands[]->{\n          _id,\n          title,\n          kicker,\n          headline,\n          subhead,\n        footnote,\n        themeColor,\n        textColor,\n        imageOverlayStrength,\n        primaryCta{\n          label,\n          href\n          },\n          secondaryCta{\n            label,\n            href\n          },\n        promoLink{\n          href,\n          label\n        },\n        heroImage{\n          asset,\n          alt\n        },\n        logo{\n          asset,\n          alt\n        }\n        }\n      }\n    }\n  }\n": HOME_PAGE_QUERYResult;
+    "\n  *[_type == \"workshop\"]\n    | order(start asc){\n      _id,\n      title,\n      \"slug\": slug.current,\n      summary,\n      categories,\n      start,\n      end,\n      location,\n      capacity,\n      registeredCount,\n      needsVolunteers,\n      registerUrl,\n      volunteerUrl,\n      heroImage,\n      categories[]->{\n        _id,\n        title,\n        slug,\n        icon,\n        description\n      }\n    }\n": WORKSHOPS_QUERYResult;
     "\n  *[_type == \"workshop\" && slug.current == $slug][0]{\n    _id,\n    title,\n    \"slug\": slug.current,\n    summary,\n    categories[]->{\n      _id,\n      title,\n      slug,\n      icon,\n      description\n    },\n    start,\n    end,\n    location,\n    capacity,\n    registeredCount,\n    needsVolunteers,\n    registerUrl,\n    volunteerUrl,\n    heroImage,\n    hosts[]{\n      _key,\n      name,\n      role,\n      avatar,\n      socialLinks[]{\n        _key,\n        label,\n        url\n      }\n    },\n    contact{\n      ctaLabel,\n      instructions,\n      email,\n      phone,\n      responseNote\n    },\n    externalLinks[]{\n      _key,\n      label,\n      href\n    },\n    body\n  }\n": WORKSHOP_QUERYResult;
     "\n  *[_type == \"workshop\" && defined(slug.current)]{\n    \"slug\": slug.current\n  }\n": WORKSHOP_SLUGS_QUERYResult;
+    "\n  *[_type == \"volunteerOpportunity\"]\n    | order(title asc){\n      _id,\n      title,\n      \"slug\": slug.current,\n      summary,\n      trackLabel,\n      isUrgent,\n      isRemoteFriendly,\n      location,\n      commitmentSummary,\n      openings,\n      experienceLevel,\n      applyUrl,\n      heroImage,\n      contact{\n        ctaLabel\n      }\n    }\n": VOLUNTEERS_QUERYResult;
+    "\n  *[_type == \"volunteerOpportunity\" && slug.current == $slug][0]{\n    _id,\n    title,\n    \"slug\": slug.current,\n    summary,\n    trackLabel,\n    isUrgent,\n    isRemoteFriendly,\n    location,\n    commitmentSummary,\n    openings,\n    experienceLevel,\n    applyUrl,\n    heroImage,\n    responsibilities,\n    qualifications,\n    benefits,\n    applicationProcess[]{\n      _key,\n      title,\n      description\n    },\n    contact{\n      ctaLabel,\n      instructions,\n      email,\n      phone,\n      responseNote\n    },\n    body\n  }\n": VOLUNTEER_QUERYResult;
+    "\n  *[_type in [\"volunteerOpportunity\", \"volunteerOPportunity\"] && defined(slug.current)]{\n    \"slug\": slug.current\n  }\n": VOLUNTEER_SLUGS_QUERYResult;
     "\n*[_id == \"siteSettings\"][0]{\n  logo,\n  orgName,\n  footerBlurb,\n  social{\n    facebook, twitter, instagram, youtube\n  },\n  quickLinks[]{\n    _key, label, href\n  },\n  contactEmail,\n  contactPhone,\n  address,\n  newsletter{\n    enabled, blurb\n  }\n}\n": SITE_SETTINGS_QUERYResult;
   }
 }

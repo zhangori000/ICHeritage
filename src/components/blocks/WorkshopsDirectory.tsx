@@ -7,51 +7,55 @@ import dayjs from "dayjs";
 import { stegaClean } from "next-sanity";
 
 import { urlFor } from "@/sanity/lib/image";
-import type { PAGE_QUERYResult } from "@/sanity/types";
+type SanitySlugValue = string | { current?: string | null } | null | undefined;
 
-type WorkshopsDirectoryBlock = Extract<
-  NonNullable<NonNullable<PAGE_QUERYResult>["content"]>[number],
-  { _type: "workshopsDirectory" }
-> & {
-  categoryCards?: Array<{
-    _id: string;
-    title?: string | null;
-    slug?: SanitySlugValue;
-    icon?: string | null;
-    description?: string | null;
-  }>;
-  workshops?: Array<{
-    _id: string;
-    title?: string | null;
-    slug?: SanitySlugValue;
-    summary?: string | null;
-    categories?: Array<{
-      _id: string;
-      title?: string | null;
-      slug?: SanitySlugValue;
-      icon?: string | null;
-      description?: string | null;
-    }> | null;
-    start?: string | null;
-    end?: string | null;
-    location?: string | null;
-    capacity?: number | null;
-    registeredCount?: number | null;
-    needsVolunteers?: boolean | null;
-    registerUrl?: string | null;
-    volunteerUrl?: string | null;
-    heroImage?: {
-      asset?: { _ref?: string } | null;
-      alt?: string | null;
-    } | null;
-  }>;
+type CategoryCard = {
+  _id: string;
+  title?: string | null;
+  slug?: SanitySlugValue;
+  icon?: string | null;
+  description?: string | null;
 };
 
-type SanitySlugValue = string | { current?: string | null } | null;
+type WorkshopCategory = {
+  _id: string;
+  title?: string | null;
+  slug?: SanitySlugValue;
+  icon?: string | null;
+  description?: string | null;
+};
+
+type WorkshopCard = {
+  _id: string;
+  title?: string | null;
+  slug?: SanitySlugValue;
+  summary?: string | null;
+  categories?: WorkshopCategory[] | null;
+  start?: string | null;
+  end?: string | null;
+  location?: string | null;
+  capacity?: number | null;
+  registeredCount?: number | null;
+  needsVolunteers?: boolean | null;
+  registerUrl?: string | null;
+  volunteerUrl?: string | null;
+  heroImage?: {
+    asset?: { _ref?: string } | null;
+    alt?: string | null;
+  } | null;
+};
+
+type WorkshopsDirectoryBlock = {
+  sectionId?: string | null;
+  heading?: string | null;
+  intro?: string | null;
+  searchPlaceholder?: string | null;
+  categoryCards?: CategoryCard[] | null;
+  showVolunteerBadge?: boolean | null;
+  workshops?: WorkshopCard[] | null;
+};
 
 type MaybeSanitySlug = SanitySlugValue | undefined;
-
-type WorkshopCard = NonNullable<WorkshopsDirectoryBlock["workshops"]>[number];
 
 const placeholderImage = "/Gemini_Generated_Image_podcast_default.png";
 
@@ -145,7 +149,7 @@ const renderCategoryIcon = (icon?: string | null): React.ReactNode => {
   }
   const initial = cleaned.replace(/[^a-z0-9]/gi, "").charAt(0);
   return (
-    <span className="text-xl font-semibold text-[color:var(--primary)]">
+    <span className="text-xl font-medium text-[color:var(--primary)]">
       {(initial || "?").toUpperCase()}
     </span>
   );
@@ -169,7 +173,7 @@ function formatDateRange(start?: string | null, end?: string | null) {
 }
 
 function getCategories(
-  workshops: WorkshopCard[],
+  workshops?: WorkshopCard[] | null,
   categoryCards?: WorkshopsDirectoryBlock["categoryCards"]
 ) {
   const set = new Set<string>();
@@ -177,7 +181,7 @@ function getCategories(
     const slug = getNormalizedSlug(item?.slug);
     if (slug) set.add(slug);
   });
-  workshops.forEach((workshop) => {
+  workshops?.forEach((workshop) => {
     workshop.categories?.forEach((cat) => {
       const slug = getNormalizedSlug(cat?.slug);
       if (slug) set.add(slug);
@@ -237,9 +241,13 @@ export function WorkshopsDirectory(block: WorkshopsDirectoryBlock) {
 
   const anchor = sectionId?.trim() ? sectionId.trim() : undefined;
   const today = React.useMemo(() => dayjs(), []);
+  const safeWorkshops = React.useMemo(
+    () => (Array.isArray(workshops) ? workshops : []),
+    [workshops]
+  );
   const allCategories = React.useMemo(
-    () => getCategories(workshops, categoryCards),
-    [workshops, categoryCards]
+    () => getCategories(safeWorkshops, categoryCards),
+    [safeWorkshops, categoryCards]
   );
 
   const [search, setSearch] = React.useState("");
@@ -251,7 +259,7 @@ export function WorkshopsDirectory(block: WorkshopsDirectoryBlock) {
   const normalizedSearch = search.trim().toLowerCase();
 
   const filtered = React.useMemo(() => {
-    return workshops
+    return safeWorkshops
       .map((workshop) => {
         const startDate = workshop.start ? dayjs(workshop.start) : null;
         const endDate = workshop.end ? dayjs(workshop.end) : null;
@@ -273,7 +281,7 @@ export function WorkshopsDirectory(block: WorkshopsDirectoryBlock) {
         }
         return 0;
       });
-  }, [workshops, today, showPast, selectedCategory, normalizedSearch]);
+  }, [safeWorkshops, today, showPast, selectedCategory, normalizedSearch]);
 
   return (
     <section id={anchor} className="bg-[color:var(--background)] py-20">
@@ -281,7 +289,7 @@ export function WorkshopsDirectory(block: WorkshopsDirectoryBlock) {
         <div className="mx-auto flex max-w-6xl flex-col gap-12">
           <div className="text-center space-y-6">
             {heading ? (
-              <h2 className="font-serif text-3xl font-medium text-[color:var(--foreground)] md:text-4xl lg:text-5xl">
+              <h2 className="font-serif text-3xl font-normal text-[color:var(--foreground)] md:text-4xl lg:text-5xl">
                 {clean(heading)}
               </h2>
             ) : null}
@@ -304,7 +312,7 @@ export function WorkshopsDirectory(block: WorkshopsDirectoryBlock) {
                       {renderCategoryIcon(card?.icon)}
                     </div>
                     {card?.title ? (
-                      <h3 className="font-serif text-lg font-semibold text-[color:var(--foreground)] md:text-xl">
+                      <h3 className="font-serif text-lg font-medium text-[color:var(--foreground)] md:text-xl">
                         {clean(card.title)}
                       </h3>
                     ) : null}
@@ -386,7 +394,7 @@ export function WorkshopsDirectory(block: WorkshopsDirectoryBlock) {
                       key={category}
                       type="button"
                       onClick={() => setSelectedCategory(value)}
-                      className={`rounded-full border px-3 py-1 text-xs font-semibold transition-colors ${
+                      className={`rounded-full border px-3 py-1 text-xs font-medium transition-colors ${
                         isActive
                           ? "border-[color:var(--primary)] bg-[color:var(--primary)] text-[color:var(--primary-foreground)]"
                           : "border-[color:var(--border)] text-[color:var(--muted-foreground)] hover:bg-[color:var(--accent)]/10"
@@ -471,26 +479,26 @@ export function WorkshopsDirectory(block: WorkshopsDirectoryBlock) {
                             return (
                               <span
                                 key={key}
-                                className="inline-flex items-center rounded-full border border-[color:var(--border)] px-2.5 py-0.5 font-semibold text-[color:var(--foreground)]"
+                                className="inline-flex items-center rounded-full border border-[color:var(--border)] px-2.5 py-0.5 text-[color:var(--foreground)]"
                               >
                                 {label}
                               </span>
                             );
                           })}
                           {needsVolunteers && showVolunteerBadge ? (
-                            <span className="inline-flex items-center rounded-full border border-[color:var(--primary)]/50 bg-[color:var(--primary)]/10 px-2.5 py-0.5 text-xs font-semibold text-[color:var(--primary)]">
+                            <span className="inline-flex items-center rounded-full border border-[color:var(--primary)]/50 bg-[color:var(--primary)]/10 px-2.5 py-0.5 text-xs font-medium text-[color:var(--primary)]">
                               Volunteers Needed
                             </span>
                           ) : null}
                           {isPast ? (
-                            <span className="inline-flex items-center rounded-full border border-[color:var(--border)] px-2.5 py-0.5 text-xs font-semibold text-[color:var(--muted-foreground)]">
+                            <span className="inline-flex items-center rounded-full border border-[color:var(--border)] px-2.5 py-0.5 text-xs font-medium text-[color:var(--muted-foreground)]">
                               Past Event
                             </span>
                           ) : null}
                         </div>
 
                         {formattedTitle ? (
-                          <h3 className="font-serif text-lg font-semibold leading-tight text-[color:var(--foreground)] transition-colors group-hover:text-[color:var(--primary)]">
+                          <h3 className="font-serif text-lg font-medium leading-tight text-[color:var(--foreground)] transition-colors group-hover:text-[color:var(--primary)]">
                             {formattedTitle}
                           </h3>
                         ) : null}

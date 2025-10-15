@@ -20,6 +20,15 @@ const toneOptions: { title: string; value: string }[] = [
   { title: "Accent", value: "accent" },
 ];
 
+const colorPresets = [
+  "#FFFFFF",
+  "#3A3A3A",
+  "#A73438",
+  "#5A6B4F",
+  "#F0E6D2",
+  "#000000",
+];
+
 export const resourcesHeroType = defineType({
   name: "resourcesHero",
   title: "Resources hero",
@@ -51,6 +60,26 @@ export const resourcesHeroType = defineType({
       type: "number",
       initialValue: 85,
       validation: (rule) => rule.min(0).max(100),
+    }),
+    defineField({
+      name: "headingColor",
+      title: "Heading color",
+      type: "color",
+      options: {
+        disableAlpha: true,
+        colorList: colorPresets,
+      },
+      description: "Optional override for the main heading color.",
+    }),
+    defineField({
+      name: "taglineColor",
+      title: "Intro text color",
+      type: "color",
+      options: {
+        disableAlpha: true,
+        colorList: colorPresets,
+      },
+      description: "Optional override for the intro paragraph color.",
     }),
     defineField({
       name: "highlights",
@@ -97,6 +126,33 @@ export const resourcesHeroType = defineType({
         }),
       ],
       validation: (rule) => rule.min(1).max(4),
+    }),
+    defineField({
+      name: "highlightTitleColor",
+      title: "Highlight title color",
+      type: "color",
+      options: {
+        disableAlpha: true,
+        colorList: colorPresets,
+      },
+      description: "Applies to every highlight card title (optional).",
+    }),
+    defineField({
+      name: "highlightBodyColor",
+      title: "Highlight body color",
+      type: "color",
+      options: {
+        disableAlpha: true,
+        colorList: colorPresets,
+      },
+      description: "Applies to every highlight card description (optional).",
+    }),
+    defineField({
+      name: "enablePetalAnimation",
+      title: "Enable petal animation",
+      type: "boolean",
+      initialValue: false,
+      description: "Adds a subtle floating petal animation over the background image.",
     }),
     defineField({
       name: "ctaLabel",
