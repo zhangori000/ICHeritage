@@ -27,6 +27,8 @@ type CTA = {
   href?: string | null;
 } | null | undefined;
 
+const FALLBACK_APPLY_PATH = "/start-a-chapter/apply";
+
 type ChapterApplicationProps = {
   sectionId?: string | null;
   kicker?: string | null;
@@ -162,6 +164,11 @@ export function ChapterApplication({
   cardFootnote,
 }: ChapterApplicationProps) {
   const sectionAnchor = sectionId?.trim() ? sectionId.trim() : undefined;
+  const trimmedCtaLabel = typeof cta?.label === "string" ? cta.label.trim() : "";
+  const trimmedCtaHref = typeof cta?.href === "string" ? cta.href.trim() : "";
+  const safeCtaHref =
+    trimmedCtaHref && !trimmedCtaHref.startsWith("#") ? trimmedCtaHref : FALLBACK_APPLY_PATH;
+  const safeCtaLabel = trimmedCtaLabel || "Begin application";
 
   return (
     <section
@@ -309,30 +316,28 @@ export function ChapterApplication({
                 );
               })()}
 
-              {cta?.href && cta?.label ? (
-                <div className="px-6">
-                  <Link
-                    href={cta.href}
-                    className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-md bg-[color:var(--primary)] px-6 text-sm font-medium text-[color:var(--primary-foreground)] transition hover:bg-[color-mix(in_oklab,var(--primary)_90%,black)]"
+              <div className="px-6">
+                <Link
+                  href={safeCtaHref}
+                  className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-md bg-[color:var(--primary)] px-6 text-sm font-medium text-[color:var(--primary-foreground)] transition hover:bg-[color-mix(in_oklab,var(--primary)_90%,black)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--primary)]/40"
+                >
+                  {safeCtaLabel}
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-5 w-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden
                   >
-                    {cta.label}
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-5 w-5"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      aria-hidden
-                    >
-                      <path d="M5 12h14" />
-                      <path d="m12 5 7 7-7 7" />
-                    </svg>
-                  </Link>
-                </div>
-              ) : null}
+                    <path d="M5 12h14" />
+                    <path d="m12 5 7 7-7 7" />
+                  </svg>
+                </Link>
+              </div>
 
               {cardFootnote ? (
                 <p className="px-6 text-center text-xs text-[color:var(--primary)]/60">

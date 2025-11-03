@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
 
 type ContactHostModalProps = {
   buttonLabel: string;
@@ -10,6 +10,31 @@ type ContactHostModalProps = {
   responseNote?: string;
   hostNames: string[];
   showContactDetails?: boolean;
+  workshopId: string;
+  workshopSlug: string;
+  workshopTitle: string;
+  workshopDate?: string | null;
+  workshopLocation?: string | null;
+};
+
+type SubmissionFeedback = {
+  type: 'success' | 'error';
+  message: string;
+  details?: {
+    confirmationEmailSent?: boolean;
+    confirmationEmailError?: string;
+    fallbackGroupUsed?: boolean;
+    targetRecipients?: string[];
+  };
+};
+
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+const deriveEmail = (value?: string | null) => {
+  if (!value) return null;
+  const trimmed = value.trim();
+  if (!trimmed) return null;
+  return EMAIL_REGEX.test(trimmed) ? trimmed : null;
 };
 
 export function ContactHostModal({
@@ -20,10 +45,18 @@ export function ContactHostModal({
   responseNote,
   hostNames,
   showContactDetails = true,
+  workshopId,
+  workshopSlug,
+  workshopTitle,
+  workshopDate,
+  workshopLocation,
 }: ContactHostModalProps) {
   const [isMounted, setIsMounted] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
+  const [status, setStatus] = useState<'idle' | 'submitting'>('idle');
+  const [feedback, setFeedback] = useState<SubmissionFeedback | null>(null);
   const closeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const formRef = useRef<HTMLFormElement | null>(null);
 
   const clearCloseTimeout = useCallback(() => {
     if (closeTimeoutRef.current) {
@@ -34,6 +67,9 @@ export function ContactHostModal({
 
   const closeModal = useCallback(() => {
     clearCloseTimeout();
+    setFeedback(null);
+    setStatus('idle');
+    formRef.current?.reset();
     setIsVisible(false);
     closeTimeoutRef.current = setTimeout(() => {
       setIsMounted(false);
@@ -42,6 +78,8 @@ export function ContactHostModal({
 
   const handleOpen = useCallback(() => {
     clearCloseTimeout();
+    setFeedback(null);
+    setStatus('idle');
     setIsMounted(true);
   }, [clearCloseTimeout]);
 
@@ -76,11 +114,108 @@ export function ContactHostModal({
 
   useEffect(() => clearCloseTimeout, [clearCloseTimeout]);
 
-  const contactLineParts = [] as string[];
+  const contactLineParts: string[] = [];
   if (showContactDetails && email) contactLineParts.push(email);
   if (showContactDetails && phone) contactLineParts.push(phone);
 
   const contactLine = contactLineParts.join(' • ');
+
+  const handleSubmit = useCallback(
+    async (event: FormEvent<HTMLFormElement>) => {
+      event.preventDefault();
+      if (status === 'submitting') return;
+
+      const form = event.currentTarget;
+      const formData = new FormData(form);
+      const message = (formData.get('message') as string | null)?.trim() ?? '';
+      const attendeeContact = (formData.get('contact') as string | null)?.trim() ?? '';
+
+      if (!message || !attendeeContact) {
+        setFeedback({
+          type: 'error',
+          message: 'Please share your question and how we can reach you.',
+        });
+        return;
+      }
+
+      const attendeeEmail = deriveEmail(attendeeContact);
+      const payload = {
+        workshopId,
+        workshopSlug,
+        workshopTitle,
+        workshopDate: workshopDate ?? null,
+        workshopLocation: workshopLocation ?? null,
+        hostNames,
+        message,
+        attendeeContact,
+        attendeeEmail,
+        contactEmail: email ?? null,
+        contactPhone: phone ?? null,
+        pageUrl: typeof window !== 'undefined' ? window.location.href : null,
+      };
+
+      try {
+        setStatus('submitting');
+        setFeedback(null);
+        const response = await fetch('/api/workshops/contact', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(payload),
+        });
+
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok || result?.ok === false) {
+          const errorMessage =
+            (typeof result?.error === 'string' && result.error) ||
+            'We could not send your message. Please try again in a moment.';
+          throw new Error(errorMessage);
+        }
+
+        form.reset();
+        setFeedback({
+          type: 'success',
+          message:
+            (typeof result?.message === 'string' && result.message) ||
+            'Your message was sent to the workshop hosts.',
+          details: {
+            confirmationEmailSent: Boolean(result?.confirmationEmailSent),
+            confirmationEmailError:
+              typeof result?.confirmationEmailError === 'string'
+                ? result.confirmationEmailError
+                : undefined,
+            fallbackGroupUsed: Boolean(result?.fallbackGroupUsed),
+            targetRecipients: Array.isArray(result?.targetRecipients)
+              ? (result.targetRecipients as string[])
+              : undefined,
+          },
+        });
+      } catch (error) {
+        console.error('Contact host submission failed', error);
+        setFeedback({
+          type: 'error',
+          message:
+            error instanceof Error
+              ? error.message
+              : 'We could not send your message. Please try again in a moment.',
+        });
+      } finally {
+        setStatus('idle');
+      }
+    },
+    [
+      email,
+      hostNames,
+      phone,
+      status,
+      workshopDate,
+      workshopId,
+      workshopLocation,
+      workshopSlug,
+      workshopTitle,
+    ]
+  );
 
   return (
     <>
@@ -157,38 +292,82 @@ export function ContactHostModal({
                 </svg>
               </button>
             </div>
-            <form className="px-6 py-6">
-              <label className="flex flex-col gap-2 text-sm text-[color:var(--foreground)]">
-                <span>Your question</span>
-                <textarea
-                  required
-                  placeholder="What's your question for the host?"
-                  className="min-h-[120px] rounded-2xl border border-[color:var(--border)] bg-[color:var(--background)] px-3 py-3 text-sm text-[color:var(--foreground)] focus:border-[color:var(--border)] focus:outline-none focus-soft"
-                />
-              </label>
-              <label className="mt-4 flex flex-col gap-2 text-sm text-[color:var(--foreground)]">
-                <span>How can we reach you?</span>
-                <input
-                  required
-                  placeholder="Email or phone number"
-                  className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--background)] px-3 py-3 text-sm text-[color:var(--foreground)] focus:border-[color:var(--border)] focus:outline-none focus-soft"
-                />
-              </label>
-              {showContactDetails && contactLine ? (
-                <p className="mt-3 text-xs text-[color:var(--muted-foreground)]">
-                  The host will send replies to{' '}
-                  <span className="font-medium text-[color:var(--foreground)]">{contactLine}</span>.
-                </p>
+            <form ref={formRef} onSubmit={handleSubmit} className="px-6 py-6">
+              {feedback?.type === 'error' ? (
+                <div className="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                  {feedback.message}
+                </div>
               ) : null}
-              {showContactDetails && responseNote ? (
-                <p className="mt-1 text-xs text-[color:var(--muted-foreground)]">{responseNote}</p>
-              ) : null}
-              <button
-                type="button"
-                className="mt-6 inline-flex w-full items-center justify-center rounded-full bg-[color:var(--primary)] px-5 py-3 text-sm font-semibold text-[color:var(--primary-foreground)] transition hover:bg-[color:var(--primary)]/90"
-              >
-                Send message
-              </button>
+
+              {feedback?.type === 'success' ? (
+                <div className="space-y-4">
+                  <div className="rounded-lg border border-[color:var(--border)] bg-[color:var(--background)] px-4 py-3 text-sm text-[color:var(--foreground)]">
+                    <p className="font-semibold text-[color:var(--foreground)]">{feedback.message}</p>
+                    {feedback.details?.confirmationEmailSent ? (
+                      <p className="mt-2 text-xs text-emerald-700">A confirmation email is on its way to you.</p>
+                    ) : null}
+                    {feedback.details?.confirmationEmailError ? (
+                      <p className="mt-2 rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-800">
+                        {feedback.details.confirmationEmailError}
+                      </p>
+                    ) : null}
+                    {feedback.details?.targetRecipients && feedback.details.targetRecipients.length > 0 ? (
+                      <div className="mt-3 text-xs text-[color:var(--muted-foreground)]">
+                        <span className="font-medium text-[color:var(--foreground)]">Notified:</span>{' '}
+                        {feedback.details.targetRecipients.join(', ')}
+                        {feedback.details.fallbackGroupUsed ? (
+                          <span>{' (using default contact group)'}</span>
+                        ) : null}
+                      </div>
+                    ) : null}
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={closeModal}
+                    className="inline-flex w-full cursor-pointer items-center justify-center rounded-full bg-[color:var(--primary)] px-5 py-3 text-sm font-semibold text-[color:var(--primary-foreground)] transition hover:bg-[color:var(--primary)]/90"
+                  >
+                    Close
+                  </button>
+                </div>
+              ) : (
+                <>
+                  <label className="flex flex-col gap-2 text-sm text-[color:var(--foreground)]">
+                    <span>Your question</span>
+                    <textarea
+                      name="message"
+                      required
+                      placeholder="What's your question for the host?"
+                      className="min-h-[120px] rounded-2xl border border-[color:var(--border)] bg-[color:var(--background)] px-3 py-3 text-sm text-[color:var(--foreground)] focus:border-[color:var(--border)] focus:outline-none focus-soft"
+                    />
+                  </label>
+                  <label className="mt-4 flex flex-col gap-2 text-sm text-[color:var(--foreground)]">
+                    <span>How can we reach you?</span>
+                    <input
+                      name="contact"
+                      required
+                      placeholder="Email or phone number"
+                      className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--background)] px-3 py-3 text-sm text-[color:var(--foreground)] focus:border-[color:var(--border)] focus:outline-none focus-soft"
+                    />
+                  </label>
+                  {showContactDetails && contactLine ? (
+                    <p className="mt-3 text-xs text-[color:var(--muted-foreground)]">
+                      The host will send replies to{' '}
+                      <span className="font-medium text-[color:var(--foreground)]">{contactLine}</span>.
+                    </p>
+                  ) : null}
+                  {showContactDetails && responseNote ? (
+                    <p className="mt-1 text-xs text-[color:var(--muted-foreground)]">{responseNote}</p>
+                  ) : null}
+                  <button
+                    type="submit"
+                    disabled={status === 'submitting'}
+                    className="mt-6 inline-flex w-full items-center justify-center rounded-full bg-[color:var(--primary)] px-5 py-3 text-sm font-semibold text-[color:var(--primary-foreground)] transition hover:bg-[color:var(--primary)]/90 disabled:cursor-not-allowed disabled:opacity-75"
+                  >
+                    {status === 'submitting' ? 'Sending…' : 'Send message'}
+                  </button>
+                </>
+              )}
             </form>
           </div>
         </div>

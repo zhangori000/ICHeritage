@@ -13,6 +13,25 @@
  */
 
 // Source: schema.json
+export type ContactGroup = {
+  _id: string;
+  _type: "contactGroup";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title?: string;
+  slug?: Slug;
+  description?: string;
+  notifyChapterApplications?: boolean;
+  recipients?: Array<{
+    name?: string;
+    email?: string;
+    role?: string;
+    _type: "recipient";
+    _key: string;
+  }>;
+};
+
 export type Brand = {
   _id: string;
   _type: "brand";
@@ -1429,8 +1448,18 @@ export type SanityAssetSourceData = {
   url?: string;
 };
 
-export type AllSanitySchemaTypes = Brand | VolunteerOpportunity | WorkshopCategory | Workshop | ColorChoice | HeroBanner | SiteSettings | Newsletter | VolunteerApplication | VolunteerBenefits | VolunteerTracks | BrandPromos | VolunteersDirectory | WorkshopsDirectory | PodcastHighlights | LeadershipSection | StoriesImpact | MissionStatement | AboutOverview | ChapterRequirements | ChapterApplication | SplitImage | NewsletterArchive | ResourcesHero | InitiativesGrid | Hero | Features | Faqs | Faq | PageBuilder | Page | Event | Category | BlockContent | BlogPost | Author | Color | RgbaColor | HsvaColor | HslaColor | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageHotspot | SanityImageCrop | SanityFileAsset | SanityImageAsset | SanityImageMetadata | Geopoint | Slug | SanityAssetSourceData;
+export type AllSanitySchemaTypes = ContactGroup | Brand | VolunteerOpportunity | WorkshopCategory | Workshop | ColorChoice | HeroBanner | SiteSettings | Newsletter | VolunteerApplication | VolunteerBenefits | VolunteerTracks | BrandPromos | VolunteersDirectory | WorkshopsDirectory | PodcastHighlights | LeadershipSection | StoriesImpact | MissionStatement | AboutOverview | ChapterRequirements | ChapterApplication | SplitImage | NewsletterArchive | ResourcesHero | InitiativesGrid | Hero | Features | Faqs | Faq | PageBuilder | Page | Event | Category | BlockContent | BlogPost | Author | Color | RgbaColor | HsvaColor | HslaColor | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageHotspot | SanityImageCrop | SanityFileAsset | SanityImageAsset | SanityImageMetadata | Geopoint | Slug | SanityAssetSourceData;
 export declare const internalGroqTypeReferenceTo: unique symbol;
+// Source: ./src/app/api/_lib/recipients.ts
+// Variable: CONTACT_GROUP_QUERY
+// Query: *[_type == "contactGroup" && notifyChapterApplications == true][0]{    title,    recipients[]{      email    }  }
+export type CONTACT_GROUP_QUERYResult = {
+  title: string | null;
+  recipients: Array<{
+    email: string | null;
+  }> | null;
+} | null;
+
 // Source: ./src/sanity/lib/queries.ts
 // Variable: BLOG_POSTS_QUERY
 // Query: *[_type == "blogPost" && defined(slug.current)]    | order(publishedAt desc)[]{      _id,      title,      slug,      body,      mainImage,      publishedAt,      "categories": coalesce(        categories[]->{          _id,          slug,          title        },        []      ),      author->{        name,        image      }    }
@@ -3393,6 +3422,7 @@ export type SITE_SETTINGS_QUERYResult = {
 import "@sanity/client";
 declare module "@sanity/client" {
   interface SanityQueries {
+    "\n  *[_type == \"contactGroup\" && notifyChapterApplications == true][0]{\n    title,\n    recipients[]{\n      email\n    }\n  }\n": CONTACT_GROUP_QUERYResult;
     "\n  *[_type == \"blogPost\" && defined(slug.current)]\n    | order(publishedAt desc)[]{\n      _id,\n      title,\n      slug,\n      body,\n      mainImage,\n      publishedAt,\n      \"categories\": coalesce(\n        categories[]->{\n          _id,\n          slug,\n          title\n        },\n        []\n      ),\n      author->{\n        name,\n        image\n      }\n    }\n": BLOG_POSTS_QUERYResult;
     "\n  *[_type == \"blogPost\" && defined(slug.current)]{\n    \"slug\": slug.current\n  }\n": BLOG_POSTS_SLUGS_QUERYResult;
     "\n  *[_type == \"blogPost\" && slug.current == $slug][0]{\n    _id,\n    title,\n    body,\n    mainImage,\n    publishedAt,\n    \"categories\": coalesce(\n      categories[]->{\n        _id,\n        slug,\n        title\n      },\n      []\n    ),\n    author->{\n      name,\n      image\n    },\n    relatedBlogPosts[] {\n      _key,\n      ...@->{ _id, title, slug }\n    }\n  }\n": BLOG_POST_QUERYResult;
