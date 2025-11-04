@@ -202,15 +202,22 @@ export async function POST(request: Request) {
   ];
 
   try {
-    await resend.emails.send({
+    const replyToValue =
+      replyToAddresses.length === 1 ? replyToAddresses[0] : replyToAddresses;
+
+    const adminEmailPayload: Parameters<typeof resend.emails.send>[0] & {
+      reply_to?: string | string[];
+    } = {
       from: adminFrom,
       to: toEmails,
       subject: guessSubject(fields),
       text: `A new Start a Chapter application was submitted.\n\n${textSummary}`,
       html: htmlSummary,
-      replyTo: replyToAddresses,
       attachments: [csvAttachment, ...fileAttachments],
-    });
+      reply_to: replyToValue,
+    };
+
+    await resend.emails.send(adminEmailPayload);
 
     let confirmationEmailSent = false;
     let confirmationEmailError: string | undefined;
@@ -225,14 +232,19 @@ export async function POST(request: Request) {
       const applicantText = `${applicantIntro}\n\n${textSummary}\n\nIf anything looks off, reply to this email and our team will help.`;
 
       try {
-        await resend.emails.send({
+        const confirmationPayload: Parameters<typeof resend.emails.send>[0] & {
+          reply_to?: string | string[];
+        } = {
           from: adminFrom,
           to: applicantEmail,
           subject: applicantSubject,
           text: applicantText,
           html: applicantHtml,
           attachments: [createCsvAttachment(fields, timestamp), ...fileAttachments],
-        });
+          reply_to: BUSINESS_REPLY_TO,
+        };
+
+        await resend.emails.send(confirmationPayload);
         confirmationEmailSent = true;
       } catch (error) {
         console.error("Failed to send confirmation email to applicant", error);

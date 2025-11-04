@@ -67,7 +67,6 @@ export async function POST(request: Request) {
   }
 
   const body = await parseJsonBody(request);
-
   if (!body) {
     return NextResponse.json(
       { error: "Invalid JSON payload." },
@@ -77,7 +76,6 @@ export async function POST(request: Request) {
 
   const message = body.message?.trim();
   const attendeeContact = body.attendeeContact?.trim();
-
   if (!message || !attendeeContact) {
     return NextResponse.json(
       { error: "Message and contact information are required." },
@@ -86,7 +84,6 @@ export async function POST(request: Request) {
   }
 
   const timestamp = new Date().toISOString();
-
   const payload: Required<ContactPayload> = {
     workshopId: body.workshopId ?? "unknown",
     workshopTitle: body.workshopTitle ?? "Untitled workshop",
@@ -97,9 +94,7 @@ export async function POST(request: Request) {
     message,
     attendeeContact,
     attendeeEmail:
-      body.attendeeEmail?.trim() ??
-      detectEmailFromText(attendeeContact) ??
-      null,
+      body.attendeeEmail?.trim() ?? detectEmailFromText(attendeeContact),
     contactEmail: body.contactEmail ?? null,
     contactPhone: body.contactPhone ?? null,
     pageUrl: body.pageUrl ?? null,
@@ -123,15 +118,21 @@ export async function POST(request: Request) {
   const csvFilename = `workshop-contact-${timestamp.slice(0, 10)}.csv`;
   const csvAttachment = summaryToCsvAttachment(summaryFields, csvFilename);
 
-  const attendeeEmail = payload.attendeeEmail;
-  const replyTo = attendeeEmail
-    ? [BUSINESS_REPLY_TO, attendeeEmail]
-    : [BUSINESS_REPLY_TO];
+  const replyToCandidates = [
+    BUSINESS_REPLY_TO,
+    ...([payload.attendeeEmail].filter(
+      (value): value is string => typeof value === "string" && value.length > 0
+    ) as string[]),
+  ];
+  const replyToValue =
+    replyToCandidates.length === 1 ? replyToCandidates[0] : replyToCandidates;
 
   const resend = new Resend(resendApiKey);
 
   try {
-    await resend.emails.send({
+    const adminPayload: Parameters<typeof resend.emails.send>[0] & {
+      reply_to?: string | string[];
+    } = {
       from: ADMIN_FROM,
       to: toEmails,
       subject: payload.workshopTitle
@@ -139,18 +140,22 @@ export async function POST(request: Request) {
         : "Workshop contact request",
       text: `A new contact message was submitted for ${payload.workshopTitle}.\n\n${textSummary}`,
       html: htmlSummary,
-      replyTo,
       attachments: [csvAttachment],
-    });
+      reply_to: replyToValue,
+    };
+
+    await resend.emails.send(adminPayload);
 
     let confirmationEmailSent = false;
     let confirmationEmailError: string | undefined;
 
-    if (attendeeEmail) {
+    if (payload.attendeeEmail) {
       try {
-        await resend.emails.send({
+        const confirmationPayload: Parameters<typeof resend.emails.send>[0] & {
+          reply_to?: string | string[];
+        } = {
           from: ADMIN_FROM,
-          to: attendeeEmail,
+          to: payload.attendeeEmail,
           subject: `We received your message about ${payload.workshopTitle}`,
           text: `Thanks for reaching out about ${payload.workshopTitle}. Here's a copy of what you sent:\n\n${textSummary}\n\nWe'll be in touch soon.`,
           html: `<p style="font-family:Arial,sans-serif;font-size:14px;color:#333;">Thanks for reaching out about ${
@@ -158,11 +163,11 @@ export async function POST(request: Request) {
           }. Here's a copy of what you sent:</p>${summaryToHtml(
             summaryFields
           )}<p style="font-family:Arial,sans-serif;font-size:13px;color:#555;">We will reply as soon as possible. If you need to add anything, reply to this email.</p>`,
-          replyTo: [BUSINESS_REPLY_TO],
-          attachments: [
-            summaryToCsvAttachment(summaryFields, csvFilename),
-          ],
-        });
+          attachments: [summaryToCsvAttachment(summaryFields, csvFilename)],
+          reply_to: BUSINESS_REPLY_TO,
+        };
+
+        await resend.emails.send(confirmationPayload);
         confirmationEmailSent = true;
       } catch (error) {
         console.error("Failed to send workshop contact confirmation", error);
@@ -187,3 +192,4 @@ export async function POST(request: Request) {
     );
   }
 }
+

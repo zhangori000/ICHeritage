@@ -71,7 +71,6 @@ export async function POST(request: Request) {
   }
 
   const body = await parseJsonBody(request);
-
   if (!body) {
     return NextResponse.json(
       { error: "Invalid JSON payload." },
@@ -95,11 +94,8 @@ export async function POST(request: Request) {
   }
 
   const timestamp = new Date().toISOString();
-
   const attendeeEmail =
-    attendee.email?.trim() ??
-    detectEmailFromText(attendeeContact) ??
-    null;
+    attendee.email?.trim() ?? detectEmailFromText(attendeeContact);
 
   const payload: Required<RsvpPayload> = {
     workshopId: body.workshopId ?? "unknown",
@@ -140,14 +136,21 @@ export async function POST(request: Request) {
   const csvFilename = `workshop-rsvp-${timestamp.slice(0, 10)}.csv`;
   const csvAttachment = summaryToCsvAttachment(summaryFields, csvFilename);
 
-  const replyTo = attendeeEmail
-    ? [BUSINESS_REPLY_TO, attendeeEmail]
-    : [BUSINESS_REPLY_TO];
+  const replyToCandidates = [
+    BUSINESS_REPLY_TO,
+    ...([payload.attendee.email].filter(
+      (value): value is string => typeof value === "string" && value.length > 0
+    ) as string[]),
+  ];
+  const replyToValue =
+    replyToCandidates.length === 1 ? replyToCandidates[0] : replyToCandidates;
 
   const resend = new Resend(resendApiKey);
 
   try {
-    await resend.emails.send({
+    const adminPayload: Parameters<typeof resend.emails.send>[0] & {
+      reply_to?: string | string[];
+    } = {
       from: ADMIN_FROM,
       to: toEmails,
       subject: payload.workshopTitle
@@ -155,18 +158,22 @@ export async function POST(request: Request) {
         : "Workshop RSVP request",
       text: `A new RSVP request was submitted for ${payload.workshopTitle}.\n\n${textSummary}`,
       html: htmlSummary,
-      replyTo,
       attachments: [csvAttachment],
-    });
+      reply_to: replyToValue,
+    };
+
+    await resend.emails.send(adminPayload);
 
     let confirmationEmailSent = false;
     let confirmationEmailError: string | undefined;
 
-    if (attendeeEmail) {
+    if (payload.attendee.email) {
       try {
-        await resend.emails.send({
+        const confirmationPayload: Parameters<typeof resend.emails.send>[0] & {
+          reply_to?: string | string[];
+        } = {
           from: ADMIN_FROM,
-          to: attendeeEmail,
+          to: payload.attendee.email,
           subject: `We received your RSVP for ${payload.workshopTitle}`,
           text: `Thanks for your interest in ${payload.workshopTitle}. Here's a copy of what you shared:\n\n${textSummary}\n\nWe'll send RSVP details as soon as they are available.`,
           html: `<p style="font-family:Arial,sans-serif;font-size:14px;color:#333;">Thanks for your interest in ${
@@ -174,11 +181,11 @@ export async function POST(request: Request) {
           }. Here's a copy of what you shared:</p>${summaryToHtml(
             summaryFields
           )}<p style="font-family:Arial,sans-serif;font-size:13px;color:#555;">We'll follow up with RSVP details soon. If anything changes, reply to this email.</p>`,
-          replyTo: [BUSINESS_REPLY_TO],
-          attachments: [
-            summaryToCsvAttachment(summaryFields, csvFilename),
-          ],
-        });
+          attachments: [summaryToCsvAttachment(summaryFields, csvFilename)],
+          reply_to: BUSINESS_REPLY_TO,
+        };
+
+        await resend.emails.send(confirmationPayload);
         confirmationEmailSent = true;
       } catch (error) {
         console.error("Failed to send workshop RSVP confirmation", error);
@@ -203,3 +210,4 @@ export async function POST(request: Request) {
     );
   }
 }
+
