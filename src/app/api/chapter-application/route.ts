@@ -3,6 +3,7 @@ import { Resend } from "resend";
 import { resolveNotificationRecipients } from "@/app/api/_lib/recipients";
 
 const resendApiKey = process.env.RESEND_API_KEY;
+const BUSINESS_REPLY_TO = "chineseicheritage@gmail.com";
 
 type NormalizedFields = Record<string, string | string[]>;
 
@@ -197,7 +198,7 @@ export async function POST(request: Request) {
   const applicantEmailRaw = extractValue(fields.leadEmail);
   const applicantEmail = applicantEmailRaw?.split(";")[0]?.trim();
   const replyToAddresses = [
-    "chineseicheritage@gmail.com",
+    BUSINESS_REPLY_TO,
     ...(applicantEmail ? [applicantEmail] : []),
   ];
 
