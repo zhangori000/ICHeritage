@@ -167,9 +167,14 @@ export function ContactHostModal({
 
         const result = await response.json().catch(() => ({}));
         if (!response.ok || result?.ok === false) {
+          const resultError =
+            typeof result === 'object' &&
+            result !== null &&
+            typeof (result as { error?: unknown }).error === 'string'
+              ? (result as { error: string }).error
+              : undefined;
           const errorMessage =
-            (typeof result?.error === 'string' && result.error) ||
-            'We could not send your message. Please try again in a moment.';
+            resultError ?? 'We could not send your message. Please try again in a moment.';
           throw new Error(errorMessage);
         }
 

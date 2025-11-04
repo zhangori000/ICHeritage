@@ -558,9 +558,14 @@ export function StartChapterApplicationForm() {
         }
 
         if (!response.ok || (result && result.ok === false)) {
+          const errorFromResult =
+            typeof result === "object" &&
+            result !== null &&
+            typeof (result as { error?: unknown }).error === "string"
+              ? ((result as { error: string }).error)
+              : undefined;
           const errorText =
-            (result?.error && typeof result.error === "string" && result.error) ||
-            "Something went wrong while submitting. Please try again.";
+            errorFromResult ?? "Something went wrong while submitting. Please try again.";
           throw new Error(errorText);
         }
 
