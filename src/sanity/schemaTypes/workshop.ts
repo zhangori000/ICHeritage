@@ -183,12 +183,16 @@ export const workshopType = defineType({
       title: "Contact settings",
       type: "object",
       options: { collapsible: true },
+      initialValue: {
+        ctaLabel: "Contact the host",
+        instructions: "Have a question about the event? You can send a message to the host",
+      },
       fields: [
         defineField({
           name: "ctaLabel",
           title: "Button label",
           type: "string",
-          initialValue: "Contact the Host",
+          initialValue: "Contact the host",
           description: "Text for the contact button on the workshop page.",
         }),
         defineField({
@@ -196,6 +200,7 @@ export const workshopType = defineType({
           title: "Modal instructions",
           type: "text",
           rows: 3,
+          initialValue: "Have a question about the event? You can send a message to the host",
           description:
             "Short welcome message that appears at the top of the contact modal. Explain what happens after someone submits.",
         }),

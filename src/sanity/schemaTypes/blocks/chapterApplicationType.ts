@@ -217,6 +217,10 @@ export const chapterApplicationType = defineType({
       name: "cta",
       title: "CTA",
       type: "object",
+      initialValue: {
+        label: "Begin application",
+        href: "/start-a-chapter/apply",
+      },
       fields: [
         defineField({
           name: "label",

@@ -36,6 +36,7 @@ import { workshopType } from "./workshop";
 import { workshopCategoryType } from "./workshopCategory";
 import { volunteerOpportunityType } from "./volunteerOpportunity";
 import { brandType } from "./brand";
+import { contactGroupType } from "./admin/contactGroupType";
 
 export const schema: { types: SchemaTypeDefinition[] } = {
   types: [
@@ -75,5 +76,6 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     workshopCategoryType,
     volunteerOpportunityType,
     brandType,
+    contactGroupType,
   ],
 };

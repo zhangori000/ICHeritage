@@ -93,6 +93,17 @@ export default async function VolunteerOpportunityPage({
   const hostNames =
     contactEmail || contactPhone ? ["Volunteer coordinator"] : [];
   const hasContactDetails = Boolean(contactEmail || contactPhone);
+  const opportunitySlug = (() => {
+    const rawSlug = opportunity.slug;
+    if (!rawSlug) return resolved.slug;
+    if (typeof rawSlug === "string") return rawSlug;
+    if (typeof rawSlug === "object" && typeof (rawSlug as { current?: unknown }).current === "string") {
+      return (rawSlug as { current: string }).current;
+    }
+    return resolved.slug;
+  })();
+  const opportunityIdentifier = opportunity._id ?? opportunitySlug;
+
 
   const applicationSteps = (opportunity.applicationProcess ?? [])
     .map((step, index) => {
@@ -149,6 +160,11 @@ export default async function VolunteerOpportunityPage({
                     responseNote={responseNote || undefined}
                     hostNames={hostNames}
                     showContactDetails={false}
+                    workshopId={opportunityIdentifier}
+                    workshopSlug={opportunitySlug}
+                    workshopTitle={title}
+                    workshopDate={estimatedTime || null}
+                    workshopLocation={location}
                   />
                 </div>
               </div>

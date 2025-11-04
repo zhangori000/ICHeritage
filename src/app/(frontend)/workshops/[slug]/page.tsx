@@ -337,6 +337,9 @@ export default async function WorkshopPage({
   const scheduleSecondary = formatTimeWindow(workshop.start, workshop.end);
   const scheduleSecondaryText = scheduleSecondary ?? scheduleDetail;
 
+  const workshopSlug = getSlugValue(workshop.slug) || resolved.slug;
+  const workshopIdentifier = workshop._id ?? workshopSlug;
+  const showContactDetails = Boolean(contactSettings.email) || Boolean(contactSettings.phone) || Boolean(contactSettings.responseNote);
   const locationParts = location
     ? location.split(",").map((part) => part.trim()).filter(Boolean)
     : [];
@@ -444,6 +447,12 @@ export default async function WorkshopPage({
                     phone={contactSettings.phone}
                     responseNote={contactSettings.responseNote}
                     hostNames={hostNames}
+                    showContactDetails={showContactDetails}
+                    workshopId={workshopIdentifier}
+                    workshopSlug={workshopSlug}
+                    workshopTitle={title}
+                    workshopDate={scheduleDetail}
+                    workshopLocation={location}
                   />
                 </div>
               </div>
@@ -652,13 +661,24 @@ export default async function WorkshopPage({
               </section>
             ) : null}
 
-            <RsvpForm instructions={contactSettings.responseNote || contactSettings.instructions} />
+            <RsvpForm
+            instructions={contactSettings.responseNote || contactSettings.instructions}
+            workshopId={workshopIdentifier}
+            workshopSlug={workshopSlug}
+            workshopTitle={title}
+            workshopDate={scheduleDetail}
+            workshopLocation={location}
+            contactEmail={contactSettings.email}
+            contactPhone={contactSettings.phone}
+          />
           </main>
         </div>
       </div>
     </article>
   );
 }
+
+
 
 
 
