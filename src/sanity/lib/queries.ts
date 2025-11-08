@@ -494,3 +494,33 @@ export const SITE_SETTINGS_QUERY = defineQuery(`
   }
 }
 `);
+
+export const GALLERY_ALBUMS_QUERY = defineQuery(`
+  *[_type == "galleryAlbum"]
+    | order(_createdAt desc){
+      _id,
+      title,
+      description,
+      shareUrl,
+      highlightImage
+    }
+`);
+
+export const GALLERY_PAGE_QUERY = defineQuery(`
+{
+  "settings": *[_type == "gallerySettings"][0]{
+    heroEyebrow,
+    heroTitle,
+    heroDescription,
+    heroBackgroundImage
+  },
+  "albums": *[_type == "galleryAlbum"]
+    | order(_createdAt desc){
+      _id,
+      title,
+      description,
+      shareUrl,
+      highlightImage
+    }
+}
+`);
