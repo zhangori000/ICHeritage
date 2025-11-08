@@ -19,6 +19,7 @@ type NavGroup = {
 
 const NAV_ITEMS: Array<NavLink | NavGroup> = [
   { id: "nav-resources", label: "Resources", href: "/resources" },
+  { id: "nav-gallery", label: "Gallery", href: "/gallery" },
   {
     id: "nav-program",
     label: "Program",

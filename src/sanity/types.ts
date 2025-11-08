@@ -13,6 +13,54 @@
  */
 
 // Source: schema.json
+export type GallerySettings = {
+  _id: string;
+  _type: "gallerySettings";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  heroEyebrow?: string;
+  heroTitle?: string;
+  heroDescription?: string;
+  heroBackgroundImage?: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+  };
+};
+
+export type GalleryAlbum = {
+  _id: string;
+  _type: "galleryAlbum";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title?: string;
+  description?: string;
+  shareUrl?: string;
+  highlightImage?: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+  };
+};
+
 export type ContactGroup = {
   _id: string;
   _type: "contactGroup";
@@ -1448,7 +1496,7 @@ export type SanityAssetSourceData = {
   url?: string;
 };
 
-export type AllSanitySchemaTypes = ContactGroup | Brand | VolunteerOpportunity | WorkshopCategory | Workshop | ColorChoice | HeroBanner | SiteSettings | Newsletter | VolunteerApplication | VolunteerBenefits | VolunteerTracks | BrandPromos | VolunteersDirectory | WorkshopsDirectory | PodcastHighlights | LeadershipSection | StoriesImpact | MissionStatement | AboutOverview | ChapterRequirements | ChapterApplication | SplitImage | NewsletterArchive | ResourcesHero | InitiativesGrid | Hero | Features | Faqs | Faq | PageBuilder | Page | Event | Category | BlockContent | BlogPost | Author | Color | RgbaColor | HsvaColor | HslaColor | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageHotspot | SanityImageCrop | SanityFileAsset | SanityImageAsset | SanityImageMetadata | Geopoint | Slug | SanityAssetSourceData;
+export type AllSanitySchemaTypes = GallerySettings | GalleryAlbum | ContactGroup | Brand | VolunteerOpportunity | WorkshopCategory | Workshop | ColorChoice | HeroBanner | SiteSettings | Newsletter | VolunteerApplication | VolunteerBenefits | VolunteerTracks | BrandPromos | VolunteersDirectory | WorkshopsDirectory | PodcastHighlights | LeadershipSection | StoriesImpact | MissionStatement | AboutOverview | ChapterRequirements | ChapterApplication | SplitImage | NewsletterArchive | ResourcesHero | InitiativesGrid | Hero | Features | Faqs | Faq | PageBuilder | Page | Event | Category | BlockContent | BlogPost | Author | Color | RgbaColor | HsvaColor | HslaColor | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageHotspot | SanityImageCrop | SanityFileAsset | SanityImageAsset | SanityImageMetadata | Geopoint | Slug | SanityAssetSourceData;
 export declare const internalGroqTypeReferenceTo: unique symbol;
 // Source: ./src/app/api/_lib/recipients.ts
 // Variable: CONTACT_GROUP_QUERY
@@ -3417,6 +3465,68 @@ export type SITE_SETTINGS_QUERYResult = {
     blurb: string | null;
   } | null;
 } | null;
+// Variable: GALLERY_ALBUMS_QUERY
+// Query: *[_type == "galleryAlbum"]    | order(_createdAt desc){      _id,      title,      description,      shareUrl,      highlightImage    }
+export type GALLERY_ALBUMS_QUERYResult = Array<{
+  _id: string;
+  title: string | null;
+  description: string | null;
+  shareUrl: string | null;
+  highlightImage: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+  } | null;
+}>;
+// Variable: GALLERY_PAGE_QUERY
+// Query: {  "settings": *[_type == "gallerySettings"][0]{    heroEyebrow,    heroTitle,    heroDescription,    heroBackgroundImage  },  "albums": *[_type == "galleryAlbum"]    | order(_createdAt desc){      _id,      title,      description,      shareUrl,      highlightImage    }}
+export type GALLERY_PAGE_QUERYResult = {
+  settings: {
+    heroEyebrow: string | null;
+    heroTitle: string | null;
+    heroDescription: string | null;
+    heroBackgroundImage: {
+      asset?: {
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      };
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      alt?: string;
+      _type: "image";
+    } | null;
+  } | null;
+  albums: Array<{
+    _id: string;
+    title: string | null;
+    description: string | null;
+    shareUrl: string | null;
+    highlightImage: {
+      asset?: {
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      };
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      alt?: string;
+      _type: "image";
+    } | null;
+  }>;
+};
 
 // Query TypeMap
 import "@sanity/client";
@@ -3439,5 +3549,7 @@ declare module "@sanity/client" {
     "\n  *[_type == \"volunteerOpportunity\" && slug.current == $slug][0]{\n    _id,\n    title,\n    \"slug\": slug.current,\n    summary,\n    trackLabel,\n    isUrgent,\n    isRemoteFriendly,\n    location,\n    commitmentSummary,\n    openings,\n    experienceLevel,\n    applyUrl,\n    heroImage,\n    responsibilities,\n    qualifications,\n    benefits,\n    applicationProcess[]{\n      _key,\n      title,\n      description\n    },\n    contact{\n      ctaLabel,\n      instructions,\n      email,\n      phone,\n      responseNote\n    },\n    body\n  }\n": VOLUNTEER_QUERYResult;
     "\n  *[_type in [\"volunteerOpportunity\", \"volunteerOPportunity\"] && defined(slug.current)]{\n    \"slug\": slug.current\n  }\n": VOLUNTEER_SLUGS_QUERYResult;
     "\n*[_id == \"siteSettings\"][0]{\n  logo,\n  orgName,\n  footerBlurb,\n  social{\n    facebook, twitter, instagram, youtube\n  },\n  quickLinks[]{\n    _key, label, href\n  },\n  contactEmail,\n  contactPhone,\n  address,\n  newsletter{\n    enabled, blurb\n  }\n}\n": SITE_SETTINGS_QUERYResult;
+    "\n  *[_type == \"galleryAlbum\"]\n    | order(_createdAt desc){\n      _id,\n      title,\n      description,\n      shareUrl,\n      highlightImage\n    }\n": GALLERY_ALBUMS_QUERYResult;
+    "\n{\n  \"settings\": *[_type == \"gallerySettings\"][0]{\n    heroEyebrow,\n    heroTitle,\n    heroDescription,\n    heroBackgroundImage\n  },\n  \"albums\": *[_type == \"galleryAlbum\"]\n    | order(_createdAt desc){\n      _id,\n      title,\n      description,\n      shareUrl,\n      highlightImage\n    }\n}\n": GALLERY_PAGE_QUERYResult;
   }
 }
