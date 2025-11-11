@@ -39,6 +39,7 @@ import { brandType } from "./brand";
 import { contactGroupType } from "./admin/contactGroupType";
 import { galleryAlbumType } from "./galleryAlbum";
 import { gallerySettingsType } from "./gallerySettings";
+import { workshopVolunteerType } from "./workshopVolunteer";
 
 export const schema: { types: SchemaTypeDefinition[] } = {
   types: [
@@ -76,6 +77,7 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     colorChoiceType,
     workshopType,
     workshopCategoryType,
+    workshopVolunteerType,
     volunteerOpportunityType,
     brandType,
     contactGroupType,

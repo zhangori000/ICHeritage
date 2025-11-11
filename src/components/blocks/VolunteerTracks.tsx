@@ -413,7 +413,7 @@ export function VolunteerTracks(block: VolunteerTracksBlock) {
                     const label = clean(link?.label);
                     if (!label) return null;
                     const rawHref = link?.href ?? "";
-                    const href = rawHref && rawHref.startsWith("#") ? "/volunteer-opportunities" : rawHref;
+                    const href = rawHref && rawHref.startsWith("#") ? "/volunteer" : rawHref;
                     const className =
                       "inline-flex w-full items-center justify-center gap-2 rounded-md border border-[color:var(--border)] px-6 py-2 text-sm font-medium text-[color:var(--foreground)] transition-all hover:bg-[color:var(--accent)]/10";
                     if (isInternalHref(href)) {

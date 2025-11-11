@@ -196,7 +196,8 @@ const arrowIcon = (
 );
 
 function renderSupportLink(link: { label: string; href: string }, key: string) {
-  const normalizedHref = link.href.startsWith("#") ? "/volunteer-opportunities" : link.href;
+  const hrefValue = link.href ?? "";
+  const normalizedHref = hrefValue.startsWith("#") ? "/volunteer" : hrefValue;
   const isInternal = normalizedHref.startsWith("/");
   const className =
     "inline-flex items-center justify-center gap-2 rounded-md border border-[color:var(--border)] px-6 py-2 text-sm font-medium text-[color:var(--foreground)] transition-all hover:bg-[color:var(--accent)]/10";

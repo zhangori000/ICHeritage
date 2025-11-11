@@ -428,7 +428,6 @@ export function WorkshopsDirectory(block: WorkshopsDirectoryBlock) {
                   registeredCount,
                   needsVolunteers,
                   registerUrl,
-                  volunteerUrl,
                   heroImage,
                 } = workshop;
 
@@ -487,7 +486,7 @@ export function WorkshopsDirectory(block: WorkshopsDirectoryBlock) {
                           })}
                           {needsVolunteers && showVolunteerBadge ? (
                             <span className="inline-flex items-center rounded-full border border-[color:var(--primary)]/50 bg-[color:var(--primary)]/10 px-2.5 py-0.5 text-xs font-medium text-[color:var(--primary)]">
-                              Volunteers Needed
+                              Volunteers needed - open View details
                             </span>
                           ) : null}
                           {isPast ? (
@@ -574,45 +573,36 @@ export function WorkshopsDirectory(block: WorkshopsDirectoryBlock) {
                         </p>
                       ) : null}
 
-                      <div className="flex flex-wrap gap-2">
-                        {registerUrl ? (
-                          <a
-                            href={registerUrl}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="inline-flex flex-1 items-center justify-center rounded-md bg-[color:var(--primary)] px-3 py-2 text-sm font-medium text-[color:var(--primary-foreground)] transition-colors hover:bg-[color:var(--primary)]/90"
-                          >
-                            Register
-                          </a>
-                        ) : slugPath ? (
-                          <Link
-                            href={slugPath}
-                            prefetch={false}
-                            className="inline-flex flex-1 items-center justify-center rounded-md bg-[color:var(--primary)] px-3 py-2 text-sm font-medium text-[color:var(--primary-foreground)] transition-colors hover:bg-[color:var(--primary)]/90"
-                          >
-                            View Details
-                          </Link>
-                        ) : null}
-                        {volunteerUrl ? (
-                          <a
-                            href={volunteerUrl}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="inline-flex items-center justify-center rounded-md border border-[color:var(--border)] px-3 py-2 text-sm font-medium text-[color:var(--foreground)] transition-colors hover:bg-[color:var(--accent)]/10"
-                          >
-                            Volunteer
-                          </a>
-                        ) : null}
-                        {!volunteerUrl && slugPath && needsVolunteers ? (
-                          <Link
-                            href={slugPath}
-                            prefetch={false}
-                            className="inline-flex items-center justify-center rounded-md border border-[color:var(--border)] px-3 py-2 text-sm font-medium text-[color:var(--foreground)] transition-colors hover:bg-[color:var(--accent)]/10"
-                          >
-                            Volunteer
-                          </Link>
-                        ) : null}
-                      </div>
+                      {(registerUrl || slugPath) ? (
+                        <div className="flex flex-col gap-2">
+                          <div className="flex flex-wrap gap-2">
+                            {registerUrl ? (
+                              <a
+                                href={registerUrl}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="inline-flex flex-1 items-center justify-center rounded-md bg-[color:var(--primary)] px-3 py-2 text-sm font-medium text-[color:var(--primary-foreground)] transition-colors hover:bg-[color:var(--primary)]/90"
+                              >
+                                Register
+                              </a>
+                            ) : null}
+                            {slugPath ? (
+                              <Link
+                                href={slugPath}
+                                prefetch={false}
+                                className="inline-flex flex-1 items-center justify-center rounded-md border border-[color:var(--border)] px-3 py-2 text-sm font-medium text-[color:var(--foreground)] transition-colors hover:border-[color:var(--primary)] hover:text-[color:var(--primary)]"
+                              >
+                                View Details
+                              </Link>
+                            ) : null}
+                          </div>
+                          {needsVolunteers && slugPath ? (
+                            <p className="text-xs text-[color:var(--muted-foreground)]">
+                              Volunteers can submit their interest inside the View details page.
+                            </p>
+                          ) : null}
+                        </div>
+                      ) : null}
                       {slugPath ? (
                         <div className="text-right text-xs text-[color:var(--muted-foreground)]">
                           <Link href={slugPath} prefetch={false} className="underline-offset-4 hover:underline">

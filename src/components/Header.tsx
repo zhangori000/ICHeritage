@@ -36,11 +36,6 @@ const NAV_ITEMS: Array<NavLink | NavGroup> = [
     label: "Volunteer",
     children: [
       { id: "nav-volunteer-about", label: "About Volunteers", href: "/volunteer" },
-      {
-        id: "nav-volunteer-opportunities",
-        label: "Volunteer Opportunities",
-        href: "/volunteer-opportunities",
-      },
     ],
   },
   { id: "nav-workshops", label: "Workshops", href: "/workshops" },

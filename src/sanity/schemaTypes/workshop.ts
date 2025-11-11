@@ -88,6 +88,20 @@ export const workshopType = defineType({
       description: "Optional volunteer signup link",
     }),
     defineField({
+      name: "volunteerResponses",
+      title: "Volunteer responses",
+      type: "array",
+      description:
+        "Automatically populated with volunteer submissions. You can also add or remove entries manually.",
+      of: [
+        defineField({
+          name: "volunteerReference",
+          type: "reference",
+          to: [{ type: "workshopVolunteer" }],
+        }),
+      ],
+    }),
+    defineField({
       name: "heroImage",
       title: "Hero image",
       type: "image",

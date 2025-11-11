@@ -34,20 +34,9 @@ type VolunteersDirectoryBlock = {
   opportunities?: VolunteerOpportunityCard[] | null;
 };
 
-type MaybeSanitySlug = SanitySlugValue | undefined;
-
 const placeholderImage = "/Gemini_Generated_Image_volunteer_default.png";
 
 const clean = (value?: string | null) => (value ? stegaClean(value) : "");
-
-const getSlugValue = (value: MaybeSanitySlug) => {
-  if (!value) return "";
-  if (typeof value === "string") return stegaClean(value);
-  if (typeof value === "object" && "current" in value) {
-    return value.current ? stegaClean(value.current) : "";
-  }
-  return "";
-};
 
 const getTrackKey = (label: string) =>
   label
@@ -211,8 +200,8 @@ export function VolunteersDirectory({
                 const estimatedTime = clean(opportunity.commitmentSummary);
                 const urgent = Boolean(opportunity.isUrgent);
                 const remoteFriendly = Boolean(opportunity.isRemoteFriendly);
-                const slugValue = getSlugValue(opportunity.slug);
-                const slugPath = slugValue ? `/volunteer-opportunities/${slugValue}` : "";
+                const applyHref = clean(opportunity.applyUrl).trim();
+                const applyHrefIsInternal = applyHref.startsWith("/");
 
                 const heroImage =
                   opportunity.heroImage?.asset?._ref
@@ -343,15 +332,26 @@ export function VolunteersDirectory({
                         ) : null}
                       </div>
 
-                      {slugPath ? (
+                      {applyHref ? (
                         <div className="pt-2">
-                          <Link
-                            href={slugPath}
-                            prefetch={false}
-                            className="inline-flex w-full items-center justify-center gap-2 rounded-md bg-[color:var(--primary)] px-4 py-2 text-sm font-semibold text-[color:var(--primary-foreground)] transition hover:bg-[color:var(--primary)]/90"
-                          >
-                            Learn More &amp; Apply
-                          </Link>
+                          {applyHrefIsInternal ? (
+                            <Link
+                              href={applyHref}
+                              prefetch={false}
+                              className="inline-flex w-full items-center justify-center gap-2 rounded-md bg-[color:var(--primary)] px-4 py-2 text-sm font-semibold text-[color:var(--primary-foreground)] transition hover:bg-[color:var(--primary)]/90"
+                            >
+                              Apply Now
+                            </Link>
+                          ) : (
+                            <a
+                              href={applyHref}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="inline-flex w-full items-center justify-center gap-2 rounded-md bg-[color:var(--primary)] px-4 py-2 text-sm font-semibold text-[color:var(--primary-foreground)] transition hover:bg-[color:var(--primary)]/90"
+                            >
+                              Apply Now
+                            </a>
+                          )}
                         </div>
                       ) : null}
                     </div>
