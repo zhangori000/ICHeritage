@@ -14,7 +14,7 @@ import type { WORKSHOP_SLUGS_QUERYResult } from "@/sanity/types";
 import { stegaClean } from "next-sanity";
 import { urlFor } from "@/sanity/lib/image";
 import { ContactHostModal } from "@/components/workshops/ContactHostModal";
-import { RsvpForm } from "@/components/workshops/RsvpForm";
+import { EngagementForms } from "@/components/workshops/EngagementForms";
 import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 
 const placeholderImage = "/Gemini_Generated_Image_workshop_default.png";
@@ -159,7 +159,6 @@ export default async function WorkshopPage({
     workshop.registeredCount
   );
   const registerUrl = workshop.registerUrl?.trim();
-  const volunteerUrl = workshop.volunteerUrl?.trim();
   const categoryBadges = (workshop.categories ?? [])
     .map((category, index) => {
       if (!category) return null;
@@ -493,23 +492,23 @@ export default async function WorkshopPage({
 
           <main className="flex flex-col gap-6">
             <section className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--card)] p-6 shadow-sm">
-              {categoryBadges.length > 0 || workshop.needsVolunteers ? (
-                <div className="flex flex-wrap gap-2">
-                  {categoryBadges.map(({ key, label }) => (
-                    <span
-                      key={key}
-                      className="inline-flex items-center rounded-full border border-[color:var(--border)]/80 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-[color:var(--muted-foreground)]"
+            {categoryBadges.length > 0 || workshop.needsVolunteers ? (
+              <div className="flex flex-wrap gap-2">
+                {categoryBadges.map(({ key, label }) => (
+                  <span
+                    key={key}
+                    className="inline-flex items-center rounded-full border border-[color:var(--border)]/80 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-[color:var(--muted-foreground)]"
                     >
                       {label}
                     </span>
                   ))}
-                  {workshop.needsVolunteers ? (
-                    <span className="inline-flex items-center rounded-full border border-[color:var(--primary)]/50 bg-[color:var(--primary)]/15 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-[color:var(--primary)]">
-                      Volunteers needed
-                    </span>
-                  ) : null}
-                </div>
-              ) : null}
+                {workshop.needsVolunteers ? (
+                  <span className="inline-flex items-center rounded-full border border-[color:var(--primary)]/50 bg-[color:var(--primary)]/15 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-[color:var(--primary)]">
+                    Volunteers needed - fill out the volunteer form
+                  </span>
+                ) : null}
+              </div>
+            ) : null}
 
               <h1 className="mt-4 font-serif text-3xl text-[color:var(--foreground)] md:text-5xl">
                 {title}
@@ -627,30 +626,21 @@ export default async function WorkshopPage({
                 ) : null}
               </div>
 
-              {(registerUrl || volunteerUrl) && (
-                <div className="mt-6 flex flex-wrap gap-3">
-                  {registerUrl ? (
-                    <a
-                      href={registerUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex items-center justify-center gap-2 rounded-full bg-[color:var(--primary)] px-6 py-3 text-sm font-semibold text-[color:var(--primary-foreground)] transition hover:bg-[color:var(--primary)]/90"
-                    >
-                      Register
-                    </a>
-                  ) : null}
-                  {volunteerUrl ? (
-                    <a
-                      href={volunteerUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex items-center justify-center gap-2 rounded-full border border-[color:var(--border)] px-6 py-3 text-sm font-semibold text-[color:var(--foreground)] transition hover:border-[color:var(--primary)] hover:text-[color:var(--primary)]"
-                    >
-                      Volunteer
-                    </a>
-                  ) : null}
-                </div>
-              )}
+            {registerUrl ? (
+              <div className="mt-6 flex flex-col gap-2">
+                <a
+                  href={registerUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center justify-center gap-2 rounded-full bg-[color:var(--primary)] px-6 py-3 text-sm font-semibold text-[color:var(--primary-foreground)] transition hover:bg-[color:var(--primary)]/90"
+                >
+                  Register (external link)
+                </a>
+                <p className="text-xs text-[color:var(--muted-foreground)]">
+                  Prefer to respond here? Use the RSVP or volunteer forms below.
+                </p>
+              </div>
+            ) : null}
             </section>
 
             {workshop.body ? (
@@ -661,16 +651,34 @@ export default async function WorkshopPage({
               </section>
             ) : null}
 
-            <RsvpForm
-            instructions={contactSettings.responseNote || contactSettings.instructions}
-            workshopId={workshopIdentifier}
-            workshopSlug={workshopSlug}
-            workshopTitle={title}
-            workshopDate={scheduleDetail}
-            workshopLocation={location}
-            contactEmail={contactSettings.email}
-            contactPhone={contactSettings.phone}
-          />
+            <EngagementForms
+              rsvp={{
+                instructions:
+                  contactSettings.responseNote ||
+                  contactSettings.instructions ||
+                  "Leave your details and we will share RSVP information as soon as it is available.",
+                workshopId: workshopIdentifier,
+                workshopSlug,
+                workshopTitle: title,
+                workshopDate: scheduleDetail,
+                workshopLocation: location,
+                contactEmail: contactSettings.email,
+                contactPhone: contactSettings.phone,
+              }}
+              volunteer={{
+                instructions: workshop.needsVolunteers
+                  ? "Tell us how you can support the workshop. We’ll reply soon with the next steps."
+                  : "Even if volunteer spots are limited, we’ll keep your information on file for future workshops.",
+                workshopId: workshopIdentifier,
+                workshopSlug,
+                workshopTitle: title,
+                workshopDate: scheduleDetail,
+                workshopLocation: location,
+                contactEmail: contactSettings.email,
+                contactPhone: contactSettings.phone,
+                needsVolunteers: Boolean(workshop.needsVolunteers),
+              }}
+            />
           </main>
         </div>
       </div>

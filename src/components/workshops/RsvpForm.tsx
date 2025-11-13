@@ -65,7 +65,6 @@ export function RsvpForm({
     const ctx = gsap.context(() => {
       gsap.from('.rsvp-field', {
         y: 12,
-        opacity: 0,
         duration: 0.5,
         ease: 'power2.out',
         stagger: 0.08,

@@ -224,6 +224,36 @@ export type VolunteerOpportunity = {
   }>;
 };
 
+export type WorkshopVolunteer = {
+  _id: string;
+  _type: "workshopVolunteer";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  workshop?: {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "workshop";
+  };
+  workshopTitle?: string;
+  workshopSlug?: string;
+  workshopDate?: string;
+  workshopLocation?: string;
+  pageUrl?: string;
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  phone?: string;
+  pronouns?: string;
+  interests?: Array<string>;
+  availability?: string;
+  experience?: string;
+  notes?: string;
+  submittedAt?: string;
+  source?: string;
+};
+
 export type WorkshopCategory = {
   _id: string;
   _type: "workshopCategory";
@@ -260,6 +290,13 @@ export type Workshop = {
   needsVolunteers?: boolean;
   registerUrl?: string;
   volunteerUrl?: string;
+  volunteerResponses?: Array<{
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    _key: string;
+    [internalGroqTypeReferenceTo]?: "workshopVolunteer";
+  }>;
   heroImage?: {
     asset?: {
       _ref: string;
@@ -1496,7 +1533,7 @@ export type SanityAssetSourceData = {
   url?: string;
 };
 
-export type AllSanitySchemaTypes = GallerySettings | GalleryAlbum | ContactGroup | Brand | VolunteerOpportunity | WorkshopCategory | Workshop | ColorChoice | HeroBanner | SiteSettings | Newsletter | VolunteerApplication | VolunteerBenefits | VolunteerTracks | BrandPromos | VolunteersDirectory | WorkshopsDirectory | PodcastHighlights | LeadershipSection | StoriesImpact | MissionStatement | AboutOverview | ChapterRequirements | ChapterApplication | SplitImage | NewsletterArchive | ResourcesHero | InitiativesGrid | Hero | Features | Faqs | Faq | PageBuilder | Page | Event | Category | BlockContent | BlogPost | Author | Color | RgbaColor | HsvaColor | HslaColor | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageHotspot | SanityImageCrop | SanityFileAsset | SanityImageAsset | SanityImageMetadata | Geopoint | Slug | SanityAssetSourceData;
+export type AllSanitySchemaTypes = GallerySettings | GalleryAlbum | ContactGroup | Brand | VolunteerOpportunity | WorkshopVolunteer | WorkshopCategory | Workshop | ColorChoice | HeroBanner | SiteSettings | Newsletter | VolunteerApplication | VolunteerBenefits | VolunteerTracks | BrandPromos | VolunteersDirectory | WorkshopsDirectory | PodcastHighlights | LeadershipSection | StoriesImpact | MissionStatement | AboutOverview | ChapterRequirements | ChapterApplication | SplitImage | NewsletterArchive | ResourcesHero | InitiativesGrid | Hero | Features | Faqs | Faq | PageBuilder | Page | Event | Category | BlockContent | BlogPost | Author | Color | RgbaColor | HsvaColor | HslaColor | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageHotspot | SanityImageCrop | SanityFileAsset | SanityImageAsset | SanityImageMetadata | Geopoint | Slug | SanityAssetSourceData;
 export declare const internalGroqTypeReferenceTo: unique symbol;
 // Source: ./src/app/api/_lib/recipients.ts
 // Variable: CONTACT_GROUP_QUERY
