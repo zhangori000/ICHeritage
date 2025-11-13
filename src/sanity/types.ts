@@ -1545,6 +1545,19 @@ export type CONTACT_GROUP_QUERYResult = {
   }> | null;
 } | null;
 
+// Source: ./src/app/api/workshops/volunteer/route.ts
+// Variable: WORKSHOP_CONTACT_QUERY
+// Query: *[_type == "workshop" && (    (defined($workshopId) && _id == $workshopId) ||    (defined($workshopSlug) && slug.current == $workshopSlug)  )][0]{    _id,    title,    "slug": slug.current,    contact{      email,      phone    }  }
+export type WORKSHOP_CONTACT_QUERYResult = {
+  _id: string;
+  title: string | null;
+  slug: string | null;
+  contact: {
+    email: string | null;
+    phone: string | null;
+  } | null;
+} | null;
+
 // Source: ./src/sanity/lib/queries.ts
 // Variable: BLOG_POSTS_QUERY
 // Query: *[_type == "blogPost" && defined(slug.current)]    | order(publishedAt desc)[]{      _id,      title,      slug,      body,      mainImage,      publishedAt,      "categories": coalesce(        categories[]->{          _id,          slug,          title        },        []      ),      author->{        name,        image      }    }
@@ -3570,6 +3583,7 @@ import "@sanity/client";
 declare module "@sanity/client" {
   interface SanityQueries {
     "\n  *[_type == \"contactGroup\" && notifyChapterApplications == true][0]{\n    title,\n    recipients[]{\n      email\n    }\n  }\n": CONTACT_GROUP_QUERYResult;
+    "\n  *[_type == \"workshop\" && (\n    (defined($workshopId) && _id == $workshopId) ||\n    (defined($workshopSlug) && slug.current == $workshopSlug)\n  )][0]{\n    _id,\n    title,\n    \"slug\": slug.current,\n    contact{\n      email,\n      phone\n    }\n  }\n": WORKSHOP_CONTACT_QUERYResult;
     "\n  *[_type == \"blogPost\" && defined(slug.current)]\n    | order(publishedAt desc)[]{\n      _id,\n      title,\n      slug,\n      body,\n      mainImage,\n      publishedAt,\n      \"categories\": coalesce(\n        categories[]->{\n          _id,\n          slug,\n          title\n        },\n        []\n      ),\n      author->{\n        name,\n        image\n      }\n    }\n": BLOG_POSTS_QUERYResult;
     "\n  *[_type == \"blogPost\" && defined(slug.current)]{\n    \"slug\": slug.current\n  }\n": BLOG_POSTS_SLUGS_QUERYResult;
     "\n  *[_type == \"blogPost\" && slug.current == $slug][0]{\n    _id,\n    title,\n    body,\n    mainImage,\n    publishedAt,\n    \"categories\": coalesce(\n      categories[]->{\n        _id,\n        slug,\n        title\n      },\n      []\n    ),\n    author->{\n      name,\n      image\n    },\n    relatedBlogPosts[] {\n      _key,\n      ...@->{ _id, title, slug }\n    }\n  }\n": BLOG_POST_QUERYResult;

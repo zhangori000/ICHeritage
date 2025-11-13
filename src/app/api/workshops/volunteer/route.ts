@@ -1,13 +1,19 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
+import groq from "groq";
 
-import { resolveNotificationRecipients } from "@/app/api/_lib/recipients";
+import {
+  resolveNotificationRecipients,
+  detectEmailFromText,
+} from "@/app/api/_lib/recipients";
 import {
   SummaryField,
   summaryToCsvAttachment,
   summaryToHtml,
   summaryToText,
 } from "@/app/api/_lib/summary";
+import { client } from "@/sanity/lib/client";
+import { token } from "@/sanity/lib/token";
 import { writeClient } from "@/sanity/lib/writeClient";
 
 const resendApiKey = process.env.RESEND_API_KEY;
@@ -62,11 +68,73 @@ type NormalizedVolunteerPayload = {
   volunteer: NormalizedVolunteerDetails;
 };
 
+const readClient = client.withConfig({ token, useCdn: false });
+
+const WORKSHOP_CONTACT_QUERY = groq`
+  *[_type == "workshop" && (
+    (defined($workshopId) && _id == $workshopId) ||
+    (defined($workshopSlug) && slug.current == $workshopSlug)
+  )][0]{
+    _id,
+    title,
+    "slug": slug.current,
+    contact{
+      email,
+      phone
+    }
+  }
+`;
+
+type WorkshopContactLookupResult = {
+  contact?: {
+    email?: string | null;
+    phone?: string | null;
+  };
+};
+
 const parseJsonBody = async (request: Request) => {
   try {
     return (await request.json()) as VolunteerPayload;
   } catch {
     return null;
+  }
+};
+
+const sanitizePhone = (value?: string | null) => {
+  const trimmed = value?.trim();
+  return trimmed || null;
+};
+
+const fetchWorkshopContactDetails = async (
+  workshopId?: string | null,
+  workshopSlug?: string | null
+) => {
+  if (!workshopId && !workshopSlug) {
+    return {
+      contactEmail: null,
+      contactPhone: null,
+    };
+  }
+
+  try {
+    const result = await readClient.fetch<WorkshopContactLookupResult | null>(
+      WORKSHOP_CONTACT_QUERY,
+      {
+        workshopId: workshopId ?? null,
+        workshopSlug: workshopSlug ?? null,
+      }
+    );
+
+    return {
+      contactEmail: detectEmailFromText(result?.contact?.email),
+      contactPhone: sanitizePhone(result?.contact?.phone),
+    };
+  } catch (error) {
+    console.error("Failed to read workshop contact details", error);
+    return {
+      contactEmail: null,
+      contactPhone: null,
+    };
   }
 };
 
@@ -202,6 +270,12 @@ export async function POST(request: Request) {
     );
   }
 
+  const { contactEmail, contactPhone: configuredContactPhone } = await fetchWorkshopContactDetails(
+    body.workshopId,
+    body.workshopSlug
+  );
+  const fallbackContactPhone = sanitizePhone(body.contactPhone);
+
   const timestamp = new Date().toISOString();
   const normalizedPayload: NormalizedVolunteerPayload = {
     workshopId: body.workshopId ?? "unknown",
@@ -209,9 +283,9 @@ export async function POST(request: Request) {
     workshopTitle: body.workshopTitle ?? "Untitled workshop",
     workshopDate: body.workshopDate ?? "",
     workshopLocation: body.workshopLocation ?? "",
-    contactEmail: body.contactEmail ?? null,
-    contactPhone: body.contactPhone ?? null,
-    pageUrl: body.pageUrl ?? null,
+    contactEmail,
+    contactPhone: configuredContactPhone ?? fallbackContactPhone,
+    pageUrl: body.pageUrl?.trim() || null,
     volunteer: {
       firstName,
       lastName,
@@ -287,9 +361,12 @@ export async function POST(request: Request) {
     }
   }
 
-  const { recipients: toEmails, fallbackUsed } = await resolveNotificationRecipients([
-    normalizedPayload.contactEmail,
-  ]);
+  const preferredRecipients = normalizedPayload.contactEmail
+    ? [normalizedPayload.contactEmail]
+    : [];
+  const { recipients: toEmails, fallbackUsed } = await resolveNotificationRecipients(
+    preferredRecipients
+  );
 
   if (!toEmails.length) {
     return NextResponse.json(
