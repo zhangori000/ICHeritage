@@ -7,6 +7,14 @@ import { sanityFetch } from "@/sanity/lib/live";
 import { LEGAL_PAGES_QUERY, SITE_SETTINGS_QUERY } from "@/sanity/lib/queries";
 import { Footer } from "@/components/Footer";
 
+/**
+ * Regenerate every page in the background at most every 5 minutes, so
+ * edits published in Studio reach the live site even when nobody has the
+ * page open (Sanity Live only pushes updates to browsers that are already
+ * connected). POST /api/revalidate publishes changes immediately.
+ */
+export const revalidate = 300;
+
 export default async function FrontendLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
