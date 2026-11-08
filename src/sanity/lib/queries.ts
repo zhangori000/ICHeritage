@@ -79,7 +79,12 @@ export const NEWSLETTER_QUERY = defineQuery(`
     readTime,
     excerpt,
     coverImage,
-    body
+    body,
+    "attachment": attachment{
+      "url": asset->url,
+      "filename": asset->originalFilename,
+      "size": asset->size
+    }
   }
 `);
 
@@ -488,22 +493,13 @@ export const SITE_SETTINGS_QUERY = defineQuery(`
   },
   contactEmail,
   contactPhone,
-  address,
   newsletter{
     enabled, blurb
+  },
+  navigation{
+    showWorkshops, showBrands
   }
 }
-`);
-
-export const GALLERY_ALBUMS_QUERY = defineQuery(`
-  *[_type == "galleryAlbum"]
-    | order(_createdAt desc){
-      _id,
-      title,
-      description,
-      shareUrl,
-      highlightImage
-    }
 `);
 
 export const GALLERY_PAGE_QUERY = defineQuery(`
@@ -515,12 +511,23 @@ export const GALLERY_PAGE_QUERY = defineQuery(`
     heroBackgroundImage
   },
   "albums": *[_type == "galleryAlbum"]
-    | order(_createdAt desc){
+    | order(coalesce(date, _createdAt) desc){
       _id,
       title,
       description,
+      date,
       shareUrl,
-      highlightImage
+      highlightImage,
+      photos[]{
+        _key,
+        asset,
+        hotspot,
+        crop,
+        alt,
+        caption,
+        "dimensions": asset->metadata.dimensions{ width, height },
+        "lqip": asset->metadata.lqip
+      }
     }
 }
 `);

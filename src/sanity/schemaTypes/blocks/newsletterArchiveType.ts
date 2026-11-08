@@ -18,6 +18,8 @@ export const newsletterArchiveType = defineType({
       title: "Section description",
       type: "text",
       rows: 3,
+      description:
+        "The article cards below this heading are filled in automatically from Content → Resources → Articles & Newsletters.",
     }),
     defineField({
       name: "searchPlaceholder",
@@ -31,10 +33,14 @@ export const newsletterArchiveType = defineType({
       type: "string",
       initialValue: "Filter by Topic",
     }),
+    // Cards on the live site are generated automatically from the
+    // "Article / Newsletter" documents, so this manual list is hidden in the
+    // Studio. It is kept only so older page documents still validate.
     defineField({
       name: "newsletters",
-      title: "Featured newsletters",
+      title: "Featured newsletters (legacy, not used)",
       type: "array",
+      hidden: true,
       of: [
         defineArrayMember({
           type: "object",
@@ -88,7 +94,6 @@ export const newsletterArchiveType = defineType({
           },
         }),
       ],
-      validation: (rule) => rule.min(1).max(6),
     }),
     defineField({
       name: "cta",

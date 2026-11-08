@@ -3,7 +3,7 @@ import { DocumentTextIcon } from "@sanity/icons";
 
 export default defineType({
   name: "newsletter",
-  title: "Newsletter",
+  title: "Article / Newsletter",
   type: "document",
   icon: DocumentTextIcon,
   fields: [
@@ -53,7 +53,17 @@ export default defineType({
       name: "body",
       title: "Body",
       type: "blockContent",
+      description:
+        "The article text. You can add headings, links, and inline images here.",
       validation: (rule) => rule.required(),
+    }),
+    defineField({
+      name: "attachment",
+      title: "Downloadable file (optional)",
+      type: "file",
+      description:
+        "Upload a PDF version of the article or newsletter. A download button will appear on the article page.",
+      options: { accept: "application/pdf,.pdf" },
     }),
   ],
   preview: {

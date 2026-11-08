@@ -27,8 +27,9 @@ export const gallerySettingsType = defineType({
       title: "Hero description",
       type: "text",
       rows: 3,
-      description:
-        "Explain how chapters can browse shared albums curated in iCloud, Google Photos, etc.",
+      description: "One or two sentences introducing the photo gallery.",
+      initialValue:
+        "Moments from our workshops, celebrations, and community gatherings.",
     }),
     defineField({
       name: "heroBackgroundImage",
