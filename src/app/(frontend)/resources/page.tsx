@@ -6,12 +6,12 @@ import type { PAGE_QUERY_RESULT, NEWSLETTERS_QUERY_RESULT } from "@/sanity/types
 export default async function ResourcesPage() {
   const [{ data: pageData }, { data: newsletterData }] = await Promise.all([
     sanityFetch<typeof PAGE_QUERY>({
-    stega: false,
+      stega: false,
       query: PAGE_QUERY,
       params: { slug: "resources" },
     }),
     sanityFetch<typeof NEWSLETTERS_QUERY>({
-    stega: false,
+      stega: false,
       query: NEWSLETTERS_QUERY,
     }),
   ]);

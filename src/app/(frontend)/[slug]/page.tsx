@@ -1,4 +1,4 @@
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 import { PageBuilder } from "@/components/PageBuilder";
 import { client } from "@/sanity/lib/client";
@@ -33,6 +33,11 @@ export default async function Page({
 }) {
   const { slug } = await params;
 
+  // The home page document has the slug "home" but lives at "/".
+  if (slug === "home") {
+    redirect("/");
+  }
+
   const [{ data: page }, { data: settings }] = await Promise.all([
     sanityFetch({ stega: false, query: PAGE_QUERY, params: { slug } }),
     sanityFetch({ stega: false, query: SITE_SETTINGS_QUERY }),
@@ -44,7 +49,13 @@ export default async function Page({
     redirect("/");
   }
 
-  return page?.content ? (
+  // Unknown slugs used to render an empty 200 page; a real 404 is clearer
+  // for visitors and search engines.
+  if (!page) {
+    notFound();
+  }
+
+  return page.content ? (
     <PageBuilder
       documentId={page._id}
       documentType={page._type}

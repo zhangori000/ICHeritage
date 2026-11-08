@@ -69,11 +69,12 @@ export function Footer({ settings, legalPages = [] }: FooterProps) {
 
   // Privacy / Terms links appear only once those pages exist in Studio
   // (Pages → + Create with slug "privacy" or "terms"), so nothing 404s.
+  const LEGAL_ORDER = ["privacy", "terms"];
   const legalLinks = legalPages
     .filter((page): page is { title: string; slug: string } =>
       Boolean(page?.slug && page?.title)
     )
-    .sort((a, b) => (a.slug === "privacy" ? -1 : b.slug === "privacy" ? 1 : 0));
+    .sort((a, b) => LEGAL_ORDER.indexOf(a.slug) - LEGAL_ORDER.indexOf(b.slug));
 
   const newsletterEnabled = settings?.newsletter?.enabled ?? true;
   const newsletterBlurb =

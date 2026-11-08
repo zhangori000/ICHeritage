@@ -42,7 +42,6 @@ export default function Loading() {
           ))}
         </div>
       </div>
-      <span className="sr-only">Loading…</span>
     </div>
   );
 }
