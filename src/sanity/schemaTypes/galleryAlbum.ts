@@ -1,7 +1,13 @@
 // src/sanity/schemaTypes/galleryAlbum.ts
 import { ImagesIcon } from "@sanity/icons";
-import { defineField, defineType } from "sanity";
+import { defineArrayMember, defineField, defineType } from "sanity";
 
+/**
+ * A gallery album is a set of photos uploaded directly in Sanity Studio.
+ * Editors can drag-and-drop many images at once into the "Photos" field.
+ * An optional external link (iCloud, Google Photos, …) is still supported
+ * for albums that live elsewhere.
+ */
 export const galleryAlbumType = defineType({
   name: "galleryAlbum",
   title: "Gallery Album",
@@ -19,22 +25,22 @@ export const galleryAlbumType = defineType({
       title: "Description",
       type: "text",
       rows: 2,
-      description: "Optional context that appears with the album embed.",
+      description: "Optional short intro shown under the album title.",
     }),
     defineField({
-      name: "shareUrl",
-      title: "Shared album URL",
-      type: "url",
-      description: "Public iCloud, Google Photos, or similar shared link.",
-      validation: (rule) =>
-        rule.required().uri({ allowRelative: false, scheme: ["http", "https"] }),
+      name: "date",
+      title: "Event date",
+      type: "date",
+      description:
+        "Optional. Used to order albums on the gallery page (newest first) and shown next to the title.",
+      options: { dateFormat: "YYYY-MM-DD" },
     }),
     defineField({
       name: "highlightImage",
-      title: "Highlight image",
+      title: "Cover image",
       type: "image",
       description:
-        "Optional photo that appears on the gallery card for extra context.",
+        "Optional. Large banner photo at the top of the album. If left empty, the first photo below is used.",
       options: { hotspot: true },
       fields: [
         defineField({
@@ -44,11 +50,63 @@ export const galleryAlbumType = defineType({
         }),
       ],
     }),
+    defineField({
+      name: "photos",
+      title: "Photos",
+      type: "array",
+      description:
+        "Upload the photos for this album. You can drag and drop several files at once. Drag photos to reorder them.",
+      of: [
+        defineArrayMember({
+          type: "image",
+          options: { hotspot: true },
+          fields: [
+            defineField({
+              name: "alt",
+              type: "string",
+              title: "Alt text",
+              description: "Short description of the photo for screen readers.",
+            }),
+            defineField({
+              name: "caption",
+              type: "string",
+              title: "Caption",
+              description: "Optional caption shown under the photo when opened.",
+            }),
+          ],
+        }),
+      ],
+      options: { layout: "grid" },
+    }),
+    defineField({
+      name: "shareUrl",
+      title: "External album link (optional)",
+      type: "url",
+      description:
+        "Only needed if the full album lives somewhere else (iCloud, Google Photos, Dropbox…). A “View full album” button will link to it.",
+      validation: (rule) =>
+        rule.uri({ allowRelative: false, scheme: ["http", "https"] }),
+    }),
   ],
   preview: {
     select: {
       title: "title",
-      subtitle: "shareUrl",
+      date: "date",
+      photos: "photos",
+      media: "highlightImage",
+      firstPhoto: "photos.0",
+    },
+    prepare({ title, date, photos, media, firstPhoto }) {
+      const count = Array.isArray(photos) ? photos.length : 0;
+      const parts = [
+        date ? String(date) : null,
+        `${count} photo${count === 1 ? "" : "s"}`,
+      ].filter(Boolean);
+      return {
+        title: title || "Untitled album",
+        subtitle: parts.join(" · "),
+        media: media ?? firstPhoto,
+      };
     },
   },
 });

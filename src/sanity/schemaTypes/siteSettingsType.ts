@@ -30,6 +30,35 @@ export const siteSettingsType = defineType({
       validation: (rule) => rule.required(),
     }),
 
+    // --- SECTION VISIBILITY -------------------------------------------------
+    // Lets the site owner switch optional sections on/off without a deploy.
+    // Hidden sections disappear from the header menu and their pages send
+    // visitors back to the home page. Anything left unset counts as hidden.
+    defineField({
+      name: "navigation",
+      title: "Section visibility",
+      type: "object",
+      description:
+        "Switch optional sections of the website on or off. Sections that are off are removed from the menu and their pages redirect to the home page.",
+      options: { collapsible: true, collapsed: false },
+      fields: [
+        defineField({
+          name: "showWorkshops",
+          title: "Show Workshops",
+          type: "boolean",
+          description: "Shows the Workshops link in the menu and the /workshops pages.",
+          initialValue: false,
+        }),
+        defineField({
+          name: "showBrands",
+          title: "Show Brands",
+          type: "boolean",
+          description: "Shows the Brands link in the menu and the /brands page.",
+          initialValue: false,
+        }),
+      ],
+    }),
+
     // --- FOOTER: LEFT COLUMN ------------------------------------------------
     defineField({
       name: "footerBlurb",
@@ -90,13 +119,6 @@ export const siteSettingsType = defineType({
       name: "contactPhone",
       title: "Phone number",
       type: "string",
-    }),
-    defineField({
-      name: "address",
-      title: "Address (2–3 lines)",
-      type: "array",
-      of: [{ type: "string" }],
-      options: { sortable: true },
     }),
 
     // --- FOOTER: NEWSLETTER (right column) ---------------------------------

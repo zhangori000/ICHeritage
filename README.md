@@ -28,3 +28,18 @@ Run this to move developmetn dataset to production (delete the developmetn.tar.g
 `npx sanity@latest dataset import development.tar.gz production --replace`
 
 Or just run the npm command in package.json
+
+# Editing content (for the site owner)
+
+Everything below is done in Sanity Studio at `/studio` — no code changes or redeploy needed.
+
+- **Show / hide Workshops and Brands** — `Site Settings → Section visibility`. Both are off by
+  default: the links disappear from the menu and `/workshops` and `/brands` redirect to the home page.
+  Tip: if a home-page card still links to a hidden section, edit that card under `Pages → Home Page`.
+- **Gallery photos** — `Gallery → Photo Albums → + Create`. Give the album a title, then drag and drop
+  photos into the **Photos** field (several at once is fine). Optional: a date, a cover image, a caption
+  per photo, and an external album link. `Gallery → Gallery Page Settings` controls the hero text.
+- **Articles / newsletters** — `Resources → Articles & Newsletters → + Create`. Write the article in the
+  **Body** field (headings, links, and inline images are supported) and optionally attach a PDF under
+  **Downloadable file**. Published articles appear automatically on `/resources`.
+- **Footer contact details** — `Site Settings` (email and phone). The street address is no longer shown.

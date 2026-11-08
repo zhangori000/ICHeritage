@@ -6,15 +6,26 @@ import Image from "next/image";
 import Link from "next/link";
 import type { SITE_SETTINGS_QUERYResult } from "@/sanity/types";
 import { urlFor } from "@/sanity/lib/image";
+import {
+  getSectionVisibility,
+  type HideableSection,
+} from "@/lib/siteVisibility";
 
 /* ------------------------------------------------------------------ */
 /* Nav model (matches your latest: Program menu + dedicated Volunteer) */
 /* ------------------------------------------------------------------ */
-type NavLink = { id: string; label: string; href: string };
+type NavLink = {
+  id: string;
+  label: string;
+  href: string;
+  /** When set, the link only shows if this section is switched on in Site Settings. */
+  section?: HideableSection;
+};
 type NavGroup = {
   id: string;
   label: string;
   children: Array<{ id: string; label: string; href: string }>;
+  section?: HideableSection;
 };
 
 const NAV_ITEMS: Array<NavLink | NavGroup> = [
@@ -38,8 +49,13 @@ const NAV_ITEMS: Array<NavLink | NavGroup> = [
       { id: "nav-volunteer-about", label: "About Volunteers", href: "/volunteer" },
     ],
   },
-  { id: "nav-workshops", label: "Workshops", href: "/workshops" },
-  { id: "nav-brands", label: "Brands", href: "/brands" },
+  {
+    id: "nav-workshops",
+    label: "Workshops",
+    href: "/workshops",
+    section: "workshops",
+  },
+  { id: "nav-brands", label: "Brands", href: "/brands", section: "brands" },
   { id: "nav-about", label: "About", href: "/about" },
 ];
 
@@ -67,6 +83,12 @@ export function Header({ settings }: HeaderProps) {
     (logo?.asset?._ref &&
       urlFor(logo).width(64).height(64).fit("crop").url()) ||
     "/images/logo.png";
+
+  // Drop nav items whose section is switched off in Site Settings
+  const visibility = getSectionVisibility(settings);
+  const navItems = NAV_ITEMS.filter(
+    (item) => !item.section || visibility[item.section]
+  );
 
   // Mobile drawer state
   const [mobileOpen, setMobileOpen] = React.useState(false);
@@ -110,7 +132,7 @@ export function Header({ settings }: HeaderProps) {
 
             {/* ------------------ Desktop navigation ------------------ */}
             <nav className="hidden lg:flex items-center gap-6 xl:gap-8 flex-1 justify-center">
-              {NAV_ITEMS.map((item) => {
+              {navItems.map((item) => {
                 if ("href" in item) {
                   // Simple link — hover = text color only
                   return (
@@ -309,7 +331,7 @@ export function Header({ settings }: HeaderProps) {
               Main Navigation
             </div>
 
-            {NAV_ITEMS.map((item) => {
+            {navItems.map((item) => {
               if ("href" in item) {
                 return (
                   <Link

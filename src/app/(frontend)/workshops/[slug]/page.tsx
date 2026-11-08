@@ -1,14 +1,16 @@
 import Image from "next/image";
 import dayjs from "dayjs";
 import { PortableText } from "next-sanity";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 import { sanityFetch } from "@/sanity/lib/live";
 import { client } from "@/sanity/lib/client";
 import {
+  SITE_SETTINGS_QUERY,
   WORKSHOP_QUERY,
   WORKSHOP_SLUGS_QUERY,
 } from "@/sanity/lib/queries";
+import { getSectionVisibility } from "@/lib/siteVisibility";
 import { components as portableComponents } from "@/sanity/portableTextComponents";
 import type { WORKSHOP_SLUGS_QUERYResult } from "@/sanity/types";
 import { stegaClean } from "next-sanity";
@@ -141,10 +143,15 @@ export default async function WorkshopPage({
   params: WorkshopParams;
 }) {
   const resolved = await params;
-  const { data: workshop } = await sanityFetch({
-    query: WORKSHOP_QUERY,
-    params: resolved,
-  });
+  const [{ data: workshop }, { data: settings }] = await Promise.all([
+    sanityFetch({ query: WORKSHOP_QUERY, params: resolved }),
+    sanityFetch({ query: SITE_SETTINGS_QUERY }),
+  ]);
+
+  // Workshops can be switched off in Site Settings; send visitors home.
+  if (!getSectionVisibility(settings).workshops) {
+    redirect("/");
+  }
 
   if (!workshop) {
     notFound();

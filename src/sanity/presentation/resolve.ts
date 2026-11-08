@@ -21,6 +21,37 @@ export const resolve: PresentationPluginOptions["resolve"] = {
         ],
       }),
     }),
+    newsletter: defineLocations({
+      select: {
+        title: "title",
+        slug: "slug.current",
+      },
+      resolve: (doc) => ({
+        locations: [
+          {
+            title: doc?.title || "Untitled article",
+            href: `/resources/newsletter/${doc?.slug}`,
+          },
+          { title: "Resources page", href: "/resources" },
+        ],
+      }),
+    }),
+    galleryAlbum: defineLocations({
+      select: {
+        title: "title",
+      },
+      resolve: (doc) => ({
+        locations: [
+          {
+            title: `Gallery (${doc?.title || "album"})`,
+            href: "/gallery",
+          },
+        ],
+      }),
+    }),
+    gallerySettings: {
+      locations: [{ title: "Gallery", href: "/gallery" }],
+    },
     page: defineLocations({
       select: {
         title: "title",

@@ -9,6 +9,12 @@ import type { PortableTextBlock } from "sanity";
 
 type CoverImage = NonNullable<NonNullable<BLOG_POST_QUERYResult>["mainImage"]>;
 
+type Attachment = {
+  url?: string | null;
+  filename?: string | null;
+  size?: number | null;
+};
+
 type NewsletterArticleProps = {
   _id: string;
   title: string | null;
@@ -18,7 +24,14 @@ type NewsletterArticleProps = {
   excerpt?: string | null;
   coverImage?: CoverImage | null;
   body?: PortableTextBlock[] | null;
+  attachment?: Attachment | null;
 };
+
+function formatFileSize(bytes?: number | null) {
+  if (!bytes || bytes <= 0) return null;
+  if (bytes < 1024 * 1024) return `${Math.max(1, Math.round(bytes / 1024))} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+}
 
 function RenderDate({ publishedAt }: { publishedAt?: string | null }) {
   if (!publishedAt) return null;
@@ -37,8 +50,12 @@ export function NewsletterArticle({
   excerpt,
   coverImage,
   body,
+  attachment,
 }: NewsletterArticleProps) {
   const shouldRenderMeta = issueLabel || publishedAt || readTime;
+  const downloadUrl = attachment?.url ?? null;
+  const downloadLabel = attachment?.filename || "Download PDF";
+  const downloadSize = formatFileSize(attachment?.size);
 
   return (
     <article className="grid gap-10 px-4 sm:px-6 lg:px-10 lg:grid-cols-12">
@@ -67,6 +84,37 @@ export function NewsletterArticle({
           <p className="mx-auto max-w-3xl text-lg text-[color:var(--foreground)]/75 md:text-xl lg:mx-0">
             {excerpt}
           </p>
+        ) : null}
+
+        {downloadUrl ? (
+          <div className="flex justify-center lg:justify-start">
+            <a
+              href={`${downloadUrl}?dl=`}
+              className="inline-flex items-center gap-2 rounded-md border border-[color:var(--border)] bg-[color:var(--card)] px-4 py-2 text-sm font-medium text-[color:var(--foreground)] shadow-xs transition-colors hover:bg-[color:var(--accent)] hover:text-[color:var(--accent-foreground)]"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-4 w-4"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" x2="12" y1="15" y2="3" />
+              </svg>
+              <span>{downloadLabel}</span>
+              {downloadSize ? (
+                <span className="text-[color:var(--foreground)]/60">
+                  ({downloadSize})
+                </span>
+              ) : null}
+            </a>
+          </div>
         ) : null}
       </header>
 

@@ -45,7 +45,7 @@ export type GalleryAlbum = {
   _rev: string;
   title?: string;
   description?: string;
-  shareUrl?: string;
+  date?: string;
   highlightImage?: {
     asset?: {
       _ref: string;
@@ -59,6 +59,22 @@ export type GalleryAlbum = {
     alt?: string;
     _type: "image";
   };
+  photos?: Array<{
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    caption?: string;
+    _type: "image";
+    _key: string;
+  }>;
+  shareUrl?: string;
 };
 
 export type ContactGroup = {
@@ -453,6 +469,10 @@ export type SiteSettings = {
     _type: "image";
   };
   orgName?: string;
+  navigation?: {
+    showWorkshops?: boolean;
+    showBrands?: boolean;
+  };
   footerBlurb?: string;
   social?: {
     facebook?: string;
@@ -467,7 +487,6 @@ export type SiteSettings = {
   }>;
   contactEmail?: string;
   contactPhone?: string;
-  address?: Array<string>;
   newsletter?: {
     enabled?: boolean;
     blurb?: string;
@@ -539,6 +558,16 @@ export type Newsletter = {
     _type: "divider";
     _key: string;
   }>;
+  attachment?: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.fileAsset";
+    };
+    media?: unknown;
+    _type: "file";
+  };
 };
 
 export type VolunteerApplication = {
@@ -1677,7 +1706,7 @@ export type NEWSLETTERS_QUERYResult = Array<{
   } | null;
 }>;
 // Variable: NEWSLETTER_QUERY
-// Query: *[_type == "newsletter" && slug.current == $slug][0]{    _id,    title,    issueLabel,    publishedAt,    readTime,    excerpt,    coverImage,    body  }
+// Query: *[_type == "newsletter" && slug.current == $slug][0]{    _id,    title,    issueLabel,    publishedAt,    readTime,    excerpt,    coverImage,    body,    "attachment": attachment{      "url": asset->url,      "filename": asset->originalFilename,      "size": asset->size    }  }
 export type NEWSLETTER_QUERYResult = {
   _id: string;
   title: string | null;
@@ -1738,6 +1767,11 @@ export type NEWSLETTER_QUERYResult = {
     _type: "image";
     _key: string;
   }> | null;
+  attachment: {
+    url: string | null;
+    filename: string | null;
+    size: number | null;
+  } | null;
 } | null;
 // Variable: EVENTS_QUERY
 // Query: *[_type == "event" && defined(slug.current)] | order(date asc)[0...20]{    _id,    title,    slug,    date,    location,    needsVolunteer  }
@@ -3448,7 +3482,7 @@ export type VOLUNTEER_SLUGS_QUERYResult = Array<{
   slug: string | null;
 }>;
 // Variable: SITE_SETTINGS_QUERY
-// Query: *[_id == "siteSettings"][0]{  logo,  orgName,  footerBlurb,  social{    facebook, twitter, instagram, youtube  },  quickLinks[]{    _key, label, href  },  contactEmail,  contactPhone,  address,  newsletter{    enabled, blurb  }}
+// Query: *[_id == "siteSettings"][0]{  logo,  orgName,  footerBlurb,  social{    facebook, twitter, instagram, youtube  },  quickLinks[]{    _key, label, href  },  contactEmail,  contactPhone,  newsletter{    enabled, blurb  },  navigation{    showWorkshops, showBrands  }}
 export type SITE_SETTINGS_QUERYResult = {
   logo: null;
   orgName: null;
@@ -3457,8 +3491,8 @@ export type SITE_SETTINGS_QUERYResult = {
   quickLinks: null;
   contactEmail: null;
   contactPhone: null;
-  address: null;
   newsletter: null;
+  navigation: null;
 } | {
   logo: {
     asset?: {
@@ -3479,8 +3513,8 @@ export type SITE_SETTINGS_QUERYResult = {
   quickLinks: null;
   contactEmail: null;
   contactPhone: null;
-  address: null;
   newsletter: null;
+  navigation: null;
 } | {
   logo: {
     asset?: {
@@ -3509,35 +3543,17 @@ export type SITE_SETTINGS_QUERYResult = {
   }> | null;
   contactEmail: string | null;
   contactPhone: string | null;
-  address: Array<string> | null;
   newsletter: {
     enabled: boolean | null;
     blurb: string | null;
   } | null;
-} | null;
-// Variable: GALLERY_ALBUMS_QUERY
-// Query: *[_type == "galleryAlbum"]    | order(_createdAt desc){      _id,      title,      description,      shareUrl,      highlightImage    }
-export type GALLERY_ALBUMS_QUERYResult = Array<{
-  _id: string;
-  title: string | null;
-  description: string | null;
-  shareUrl: string | null;
-  highlightImage: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    alt?: string;
-    _type: "image";
+  navigation: {
+    showWorkshops: boolean | null;
+    showBrands: boolean | null;
   } | null;
-}>;
+} | null;
 // Variable: GALLERY_PAGE_QUERY
-// Query: {  "settings": *[_type == "gallerySettings"][0]{    heroEyebrow,    heroTitle,    heroDescription,    heroBackgroundImage  },  "albums": *[_type == "galleryAlbum"]    | order(_createdAt desc){      _id,      title,      description,      shareUrl,      highlightImage    }}
+// Query: {  "settings": *[_type == "gallerySettings"][0]{    heroEyebrow,    heroTitle,    heroDescription,    heroBackgroundImage  },  "albums": *[_type == "galleryAlbum"]    | order(coalesce(date, _createdAt) desc){      _id,      title,      description,      date,      shareUrl,      highlightImage,      photos[]{        _key,        asset,        hotspot,        crop,        alt,        caption,        "dimensions": asset->metadata.dimensions{ width, height },        "lqip": asset->metadata.lqip      }    }}
 export type GALLERY_PAGE_QUERYResult = {
   settings: {
     heroEyebrow: string | null;
@@ -3561,6 +3577,7 @@ export type GALLERY_PAGE_QUERYResult = {
     _id: string;
     title: string | null;
     description: string | null;
+    date: string | null;
     shareUrl: string | null;
     highlightImage: {
       asset?: {
@@ -3575,6 +3592,24 @@ export type GALLERY_PAGE_QUERYResult = {
       alt?: string;
       _type: "image";
     } | null;
+    photos: Array<{
+      _key: string;
+      asset: {
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      } | null;
+      hotspot: SanityImageHotspot | null;
+      crop: SanityImageCrop | null;
+      alt: string | null;
+      caption: string | null;
+      dimensions: {
+        width: number | null;
+        height: number | null;
+      } | null;
+      lqip: string | null;
+    }> | null;
   }>;
 };
 
@@ -3588,7 +3623,7 @@ declare module "@sanity/client" {
     "\n  *[_type == \"blogPost\" && defined(slug.current)]{\n    \"slug\": slug.current\n  }\n": BLOG_POSTS_SLUGS_QUERYResult;
     "\n  *[_type == \"blogPost\" && slug.current == $slug][0]{\n    _id,\n    title,\n    body,\n    mainImage,\n    publishedAt,\n    \"categories\": coalesce(\n      categories[]->{\n        _id,\n        slug,\n        title\n      },\n      []\n    ),\n    author->{\n      name,\n      image\n    },\n    relatedBlogPosts[] {\n      _key,\n      ...@->{ _id, title, slug }\n    }\n  }\n": BLOG_POST_QUERYResult;
     "\n  *[_type == \"newsletter\" && defined(slug.current)]\n    | order(publishedAt desc){\n      _id,\n      title,\n      \"slug\": slug.current,\n      issueLabel,\n      publishedAt,\n      readTime,\n      excerpt,\n      coverImage\n    }\n": NEWSLETTERS_QUERYResult;
-    "\n  *[_type == \"newsletter\" && slug.current == $slug][0]{\n    _id,\n    title,\n    issueLabel,\n    publishedAt,\n    readTime,\n    excerpt,\n    coverImage,\n    body\n  }\n": NEWSLETTER_QUERYResult;
+    "\n  *[_type == \"newsletter\" && slug.current == $slug][0]{\n    _id,\n    title,\n    issueLabel,\n    publishedAt,\n    readTime,\n    excerpt,\n    coverImage,\n    body,\n    \"attachment\": attachment{\n      \"url\": asset->url,\n      \"filename\": asset->originalFilename,\n      \"size\": asset->size\n    }\n  }\n": NEWSLETTER_QUERYResult;
     "\n  *[_type == \"event\" && defined(slug.current)] | order(date asc)[0...20]{\n    _id,\n    title,\n    slug,\n    date,\n    location,\n    needsVolunteer\n  }\n": EVENTS_QUERYResult;
     "\n  *[_type == \"event\" && slug.current == $slug][0]{\n    _id,\n    title,\n    slug,\n    description,\n    date,\n    location,\n    link,\n    needsVolunteer,\n    image\n  }\n": EVENT_QUERYResult;
     "\n*[_type == \"page\" && slug.current == $slug][0]{\n  _id,\n  _type,\n  title,\n  slug,\n  content[]{\n    ...,\n    _type == \"heroBanner\" => {\n      ...,\n      titleColor,\n      kickerColor,\n      bodyColor,\n      overlayOpacity\n    },\n    _type == \"faqs\" => {\n      ...,\n      faqs[]->\n    },\n    _type == \"workshopsDirectory\" => {\n      ...,\n      categoryCards[]->{\n        _id,\n        title,\n        slug,\n        icon,\n        description\n      },\n      \"workshops\": *[_type == \"workshop\"]\n        | order(start asc){\n          _id,\n          title,\n          \"slug\": slug.current,\n          summary,\n          categories[]->{\n            _id,\n            title,\n            slug,\n            icon,\n            description\n          },\n          start,\n          end,\n          location,\n          capacity,\n          registeredCount,\n          needsVolunteers,\n          registerUrl,\n          volunteerUrl,\n          heroImage\n        }\n    },\n    _type == \"volunteersDirectory\" => {\n      ...,\n      \"opportunities\": *[_type == \"volunteerOpportunity\"]\n        | order(title asc){\n          _id,\n          title,\n          \"slug\": slug.current,\n          summary,\n          trackLabel,\n          isUrgent,\n          isRemoteFriendly,\n          location,\n          commitmentSummary,\n          openings,\n          experienceLevel,\n          applyUrl,\n          heroImage,\n          contact{\n            ctaLabel\n          }\n        }\n    },\n    _type == \"brandPromos\" => {\n      ...,\n      brands[]->{\n        _id,\n        title,\n        kicker,\n        headline,\n        subhead,\n        footnote,\n        themeColor,\n        textColor,\n        imageOverlayStrength,\n        primaryCta{\n          label,\n          href\n        },\n        secondaryCta{\n          label,\n          href\n        },\n        promoLink{\n          href,\n          label\n        },\n        heroImage{\n          asset,\n          alt\n        },\n        logo{\n          asset,\n          alt\n        }\n      }\n    }\n  }\n}\n": PAGE_QUERYResult;
@@ -3599,8 +3634,7 @@ declare module "@sanity/client" {
     "\n  *[_type == \"volunteerOpportunity\"]\n    | order(title asc){\n      _id,\n      title,\n      \"slug\": slug.current,\n      summary,\n      trackLabel,\n      isUrgent,\n      isRemoteFriendly,\n      location,\n      commitmentSummary,\n      openings,\n      experienceLevel,\n      applyUrl,\n      heroImage,\n      contact{\n        ctaLabel\n      }\n    }\n": VOLUNTEERS_QUERYResult;
     "\n  *[_type == \"volunteerOpportunity\" && slug.current == $slug][0]{\n    _id,\n    title,\n    \"slug\": slug.current,\n    summary,\n    trackLabel,\n    isUrgent,\n    isRemoteFriendly,\n    location,\n    commitmentSummary,\n    openings,\n    experienceLevel,\n    applyUrl,\n    heroImage,\n    responsibilities,\n    qualifications,\n    benefits,\n    applicationProcess[]{\n      _key,\n      title,\n      description\n    },\n    contact{\n      ctaLabel,\n      instructions,\n      email,\n      phone,\n      responseNote\n    },\n    body\n  }\n": VOLUNTEER_QUERYResult;
     "\n  *[_type in [\"volunteerOpportunity\", \"volunteerOPportunity\"] && defined(slug.current)]{\n    \"slug\": slug.current\n  }\n": VOLUNTEER_SLUGS_QUERYResult;
-    "\n*[_id == \"siteSettings\"][0]{\n  logo,\n  orgName,\n  footerBlurb,\n  social{\n    facebook, twitter, instagram, youtube\n  },\n  quickLinks[]{\n    _key, label, href\n  },\n  contactEmail,\n  contactPhone,\n  address,\n  newsletter{\n    enabled, blurb\n  }\n}\n": SITE_SETTINGS_QUERYResult;
-    "\n  *[_type == \"galleryAlbum\"]\n    | order(_createdAt desc){\n      _id,\n      title,\n      description,\n      shareUrl,\n      highlightImage\n    }\n": GALLERY_ALBUMS_QUERYResult;
-    "\n{\n  \"settings\": *[_type == \"gallerySettings\"][0]{\n    heroEyebrow,\n    heroTitle,\n    heroDescription,\n    heroBackgroundImage\n  },\n  \"albums\": *[_type == \"galleryAlbum\"]\n    | order(_createdAt desc){\n      _id,\n      title,\n      description,\n      shareUrl,\n      highlightImage\n    }\n}\n": GALLERY_PAGE_QUERYResult;
+    "\n*[_id == \"siteSettings\"][0]{\n  logo,\n  orgName,\n  footerBlurb,\n  social{\n    facebook, twitter, instagram, youtube\n  },\n  quickLinks[]{\n    _key, label, href\n  },\n  contactEmail,\n  contactPhone,\n  newsletter{\n    enabled, blurb\n  },\n  navigation{\n    showWorkshops, showBrands\n  }\n}\n": SITE_SETTINGS_QUERYResult;
+    "\n{\n  \"settings\": *[_type == \"gallerySettings\"][0]{\n    heroEyebrow,\n    heroTitle,\n    heroDescription,\n    heroBackgroundImage\n  },\n  \"albums\": *[_type == \"galleryAlbum\"]\n    | order(coalesce(date, _createdAt) desc){\n      _id,\n      title,\n      description,\n      date,\n      shareUrl,\n      highlightImage,\n      photos[]{\n        _key,\n        asset,\n        hotspot,\n        crop,\n        alt,\n        caption,\n        \"dimensions\": asset->metadata.dimensions{ width, height },\n        \"lqip\": asset->metadata.lqip\n      }\n    }\n}\n": GALLERY_PAGE_QUERYResult;
   }
 }
