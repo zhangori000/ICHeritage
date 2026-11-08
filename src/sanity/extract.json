@@ -3544,6 +3544,13 @@
         },
         "optional": true
       },
+      "photoCredits": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
       "newsletter": {
         "type": "objectAttribute",
         "value": {

@@ -594,6 +594,7 @@ export type SiteSettings = {
   }>;
   contactEmail?: string;
   contactPhone?: string;
+  photoCredits?: string;
   newsletter?: {
     enabled?: boolean;
     blurb?: string;
@@ -2923,7 +2924,7 @@ export type VOLUNTEER_SLUGS_QUERY_RESULT = Array<{
 
 // Source: src/sanity/lib/queries.ts
 // Variable: SITE_SETTINGS_QUERY
-// Query: *[_id == "siteSettings"][0]{  logo,  orgName,  footerBlurb,  social{    facebook, twitter, instagram, youtube  },  quickLinks[]{    _key, label, href  },  contactEmail,  contactPhone,  donateUrl,  newsletter{    enabled, blurb  },  navigation{    showWorkshops, showBrands  }}
+// Query: *[_id == "siteSettings"][0]{  logo,  orgName,  footerBlurb,  social{    facebook, twitter, instagram, youtube  },  quickLinks[]{    _key, label, href  },  contactEmail,  contactPhone,  donateUrl,  photoCredits,  newsletter{    enabled, blurb  },  navigation{    showWorkshops, showBrands  }}
 export type SITE_SETTINGS_QUERY_RESULT =
   | {
       logo: null;
@@ -2934,6 +2935,7 @@ export type SITE_SETTINGS_QUERY_RESULT =
       contactEmail: null;
       contactPhone: null;
       donateUrl: null;
+      photoCredits: null;
       newsletter: null;
       navigation: null;
     }
@@ -2953,6 +2955,7 @@ export type SITE_SETTINGS_QUERY_RESULT =
       contactEmail: null;
       contactPhone: null;
       donateUrl: null;
+      photoCredits: null;
       newsletter: null;
       navigation: null;
     }
@@ -2980,6 +2983,7 @@ export type SITE_SETTINGS_QUERY_RESULT =
       contactEmail: string | null;
       contactPhone: string | null;
       donateUrl: string | null;
+      photoCredits: string | null;
       newsletter: {
         enabled: boolean | null;
         blurb: string | null;
@@ -3067,7 +3071,7 @@ declare global {
     '\n  *[_type == "volunteerOpportunity"]\n    | order(title asc){\n      _id,\n      title,\n      "slug": slug.current,\n      summary,\n      trackLabel,\n      isUrgent,\n      isRemoteFriendly,\n      location,\n      commitmentSummary,\n      openings,\n      experienceLevel,\n      applyUrl,\n      heroImage,\n      contact{\n        ctaLabel\n      }\n    }\n': VOLUNTEERS_QUERY_RESULT;
     '\n  *[_type == "volunteerOpportunity" && slug.current == $slug][0]{\n    _id,\n    title,\n    "slug": slug.current,\n    summary,\n    trackLabel,\n    isUrgent,\n    isRemoteFriendly,\n    location,\n    commitmentSummary,\n    openings,\n    experienceLevel,\n    applyUrl,\n    heroImage,\n    responsibilities,\n    qualifications,\n    benefits,\n    applicationProcess[]{\n      _key,\n      title,\n      description\n    },\n    contact{\n      ctaLabel,\n      instructions,\n      email,\n      phone,\n      responseNote\n    },\n    body\n  }\n': VOLUNTEER_QUERY_RESULT;
     '\n  *[_type in ["volunteerOpportunity", "volunteerOPportunity"] && defined(slug.current)]{\n    "slug": slug.current\n  }\n': VOLUNTEER_SLUGS_QUERY_RESULT;
-    '\n*[_id == "siteSettings"][0]{\n  logo,\n  orgName,\n  footerBlurb,\n  social{\n    facebook, twitter, instagram, youtube\n  },\n  quickLinks[]{\n    _key, label, href\n  },\n  contactEmail,\n  contactPhone,\n  donateUrl,\n  newsletter{\n    enabled, blurb\n  },\n  navigation{\n    showWorkshops, showBrands\n  }\n}\n': SITE_SETTINGS_QUERY_RESULT;
+    '\n*[_id == "siteSettings"][0]{\n  logo,\n  orgName,\n  footerBlurb,\n  social{\n    facebook, twitter, instagram, youtube\n  },\n  quickLinks[]{\n    _key, label, href\n  },\n  contactEmail,\n  contactPhone,\n  donateUrl,\n  photoCredits,\n  newsletter{\n    enabled, blurb\n  },\n  navigation{\n    showWorkshops, showBrands\n  }\n}\n': SITE_SETTINGS_QUERY_RESULT;
     '\n*[_type == "page" && slug.current in ["privacy", "terms"]]{\n  title,\n  "slug": slug.current\n}\n': LEGAL_PAGES_QUERY_RESULT;
     '\n{\n  "settings": *[_type == "gallerySettings"][0]{\n    heroEyebrow,\n    heroTitle,\n    heroDescription,\n    heroBackgroundImage\n  },\n  "albums": *[_type == "galleryAlbum"]\n    | order(coalesce(date, _createdAt) desc){\n      _id,\n      title,\n      description,\n      date,\n      shareUrl,\n      highlightImage,\n      photos[]{\n        _key,\n        asset,\n        hotspot,\n        crop,\n        alt,\n        caption,\n        "dimensions": asset->metadata.dimensions{ width, height },\n        "lqip": asset->metadata.lqip\n      }\n    }\n}\n': GALLERY_PAGE_QUERY_RESULT;
   }

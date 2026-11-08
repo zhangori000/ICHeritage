@@ -502,6 +502,7 @@ export const SITE_SETTINGS_QUERY = defineQuery(`
   contactEmail,
   contactPhone,
   donateUrl,
+  photoCredits,
   newsletter{
     enabled, blurb
   },
