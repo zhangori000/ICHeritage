@@ -4,12 +4,12 @@ import dayjs from "dayjs";
 import { stegaClean } from "next-sanity";
 
 import { urlFor } from "@/sanity/lib/image";
-import type { PAGE_QUERYResult } from "@/sanity/types";
+import type { PAGE_QUERY_RESULT } from "@/sanity/types";
 
 const FALLBACK_IMAGE = "/Gemini_Generated_Image_newsletter_default.png";
 
 type NewsletterArchiveBlock = Extract<
-  NonNullable<NonNullable<PAGE_QUERYResult>["content"]>[number],
+  NonNullable<NonNullable<PAGE_QUERY_RESULT>["content"]>[number],
   { _type: "newsletterArchive" }
 >;
 
@@ -28,11 +28,8 @@ function formatDate(date?: string | null) {
 export function NewsletterArchive({
   heading,
   description,
-  searchPlaceholder,
-  filterLabel,
   newsletters,
   cta,
-  loadMoreLabel,
 }: NewsletterArchiveBlock) {
   const list = Array.isArray(newsletters)
     ? newsletters.filter((item): item is Newsletter => Boolean(item))
@@ -40,9 +37,6 @@ export function NewsletterArchive({
 
   const subscribeTitle = clean(cta?.title);
   const subscribeBody = clean(cta?.body);
-  const subscribeDisclaimer = clean(cta?.disclaimer);
-  const subscribePlaceholder = clean(cta?.placeholder) || "Enter your email";
-  const subscribeButton = clean(cta?.buttonLabel) || "Subscribe";
 
   return (
     <section
@@ -63,49 +57,6 @@ export function NewsletterArchive({
                 {clean(description)}
               </p>
             ) : null}
-          </div>
-
-          <div className="flex flex-col md:flex-row gap-4 mb-12">
-            <label className="relative flex-1">
-              <span className="sr-only">{searchPlaceholder || "Search newsletters"}</span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="lucide lucide-search absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[color:var(--foreground)]/60"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <circle cx="11" cy="11" r="8" />
-                <path d="m21 21-4.3-4.3" />
-              </svg>
-              <input
-                className="flex h-10 w-full rounded-md border border-[color:var(--input)] bg-[color:var(--card)] pl-10 pr-3 py-2 text-sm text-[color:var(--foreground)] placeholder:text-[color:var(--foreground)]/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                placeholder={clean(searchPlaceholder) || "Search newsletters by title or content..."}
-                type="search"
-                readOnly
-              />
-            </label>
-            <button
-              type="button"
-              className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md border border-[color:var(--border)] bg-[color:var(--card)] px-4 py-2 text-sm font-medium transition-colors duration-200 shadow-xs hover:bg-[color:var(--accent)] hover:text-[color:var(--accent-foreground)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="lucide lucide-filter h-4 w-4"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
-              </svg>
-              {filterLabel || "Filter"}
-            </button>
           </div>
 
           {list.length > 0 ? (
@@ -234,7 +185,10 @@ export function NewsletterArchive({
           {(subscribeTitle || subscribeBody) && (
             <div className="mt-16">
               <div className="flex flex-col gap-6 rounded-xl border border-[color:var(--border)] bg-[color:var(--primary)] text-[color:var(--primary-foreground)] shadow-sm">
-                <div className="space-y-6 p-8 text-center">
+                <div className="space-y-5 p-8 text-center">
+                  <span className="inline-flex items-center gap-2 rounded-full bg-[color:var(--primary-foreground)]/15 px-3 py-1 text-xs font-semibold uppercase tracking-wide">
+                    Coming soon
+                  </span>
                   {subscribeTitle ? (
                     <h3 className="font-serif text-2xl md:text-3xl font-semibold">
                       {subscribeTitle}
@@ -245,40 +199,14 @@ export function NewsletterArchive({
                       {subscribeBody}
                     </p>
                   ) : null}
-                  <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
-                    <input
-                      type="email"
-                      className="flex h-10 w-full rounded-md border border-[color:var(--primary-foreground)]/20 bg-[color:var(--primary-foreground)]/10 px-3 py-2 text-sm text-[color:var(--primary-foreground)] placeholder:text-[color:var(--primary)]/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/60"
-                      placeholder={subscribePlaceholder}
-                      readOnly
-                    />
-                    <button
-                      type="button"
-                      className="inline-flex items-center justify-center gap-2 rounded-md bg-[color:var(--primary-foreground)] px-4 py-2 text-sm font-medium text-[color:var(--primary)] transition-colors hover:bg-[color:var(--primary-foreground)]/90"
-                    >
-                      {subscribeButton}
-                    </button>
-                  </div>
-                  {subscribeDisclaimer ? (
-                    <p className="text-xs text-[color:var(--primary-foreground)]/80">
-                      {subscribeDisclaimer}
-                    </p>
-                  ) : null}
+                  <p className="text-sm text-[color:var(--primary-foreground)]/80">
+                    Email sign-up is on its way. In the meantime, new articles are
+                    published right here.
+                  </p>
                 </div>
               </div>
             </div>
           )}
-
-          {loadMoreLabel ? (
-            <div className="text-center mt-12">
-              <button
-                type="button"
-                className="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium transition-all duration-200 border border-[color:var(--border)] bg-transparent px-8 py-3 h-10 rounded-md hover:bg-[color:var(--accent)] hover:text-[color:var(--accent-foreground)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
-              >
-                {clean(loadMoreLabel)}
-              </button>
-            </div>
-          ) : null}
         </div>
       </div>
     </section>

@@ -1,7 +1,7 @@
-import { PAGE_QUERYResult } from "@/sanity/types";
+import type { PAGE_QUERY_RESULT } from "@/sanity/types";
 
 type FeaturesProps = Extract<
-  NonNullable<NonNullable<PAGE_QUERYResult>["content"]>[number],
+  NonNullable<NonNullable<PAGE_QUERY_RESULT>["content"]>[number],
   { _type: "features" }
 >;
 

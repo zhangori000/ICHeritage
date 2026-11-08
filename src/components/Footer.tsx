@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 // If/when your typegen is updated, you can re-enable this import.
-import type { SITE_SETTINGS_QUERYResult } from "@/sanity/types";
+import type { SITE_SETTINGS_QUERY_RESULT } from "@/sanity/types";
 import { urlFor } from "@/sanity/lib/image";
 
 /* ------------------------------------------------------------------ */
@@ -23,14 +23,20 @@ type QuickLink = {
 };
 
 /* If you want to be strict later:
-type FooterProps = { settings: SITE_SETTINGS_QUERYResult }
+type FooterProps = { settings: SITE_SETTINGS_QUERY_RESULT }
 */
-type FooterProps = { settings: SITE_SETTINGS_QUERYResult };
+type LegalPage = { title: string | null; slug: string | null };
+
+type FooterProps = {
+  settings: SITE_SETTINGS_QUERY_RESULT;
+  /** Pages with slug "privacy" / "terms" that exist in Sanity. Links render only for these. */
+  legalPages?: LegalPage[];
+};
 
 /* ------------------------------------------------------------------ */
 /* Component                                                           */
 /* ------------------------------------------------------------------ */
-export function Footer({ settings }: FooterProps) {
+export function Footer({ settings, legalPages = [] }: FooterProps) {
   // Safe fallbacks so UI never crashes if a field is missing
   const orgName = settings?.orgName ?? "ICHeritage";
   const blurb =
@@ -60,6 +66,14 @@ export function Footer({ settings }: FooterProps) {
   // Other simple fields (leave as optional where appropriate)
   const email = settings?.contactEmail ?? undefined;
   const phone = settings?.contactPhone ?? undefined;
+
+  // Privacy / Terms links appear only once those pages exist in Studio
+  // (Pages → + Create with slug "privacy" or "terms"), so nothing 404s.
+  const legalLinks = legalPages
+    .filter((page): page is { title: string; slug: string } =>
+      Boolean(page?.slug && page?.title)
+    )
+    .sort((a, b) => (a.slug === "privacy" ? -1 : b.slug === "privacy" ? 1 : 0));
 
   const newsletterEnabled = settings?.newsletter?.enabled ?? true;
   const newsletterBlurb =
@@ -243,20 +257,12 @@ export function Footer({ settings }: FooterProps) {
             </p>
 
             {newsletterEnabled && (
-              <div className="space-y-2">
-                <input
-                  type="email"
-                  placeholder="Enter your email"
-                  className="w-full px-3 py-2 text-sm border border-[var(--border)] rounded-md bg-[var(--background)]
-                             focus:outline-none focus:ring-2 focus:ring-[var(--ring)]"
-                />
-                <button
-                  className="w-full px-3 py-2 text-sm bg-[var(--primary)] text-[var(--primary-foreground)]
-                             rounded-md hover:bg-[color-mix(in_oklab,var(--primary)_90%,black)] transition-colors"
-                >
-                  Subscribe
-                </button>
-              </div>
+              // Email sign-up is not wired to a mailing service yet, so we
+              // show a clear "coming soon" note instead of a dead form.
+              <p className="inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--background)] px-3 py-1.5 text-xs font-medium text-[var(--muted-foreground)]">
+                <span className="h-1.5 w-1.5 rounded-full bg-[var(--primary)]" aria-hidden="true" />
+                Newsletter sign-up coming soon
+              </p>
             )}
           </div>
         </div>
@@ -267,20 +273,19 @@ export function Footer({ settings }: FooterProps) {
             <p className="text-sm text-[var(--muted-foreground)]">
               © {new Date().getFullYear()} {orgName}. All rights reserved.
             </p>
-            <div className="flex gap-6 text-sm text-[var(--muted-foreground)] font-normal">
-              <Link
-                href="/privacy"
-                className="hover:text-[var(--primary)] transition-colors"
-              >
-                Privacy Policy
-              </Link>
-              <Link
-                href="/terms"
-                className="hover:text-[var(--primary)] transition-colors"
-              >
-                Terms of Service
-              </Link>
-            </div>
+            {legalLinks.length > 0 ? (
+              <div className="flex gap-6 text-sm text-[var(--muted-foreground)] font-normal">
+                {legalLinks.map((page) => (
+                  <Link
+                    key={page.slug}
+                    href={`/${page.slug}`}
+                    className="hover:text-[var(--primary)] transition-colors"
+                  >
+                    {page.title}
+                  </Link>
+                ))}
+              </div>
+            ) : null}
           </div>
         </div>
       </div>

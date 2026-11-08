@@ -4,7 +4,7 @@
 import * as React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import type { SITE_SETTINGS_QUERYResult } from "@/sanity/types";
+import type { SITE_SETTINGS_QUERY_RESULT } from "@/sanity/types";
 import { urlFor } from "@/sanity/lib/image";
 import {
   getSectionVisibility,
@@ -62,7 +62,48 @@ const NAV_ITEMS: Array<NavLink | NavGroup> = [
 /* ------------------------------------------------------------------ */
 /* Props: use the generated type, just like Footer.                    */
 /* ------------------------------------------------------------------ */
-type HeaderProps = { settings: SITE_SETTINGS_QUERYResult };
+type HeaderProps = { settings: SITE_SETTINGS_QUERY_RESULT };
+
+/* ------------------------------------------------------------------ */
+/* Donate button: live link when Site Settings has a donate URL,       */
+/* otherwise a clearly disabled "coming soon" button (no dead 404).    */
+/* ------------------------------------------------------------------ */
+function DonateButton({
+  href,
+  className,
+  onClick,
+}: {
+  href: string | null;
+  className: string;
+  onClick?: () => void;
+}) {
+  if (href) {
+    const external = /^https?:/i.test(href);
+    return (
+      <Link
+        href={href}
+        className={className}
+        onClick={onClick}
+        target={external ? "_blank" : undefined}
+        rel={external ? "noreferrer" : undefined}
+      >
+        Donate
+      </Link>
+    );
+  }
+  return (
+    <span
+      className={`${className} cursor-not-allowed opacity-75`}
+      aria-disabled="true"
+      title="Online donations are coming soon"
+    >
+      Donate
+      <span className="rounded-full bg-white/25 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide">
+        Soon
+      </span>
+    </span>
+  );
+}
 
 /* ------------------------------------------------------------------ */
 /* Component                                                           */
@@ -83,6 +124,9 @@ export function Header({ settings }: HeaderProps) {
     (logo?.asset?._ref &&
       urlFor(logo).width(64).height(64).fit("crop").url()) ||
     "/images/logo.png";
+
+  // Donate link from Site Settings; empty = show a "coming soon" button
+  const donateUrl = settings?.donateUrl ?? null;
 
   // Drop nav items whose section is switched off in Site Settings
   const visibility = getSectionVisibility(settings);
@@ -189,32 +233,15 @@ export function Header({ settings }: HeaderProps) {
 
             {/* ------------------ Desktop actions ------------------ */}
             <div className="hidden lg:flex items-center gap-3 xl:gap-4">
-              {/* Login — outline; hover = green accent bg + white text */}
-              <Link
-                href="/auth/signin"
-                className={[
-                  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all",
-                  "border px-4 py-2 h-10 bg-transparent",
-                  "text-[var(--foreground)] border-[color:var(--border)]",
-                  "hover:bg-[var(--accent)] hover:text-[var(--accent-foreground)]",
-                  "shadow-xs",
-                ].join(" ")}
-              >
-                Login
-              </Link>
-
-              {/* Donate — solid primary; hover brighten */}
-              <Link
-                href="/donate"
+              <DonateButton
+                href={donateUrl}
                 className={[
                   "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all",
                   "px-4 py-2 h-10",
                   "bg-[var(--primary)] text-[var(--primary-foreground)] hover:brightness-110",
                   "shadow-xs",
                 ].join(" ")}
-              >
-                Donate
-              </Link>
+              />
             </div>
 
             {/* ------------------ Mobile hamburger ------------------ */}
@@ -371,56 +398,15 @@ export function Header({ settings }: HeaderProps) {
 
           {/* Drawer footer actions */}
           <div className="flex flex-col gap-4 pt-4 border-t border-[var(--border)]">
-            <button
-              type="button"
-              className={[
-                "inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium transition-all",
-                "h-10 px-3",
-                "hover:bg-[var(--accent)] hover:text-[var(--accent-foreground)]",
-              ].join(" ")}
-            >
-              {/* Globe icon */}
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-4 w-4"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <circle cx="12" cy="12" r="10" />
-                <path d="M2 12h20" />
-                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10" />
-              </svg>
-              English
-            </button>
-
-            <Link
-              href="/auth/signin"
-              onClick={() => setMobileOpen(false)}
-              className={[
-                "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all",
-                "w-full h-11 px-4 border bg-transparent shadow-xs",
-                "text-[var(--foreground)] border-[color:var(--border)]",
-                "hover:bg-[var(--accent)] hover:text-[var(--accent-foreground)]",
-              ].join(" ")}
-            >
-              Login
-            </Link>
-
-            <Link
-              href="/donate"
+            <DonateButton
+              href={donateUrl}
               onClick={() => setMobileOpen(false)}
               className={[
                 "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all",
                 "w-full h-11 px-4 shadow-xs",
                 "bg-[var(--primary)] text-[var(--primary-foreground)] hover:brightness-110",
               ].join(" ")}
-            >
-              Donate
-            </Link>
+            />
           </div>
         </nav>
       </div>

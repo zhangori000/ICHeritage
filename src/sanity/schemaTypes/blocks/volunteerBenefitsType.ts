@@ -1,5 +1,5 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
-import { StarIcon } from "@sanity/icons";
+import { StarIcon } from "@sanity/icons/Star";
 
 const toneOptions = [
   { title: "Primary", value: "primary" },

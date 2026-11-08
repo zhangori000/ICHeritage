@@ -6,19 +6,27 @@ import { urlFor } from "@/sanity/lib/image";
 export const components: PortableTextComponents = {
   types: {
     image: (props) =>
-      props.value ? (
-        <Image
-          className="not-prose h-auto w-full rounded-lg"
-          src={urlFor(props.value)
-            .width(600)
-            .height(400)
-            .quality(80)
-            .auto("format")
-            .url()}
-          alt={props?.value?.alt || ""}
-          width="600"
-          height="400"
-        />
+      props.value?.asset ? (
+        <figure className="not-prose my-8">
+          <Image
+            className="h-auto w-full rounded-lg"
+            src={urlFor(props.value)
+              .width(1400)
+              .fit("max")
+              .quality(80)
+              .auto("format")
+              .url()}
+            alt={props.value.alt || ""}
+            width={1400}
+            height={900}
+            sizes="(min-width: 1024px) 800px, 100vw"
+          />
+          {props.value.caption ? (
+            <figcaption className="mt-2 text-center text-sm text-[color:var(--muted-foreground)]">
+              {props.value.caption}
+            </figcaption>
+          ) : null}
+        </figure>
       ) : null,
     codeBlock: ({ value }) =>
       value?.code ? (

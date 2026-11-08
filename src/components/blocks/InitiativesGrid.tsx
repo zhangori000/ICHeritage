@@ -4,10 +4,10 @@ import Link from "next/link";
 import { stegaClean } from "next-sanity";
 
 import { urlFor } from "@/sanity/lib/image";
-import type { PAGE_QUERYResult } from "@/sanity/types";
+import type { PAGE_QUERY_RESULT } from "@/sanity/types";
 
 type InitiativesGridBlock = Extract<
-  NonNullable<NonNullable<PAGE_QUERYResult>["content"]>[number],
+  NonNullable<NonNullable<PAGE_QUERY_RESULT>["content"]>[number],
   { _type: "initiativesGrid" }
 >;
 

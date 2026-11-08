@@ -21,13 +21,13 @@ import { BrandPromos } from "./blocks/BrandPromos";
 import { VolunteerTracks } from "./blocks/VolunteerTracks";
 import { VolunteerBenefits } from "./blocks/VolunteerBenefits";
 import { VolunteerApplication } from "./blocks/VolunteerApplication";
-import { PAGE_QUERYResult } from "@/sanity/types";
+import type { PAGE_QUERY_RESULT } from "@/sanity/types";
 import { client } from "@/sanity/lib/client";
 import { createDataAttribute } from "next-sanity";
 import { useOptimistic } from "next-sanity/hooks";
 
 type PageBuilderProps = {
-  content: NonNullable<PAGE_QUERYResult>["content"];
+  content: NonNullable<PAGE_QUERY_RESULT>["content"];
   documentId: string;
   documentType: string;
 };
@@ -53,8 +53,8 @@ export function PageBuilder({
   documentType,
 }: PageBuilderProps) {
   const blocks = useOptimistic<
-    NonNullable<PAGE_QUERYResult>["content"] | undefined,
-    NonNullable<PAGE_QUERYResult>
+    NonNullable<PAGE_QUERY_RESULT>["content"] | undefined,
+    NonNullable<PAGE_QUERY_RESULT>
   >(content, (state, action) => {
     if (action.id === documentId) {
       return action?.document?.content?.map(

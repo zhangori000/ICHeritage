@@ -1,5 +1,5 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
-import { BulbOutlineIcon } from "@sanity/icons";
+import { BulbOutlineIcon } from "@sanity/icons/BulbOutline";
 
 export const missionStatementType = defineType({
   name: "missionStatement",

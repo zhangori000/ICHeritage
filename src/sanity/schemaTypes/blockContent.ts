@@ -73,7 +73,22 @@ export default defineType({
     // as a block type.
     defineArrayMember({
       type: "image",
+      title: "Image",
       options: { hotspot: true },
+      fields: [
+        {
+          name: "alt",
+          type: "string",
+          title: "Alt text",
+          description: "Short description of the image for screen readers and search engines.",
+        },
+        {
+          name: "caption",
+          type: "string",
+          title: "Caption",
+          description: "Optional caption shown under the image.",
+        },
+      ],
     }),
     defineArrayMember({
       name: "codeBlock",

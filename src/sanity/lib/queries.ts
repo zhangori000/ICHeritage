@@ -493,12 +493,22 @@ export const SITE_SETTINGS_QUERY = defineQuery(`
   },
   contactEmail,
   contactPhone,
+  donateUrl,
   newsletter{
     enabled, blurb
   },
   navigation{
     showWorkshops, showBrands
   }
+}
+`);
+
+// Footer legal links only appear once an editor has created pages with these
+// slugs in Studio (Pages → + Create, slug "privacy" or "terms").
+export const LEGAL_PAGES_QUERY = defineQuery(`
+*[_type == "page" && slug.current in ["privacy", "terms"]]{
+  title,
+  "slug": slug.current
 }
 `);
 

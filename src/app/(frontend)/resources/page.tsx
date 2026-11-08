@@ -1,21 +1,23 @@
 ﻿import { PageBuilder } from "@/components/PageBuilder";
 import { sanityFetch } from "@/sanity/lib/live";
 import { PAGE_QUERY, NEWSLETTERS_QUERY } from "@/sanity/lib/queries";
-import type { PAGE_QUERYResult, NEWSLETTERS_QUERYResult } from "@/sanity/types";
+import type { PAGE_QUERY_RESULT, NEWSLETTERS_QUERY_RESULT } from "@/sanity/types";
 
 export default async function ResourcesPage() {
   const [{ data: pageData }, { data: newsletterData }] = await Promise.all([
     sanityFetch<typeof PAGE_QUERY>({
+    stega: false,
       query: PAGE_QUERY,
       params: { slug: "resources" },
     }),
     sanityFetch<typeof NEWSLETTERS_QUERY>({
+    stega: false,
       query: NEWSLETTERS_QUERY,
     }),
   ]);
 
-  const page: PAGE_QUERYResult | null = pageData ?? null;
-  const newsletters: NEWSLETTERS_QUERYResult = newsletterData ?? [];
+  const page: PAGE_QUERY_RESULT | null = pageData ?? null;
+  const newsletters: NEWSLETTERS_QUERY_RESULT = newsletterData ?? [];
 
   if (!page?.content) {
     return null;
