@@ -12,12 +12,12 @@ import {
 } from "@/sanity/lib/queries";
 import { getSectionVisibility } from "@/lib/siteVisibility";
 import { components as portableComponents } from "@/sanity/portableTextComponents";
-import type { WORKSHOP_SLUGS_QUERYResult } from "@/sanity/types";
+import type { WORKSHOP_SLUGS_QUERY_RESULT } from "@/sanity/types";
 import { stegaClean } from "next-sanity";
 import { urlFor } from "@/sanity/lib/image";
 import { ContactHostModal } from "@/components/workshops/ContactHostModal";
 import { EngagementForms } from "@/components/workshops/EngagementForms";
-import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
+import type { SanityImageSource } from "@sanity/image-url";
 
 const placeholderImage = "/Gemini_Generated_Image_workshop_default.png";
 const defaultHostAvatar = "/Gemini_Generated_Image_workshop_default.png";
@@ -110,7 +110,7 @@ function computeCapacity(
 }
 
 export async function generateStaticParams() {
-  const data = await client.fetch<WORKSHOP_SLUGS_QUERYResult>(WORKSHOP_SLUGS_QUERY);
+  const data = await client.fetch<WORKSHOP_SLUGS_QUERY_RESULT>(WORKSHOP_SLUGS_QUERY);
 
   if (!Array.isArray(data)) {
     return [];
@@ -144,8 +144,8 @@ export default async function WorkshopPage({
 }) {
   const resolved = await params;
   const [{ data: workshop }, { data: settings }] = await Promise.all([
-    sanityFetch({ query: WORKSHOP_QUERY, params: resolved }),
-    sanityFetch({ query: SITE_SETTINGS_QUERY }),
+    sanityFetch({ stega: false, query: WORKSHOP_QUERY, params: resolved }),
+    sanityFetch({ stega: false, query: SITE_SETTINGS_QUERY }),
   ]);
 
   // Workshops can be switched off in Site Settings; send visitors home.

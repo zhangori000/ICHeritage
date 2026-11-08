@@ -1,10 +1,10 @@
 import { PortableText } from "next-sanity";
 import Image from "next/image";
 import { urlFor } from "@/sanity/lib/image";
-import { PAGE_QUERYResult } from "@/sanity/types";
+import type { PAGE_QUERY_RESULT } from "@/sanity/types";
 
 type HeroProps = Extract<
-  NonNullable<NonNullable<PAGE_QUERYResult>["content"]>[number],
+  NonNullable<NonNullable<PAGE_QUERY_RESULT>["content"]>[number],
   { _type: "hero" }
 >;
 

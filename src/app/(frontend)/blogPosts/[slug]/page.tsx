@@ -9,6 +9,7 @@ export default async function Page({
   params: Promise<{ slug: string }>;
 }) {
   const { data: post } = await sanityFetch({
+    stega: false,
     query: BLOG_POST_QUERY,
     params: await params,
   });

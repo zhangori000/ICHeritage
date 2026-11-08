@@ -4,10 +4,10 @@ import { PortableText } from "next-sanity";
 
 import { components } from "@/sanity/portableTextComponents";
 import { urlFor } from "@/sanity/lib/image";
-import type { BLOG_POST_QUERYResult } from "@/sanity/types";
+import type { BLOG_POST_QUERY_RESULT } from "@/sanity/types";
 import type { PortableTextBlock } from "sanity";
 
-type CoverImage = NonNullable<NonNullable<BLOG_POST_QUERYResult>["mainImage"]>;
+type CoverImage = NonNullable<NonNullable<BLOG_POST_QUERY_RESULT>["mainImage"]>;
 
 type Attachment = {
   url?: string | null;

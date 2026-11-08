@@ -13,8 +13,8 @@ export default async function Page({
   const { slug } = await params;
 
   const [{ data: page }, { data: settings }] = await Promise.all([
-    sanityFetch({ query: PAGE_QUERY, params: { slug } }),
-    sanityFetch({ query: SITE_SETTINGS_QUERY }),
+    sanityFetch({ stega: false, query: PAGE_QUERY, params: { slug } }),
+    sanityFetch({ stega: false, query: SITE_SETTINGS_QUERY }),
   ]);
 
   // Sections switched off in Site Settings (e.g. Workshops, Brands) send

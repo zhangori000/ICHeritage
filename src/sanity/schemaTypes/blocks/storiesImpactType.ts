@@ -1,5 +1,5 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
-import { CommentIcon } from "@sanity/icons";
+import { CommentIcon } from "@sanity/icons/Comment";
 
 export const storiesImpactType = defineType({
   name: "storiesImpact",

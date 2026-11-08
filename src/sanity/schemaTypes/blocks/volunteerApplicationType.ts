@@ -1,5 +1,5 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
-import { ClipboardIcon } from "@sanity/icons";
+import { ClipboardIcon } from "@sanity/icons/Clipboard";
 
 const stepDefaults = [
   {

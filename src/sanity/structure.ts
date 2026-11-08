@@ -1,10 +1,8 @@
 import type { StructureResolver } from "sanity/structure";
-import {
-  CogIcon,
-  DocumentsIcon,
-  ImagesIcon,
-  BookIcon,
-} from "@sanity/icons";
+import { CogIcon } from "@sanity/icons/Cog";
+import { DocumentsIcon } from "@sanity/icons/Documents";
+import { ImagesIcon } from "@sanity/icons/Images";
+import { BookIcon } from "@sanity/icons/Book";
 
 // Document types that get a dedicated spot in the sidebar below.
 // Everything else falls into the "catch-all" list at the bottom.

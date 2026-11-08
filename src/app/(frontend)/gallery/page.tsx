@@ -6,10 +6,10 @@ import { stegaClean } from "next-sanity";
 import { sanityFetch } from "@/sanity/lib/live";
 import { GALLERY_PAGE_QUERY } from "@/sanity/lib/queries";
 import { urlFor } from "@/sanity/lib/image";
-import type { GALLERY_PAGE_QUERYResult } from "@/sanity/types";
+import type { GALLERY_PAGE_QUERY_RESULT } from "@/sanity/types";
 import { PhotoGrid, type GalleryPhoto } from "@/components/gallery/PhotoGrid";
 
-type Album = NonNullable<GALLERY_PAGE_QUERYResult["albums"]>[number];
+type Album = NonNullable<GALLERY_PAGE_QUERY_RESULT["albums"]>[number];
 type AlbumPhoto = NonNullable<Album["photos"]>[number];
 
 export const metadata: Metadata = {
@@ -61,7 +61,7 @@ function toGalleryPhoto(
 }
 
 export default async function GalleryPage() {
-  const { data } = await sanityFetch({ query: GALLERY_PAGE_QUERY });
+  const { data } = await sanityFetch({ stega: false, query: GALLERY_PAGE_QUERY });
 
   const hero = data?.settings ?? null;
   const albums = (data?.albums ?? []).filter((album): album is Album =>

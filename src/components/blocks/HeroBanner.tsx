@@ -4,7 +4,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { urlFor } from "@/sanity/lib/image";
-import type { PAGE_QUERYResult } from "@/sanity/types";
+import type { PAGE_QUERY_RESULT } from "@/sanity/types";
 
 /** Color from @sanity/color-input (loose shape) */
 type ColorLike =
@@ -43,9 +43,9 @@ function toCssColor(c: ColorLike, fallback = "var(--foreground)"): string {
   return fallback;
 }
 
-/** Narrow the block type to your heroBanner block from PAGE_QUERYResult */
+/** Narrow the block type to your heroBanner block from PAGE_QUERY_RESULT */
 type HeroBannerBlock = Extract<
-  NonNullable<NonNullable<PAGE_QUERYResult>["content"]>[number],
+  NonNullable<NonNullable<PAGE_QUERY_RESULT>["content"]>[number],
   { _type: "heroBanner" }
 >;
 

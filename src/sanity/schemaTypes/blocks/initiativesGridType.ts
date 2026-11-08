@@ -1,5 +1,5 @@
 ﻿import { defineField, defineType } from "sanity";
-import { ThLargeIcon } from "@sanity/icons";
+import { ThLargeIcon } from "@sanity/icons/ThLarge";
 
 export const initiativesGridType = defineType({
   name: "initiativesGrid",
