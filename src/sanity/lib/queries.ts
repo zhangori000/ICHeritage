@@ -225,6 +225,14 @@ export const PAGE_QUERY = defineQuery(`
 }
 `);
 
+// Slugs of every page-builder page, so /[slug] routes are prerendered at
+// build time instead of rendered on every request.
+export const PAGE_SLUGS_QUERY = defineQuery(`
+  *[_type == "page" && defined(slug.current)]{
+    "slug": slug.current
+  }
+`);
+
 export const HOME_PAGE_QUERY = defineQuery(`
 *[_id == "siteSettings"][0]{
   homePage->{

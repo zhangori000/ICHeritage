@@ -1,9 +1,30 @@
 import { redirect } from "next/navigation";
 
 import { PageBuilder } from "@/components/PageBuilder";
+import { client } from "@/sanity/lib/client";
 import { sanityFetch } from "@/sanity/lib/live";
-import { PAGE_QUERY, SITE_SETTINGS_QUERY } from "@/sanity/lib/queries";
+import {
+  PAGE_QUERY,
+  PAGE_SLUGS_QUERY,
+  SITE_SETTINGS_QUERY,
+} from "@/sanity/lib/queries";
 import { getSectionVisibility, isPageHidden } from "@/lib/siteVisibility";
+
+// Slugs that have their own route file and must not be generated here.
+const RESERVED_SLUGS = new Set(["home", "resources", "gallery", "studio"]);
+
+/**
+ * Prerender every page-builder page at build time. Sanity Live keeps them
+ * fresh (published edits revalidate the page), and unknown slugs still render
+ * on demand, so new pages work without a redeploy.
+ */
+export async function generateStaticParams() {
+  const pages = await client.fetch(PAGE_SLUGS_QUERY);
+  return (pages ?? [])
+    .map((page) => page.slug)
+    .filter((slug): slug is string => Boolean(slug) && !RESERVED_SLUGS.has(slug!))
+    .map((slug) => ({ slug }));
+}
 
 export default async function Page({
   params,
