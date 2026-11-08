@@ -69,8 +69,8 @@ export function HeroBanner({
   const kickerCss = toCssColor(kickerColor, "var(--primary)");
   const bodyCss = toCssColor(bodyColor, "var(--muted-foreground)");
 
-  // Gentle text shadow for readability on busy images
-  const textShadow = "[text-shadow:2px_2px_8px_rgba(0,0,0,0.2)]";
+  // Text shadow for readability on busy photos
+  const textShadow = "[text-shadow:0_2px_12px_rgba(0,0,0,0.45)]";
 
   // --- CTA buttons: same size; left red, right green ------------------------
   const baseCta =
@@ -105,10 +105,11 @@ export function HeroBanner({
           />
         ) : null}
 
-        {/* z-10: overlay BETWEEN image and content; dims only the image */}
+        {/* z-10: dark scrim BETWEEN image and content; dims only the image so
+            light text stays legible on busy photos */}
         <div
-          className="absolute inset-0 z-10 pointer-events-none"
-          style={{ backgroundColor: "var(--background)", opacity: overlay }}
+          className="absolute inset-0 z-10 pointer-events-none bg-black"
+          style={{ opacity: overlay }}
         />
       </div>
 
