@@ -1,5 +1,5 @@
 import { defineField, defineType } from "sanity";
-import { DocumentIcon } from "@sanity/icons";
+import { DocumentIcon } from "@sanity/icons/Document";
 
 const CTA_DESCRIPTION =
   "Use a relative path (e.g. /about) for internal links or a full URL (https://example.com).";

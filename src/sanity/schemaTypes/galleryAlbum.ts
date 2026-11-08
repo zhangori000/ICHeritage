@@ -1,5 +1,5 @@
 // src/sanity/schemaTypes/galleryAlbum.ts
-import { ImagesIcon } from "@sanity/icons";
+import { ImagesIcon } from "@sanity/icons/Images";
 import { defineArrayMember, defineField, defineType } from "sanity";
 
 /**

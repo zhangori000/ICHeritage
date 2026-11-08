@@ -225,6 +225,14 @@ export const PAGE_QUERY = defineQuery(`
 }
 `);
 
+// Slugs of every page-builder page, so /[slug] routes are prerendered at
+// build time instead of rendered on every request.
+export const PAGE_SLUGS_QUERY = defineQuery(`
+  *[_type == "page" && defined(slug.current)]{
+    "slug": slug.current
+  }
+`);
+
 export const HOME_PAGE_QUERY = defineQuery(`
 *[_id == "siteSettings"][0]{
   homePage->{
@@ -493,12 +501,22 @@ export const SITE_SETTINGS_QUERY = defineQuery(`
   },
   contactEmail,
   contactPhone,
+  donateUrl,
   newsletter{
     enabled, blurb
   },
   navigation{
     showWorkshops, showBrands
   }
+}
+`);
+
+// Footer legal links only appear once an editor has created pages with these
+// slugs in Studio (Pages → + Create, slug "privacy" or "terms").
+export const LEGAL_PAGES_QUERY = defineQuery(`
+*[_type == "page" && slug.current in ["privacy", "terms"]]{
+  title,
+  "slug": slug.current
 }
 `);
 

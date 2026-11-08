@@ -1,5 +1,5 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
-import { CheckmarkCircleIcon } from "@sanity/icons";
+import { CheckmarkCircleIcon } from "@sanity/icons/CheckmarkCircle";
 
 const toneOptions: { title: string; value: "primary" | "secondary" | "accent" | "muted" }[] = [
   { title: "Primary", value: "primary" },

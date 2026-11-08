@@ -1,6 +1,6 @@
 // src/sanity/schemaTypes/gallerySettings.ts
 import { defineField, defineType } from "sanity";
-import { ImagesIcon } from "@sanity/icons";
+import { ImagesIcon } from "@sanity/icons/Images";
 
 export const gallerySettingsType = defineType({
   name: "gallerySettings",

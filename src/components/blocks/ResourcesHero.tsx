@@ -3,7 +3,7 @@ import Link from "next/link";
 import * as React from "react";
 import { stegaClean } from "next-sanity";
 
-import type { PAGE_QUERYResult } from "@/sanity/types";
+import type { PAGE_QUERY_RESULT } from "@/sanity/types";
 import { urlFor } from "@/sanity/lib/image";
 
 type ColorLike =
@@ -18,7 +18,7 @@ type ColorLike =
   | undefined;
 
 type ResourcesHeroBlock = Extract<
-  NonNullable<NonNullable<PAGE_QUERYResult>["content"]>[number],
+  NonNullable<NonNullable<PAGE_QUERY_RESULT>["content"]>[number],
   { _type: "resourcesHero" }
 >;
 

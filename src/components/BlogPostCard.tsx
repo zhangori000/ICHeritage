@@ -1,12 +1,12 @@
 import { Author } from "@/components/Author";
 import { Categories } from "@/components/Categories";
-import { BLOG_POSTS_QUERYResult } from "@/sanity/types";
+import type { BLOG_POSTS_QUERY_RESULT } from "@/sanity/types";
 import { PublishedAt } from "@/components/PublishedAt";
 import { urlFor } from "@/sanity/lib/image";
 import Image from "next/image";
 import Link from "next/link";
 
-export function BlogPostCard(props: BLOG_POSTS_QUERYResult[0]) {
+export function BlogPostCard(props: BLOG_POSTS_QUERY_RESULT[0]) {
   const { title, author, mainImage, publishedAt, categories } = props;
 
   return (

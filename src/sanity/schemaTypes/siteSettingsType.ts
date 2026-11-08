@@ -1,6 +1,6 @@
 // src/sanity/schemaTypes/siteSettingsType.ts
 import { defineField, defineType } from "sanity";
-import { ControlsIcon } from "@sanity/icons";
+import { ControlsIcon } from "@sanity/icons/Controls";
 
 export const siteSettingsType = defineType({
   name: "siteSettings",
@@ -57,6 +57,19 @@ export const siteSettingsType = defineType({
           initialValue: false,
         }),
       ],
+    }),
+
+    // --- HEADER: DONATE BUTTON ---------------------------------------------
+    // Until a real donation page exists the header shows a disabled
+    // "Donate · coming soon" button. Paste a link (PayPal, Zeffy, Givebutter…)
+    // here and the button becomes live, no deploy needed.
+    defineField({
+      name: "donateUrl",
+      title: "Donate link",
+      type: "url",
+      description:
+        "Where the Donate button should go (e.g. a PayPal or Zeffy page). Leave empty to show the button as “coming soon”.",
+      validation: (rule) => rule.uri({ scheme: ["http", "https", "mailto"] }),
     }),
 
     // --- FOOTER: LEFT COLUMN ------------------------------------------------
@@ -130,7 +143,9 @@ export const siteSettingsType = defineType({
         {
           name: "enabled",
           type: "boolean",
-          title: "Enabled",
+          title: "Show newsletter teaser",
+          description:
+            "Shows a “Newsletter sign-up coming soon” note in the footer. The sign-up form itself is not live yet.",
           initialValue: true,
         },
         {

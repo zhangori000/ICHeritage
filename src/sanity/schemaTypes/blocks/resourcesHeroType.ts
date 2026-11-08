@@ -1,5 +1,5 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
-import { BookIcon } from "@sanity/icons";
+import { BookIcon } from "@sanity/icons/Book";
 
 const heroIconOptions: { title: string; value: string }[] = [
   { title: "Book", value: "book-open" },

@@ -12,7 +12,160 @@
  * ---------------------------------------------------------------------------------
  */
 
-// Source: schema.json
+export declare const internalGroqTypeReferenceTo: unique symbol;
+
+// Source: src/sanity/extract.json
+export type PrimaryCta = {
+  label?: string;
+  href?: string;
+};
+
+export type SecondaryCta = {
+  label?: string;
+  href?: string;
+};
+
+export type ResourcesHeroPrimaryCta = {
+  label?: string;
+  href?: string;
+};
+
+export type ResourcesHeroSecondaryCta = {
+  label?: string;
+  href?: string;
+};
+
+export type Cta = {
+  title?: string;
+  body?: string;
+  disclaimer?: string;
+  placeholder?: string;
+  buttonLabel?: string;
+  buttonHref?: string;
+};
+
+export type SectionCta = {
+  label?: string;
+  href?: string;
+};
+
+export type ChapterApplicationCta = {
+  label?: string;
+  href?: string;
+};
+
+export type ProcessCard = {
+  title?: string;
+  steps?: Array<{
+    label?: string;
+    duration?: string;
+    _key: string;
+  }>;
+};
+
+export type MetricsCard = {
+  title?: string;
+  metrics?: Array<{
+    label?: string;
+    value?: string;
+    _key: string;
+  }>;
+};
+
+export type StatsCard = {
+  heading?: string;
+  description?: string;
+  stats?: Array<{
+    value?: string;
+    label?: string;
+    color?: "primary" | "secondary" | "accent";
+    _key: string;
+  }>;
+};
+
+export type CtaCard = {
+  heading?: string;
+  body?: string;
+  primaryCta?: CtaCardPrimaryCta;
+  secondaryCta?: CtaCardSecondaryCta;
+};
+
+export type ViewAllCta = {
+  label?: string;
+  href?: string;
+};
+
+export type Callout = {
+  heading?: string;
+  body?: string;
+  links?: Array<{
+    label?: string;
+    href?: string;
+    _type: "link";
+    _key: string;
+  }>;
+};
+
+export type SanityImageAssetReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+};
+
+export type ObjectImage = {
+  asset?: SanityImageAssetReference;
+  media?: unknown; // Unable to locate the referenced type "object.image.media" in schema
+  hotspot?: SanityImageHotspot;
+  crop?: SanityImageCrop;
+  _type: "image";
+};
+
+export type CardImage = {
+  asset?: SanityImageAssetReference;
+  media?: unknown; // Unable to locate the referenced type "card.image.media" in schema
+  hotspot?: SanityImageHotspot;
+  crop?: SanityImageCrop;
+  _type: "image";
+};
+
+export type CardCta = {
+  label?: string;
+  href?: string;
+};
+
+export type Headshot = {
+  asset?: SanityImageAssetReference;
+  media?: unknown; // Unable to locate the referenced type "headshot.media" in schema
+  hotspot?: SanityImageHotspot;
+  crop?: SanityImageCrop;
+  _type: "image";
+};
+
+export type CtaCardPrimaryCta = {
+  label?: string;
+  href?: string;
+};
+
+export type CtaCardSecondaryCta = {
+  label?: string;
+  href?: string;
+};
+
+export type HeroImage = {
+  asset?: SanityImageAssetReference;
+  media?: unknown; // Unable to locate the referenced type "heroImage.media" in schema
+  hotspot?: SanityImageHotspot;
+  crop?: SanityImageCrop;
+  alt?: string;
+  _type: "image";
+};
+
+export type ObjectCta = {
+  label?: string;
+  href?: string;
+};
+
 export type GallerySettings = {
   _id: string;
   _type: "gallerySettings";
@@ -23,18 +176,29 @@ export type GallerySettings = {
   heroTitle?: string;
   heroDescription?: string;
   heroBackgroundImage?: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
+    asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
     alt?: string;
     _type: "image";
   };
+};
+
+export type SanityImageCrop = {
+  _type: "sanity.imageCrop";
+  top?: number;
+  bottom?: number;
+  left?: number;
+  right?: number;
+};
+
+export type SanityImageHotspot = {
+  _type: "sanity.imageHotspot";
+  x?: number;
+  y?: number;
+  height?: number;
+  width?: number;
 };
 
 export type GalleryAlbum = {
@@ -47,12 +211,7 @@ export type GalleryAlbum = {
   description?: string;
   date?: string;
   highlightImage?: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
+    asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
@@ -60,12 +219,7 @@ export type GalleryAlbum = {
     _type: "image";
   };
   photos?: Array<{
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
+    asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
@@ -96,6 +250,12 @@ export type ContactGroup = {
   }>;
 };
 
+export type Slug = {
+  _type: "slug";
+  current?: string;
+  source?: string;
+};
+
 export type Brand = {
   _id: string;
   _type: "brand";
@@ -119,12 +279,7 @@ export type Brand = {
     href?: string;
   };
   heroImage?: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
+    asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
@@ -132,12 +287,7 @@ export type Brand = {
     _type: "image";
   };
   logo?: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
+    asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
@@ -149,6 +299,15 @@ export type Brand = {
     href?: string;
     label?: string;
   };
+};
+
+export type Color = {
+  _type: "color";
+  hex?: string;
+  alpha?: number;
+  hsl?: HslaColor;
+  hsv?: HsvaColor;
+  rgb?: RgbaColor;
 };
 
 export type VolunteerOpportunity = {
@@ -168,12 +327,7 @@ export type VolunteerOpportunity = {
   isUrgent?: boolean;
   isRemoteFriendly?: boolean;
   heroImage?: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
+    asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
@@ -197,47 +351,58 @@ export type VolunteerOpportunity = {
     phone?: string;
     responseNote?: string;
   };
-  body?: Array<{
-    children?: Array<{
-      marks?: Array<string>;
-      text?: string;
-      _type: "span";
+  body?: BlockContent;
+};
+
+export type BlockContent = Array<
+  | {
+      children?: Array<{
+        marks?: Array<string>;
+        text?: string;
+        _type: "span";
+        _key: string;
+      }>;
+      style?: "normal" | "h1" | "h2" | "h3" | "h4" | "blockquote";
+      listItem?: "bullet" | "number";
+      markDefs?: Array<{
+        href?: string;
+        newTab?: boolean;
+        _type: "link";
+        _key: string;
+      }>;
+      level?: number;
+      _type: "block";
       _key: string;
-    }>;
-    style?: "normal" | "h1" | "h2" | "h3" | "h4" | "blockquote";
-    listItem?: "bullet" | "number";
-    markDefs?: Array<{
-      href?: string;
-      newTab?: boolean;
-      _type: "link";
+    }
+  | {
+      asset?: SanityImageAssetReference;
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      alt?: string;
+      caption?: string;
+      _type: "image";
       _key: string;
-    }>;
-    level?: number;
-    _type: "block";
-    _key: string;
-  } | {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    _type: "image";
-    _key: string;
-  } | {
-    filename?: string;
-    language?: "javascript" | "typescript" | "json" | "shell" | "markdown";
-    code?: string;
-    _type: "codeBlock";
-    _key: string;
-  } | {
-    style?: string;
-    _type: "divider";
-    _key: string;
-  }>;
+    }
+  | {
+      filename?: string;
+      language?: "javascript" | "typescript" | "json" | "shell" | "markdown";
+      code?: string;
+      _type: "codeBlock";
+      _key: string;
+    }
+  | {
+      style?: string;
+      _type: "divider";
+      _key: string;
+    }
+>;
+
+export type WorkshopReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "workshop";
 };
 
 export type WorkshopVolunteer = {
@@ -246,12 +411,7 @@ export type WorkshopVolunteer = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  workshop?: {
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "workshop";
-  };
+  workshop?: WorkshopReference;
   workshopTitle?: string;
   workshopSlug?: string;
   workshopDate?: string;
@@ -282,6 +442,20 @@ export type WorkshopCategory = {
   description?: string;
 };
 
+export type WorkshopCategoryReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "workshopCategory";
+};
+
+export type WorkshopVolunteerReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "workshopVolunteer";
+};
+
 export type Workshop = {
   _id: string;
   _type: "workshop";
@@ -291,13 +465,11 @@ export type Workshop = {
   title?: string;
   slug?: Slug;
   summary?: string;
-  categories?: Array<{
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    _key: string;
-    [internalGroqTypeReferenceTo]?: "workshopCategory";
-  }>;
+  categories?: Array<
+    {
+      _key: string;
+    } & WorkshopCategoryReference
+  >;
   start?: string;
   end?: string;
   location?: string;
@@ -306,20 +478,13 @@ export type Workshop = {
   needsVolunteers?: boolean;
   registerUrl?: string;
   volunteerUrl?: string;
-  volunteerResponses?: Array<{
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    _key: string;
-    [internalGroqTypeReferenceTo]?: "workshopVolunteer";
-  }>;
+  volunteerResponses?: Array<
+    {
+      _key: string;
+    } & WorkshopVolunteerReference
+  >;
   heroImage?: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
+    asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
@@ -330,12 +495,7 @@ export type Workshop = {
     name?: string;
     role?: string;
     avatar?: {
-      asset?: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-      };
+      asset?: SanityImageAssetReference;
       media?: unknown;
       hotspot?: SanityImageHotspot;
       crop?: SanityImageCrop;
@@ -364,47 +524,7 @@ export type Workshop = {
     _type: "link";
     _key: string;
   }>;
-  body?: Array<{
-    children?: Array<{
-      marks?: Array<string>;
-      text?: string;
-      _type: "span";
-      _key: string;
-    }>;
-    style?: "normal" | "h1" | "h2" | "h3" | "h4" | "blockquote";
-    listItem?: "bullet" | "number";
-    markDefs?: Array<{
-      href?: string;
-      newTab?: boolean;
-      _type: "link";
-      _key: string;
-    }>;
-    level?: number;
-    _type: "block";
-    _key: string;
-  } | {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    _type: "image";
-    _key: string;
-  } | {
-    filename?: string;
-    language?: "javascript" | "typescript" | "json" | "shell" | "markdown";
-    code?: string;
-    _type: "codeBlock";
-    _key: string;
-  } | {
-    style?: string;
-    _type: "divider";
-    _key: string;
-  }>;
+  body?: BlockContent;
 };
 
 export type ColorChoice = {
@@ -416,12 +536,7 @@ export type ColorChoice = {
 export type HeroBanner = {
   _type: "heroBanner";
   background?: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
+    asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
@@ -434,14 +549,15 @@ export type HeroBanner = {
   kickerColor?: Color;
   body?: string;
   bodyColor?: Color;
-  primaryCta?: {
-    label?: string;
-    href?: string;
-  };
-  secondaryCta?: {
-    label?: string;
-    href?: string;
-  };
+  primaryCta?: PrimaryCta;
+  secondaryCta?: SecondaryCta;
+};
+
+export type PageReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "page";
 };
 
 export type SiteSettings = {
@@ -450,19 +566,9 @@ export type SiteSettings = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  homePage?: {
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "page";
-  };
+  homePage?: PageReference;
   logo?: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
+    asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
@@ -473,6 +579,7 @@ export type SiteSettings = {
     showWorkshops?: boolean;
     showBrands?: boolean;
   };
+  donateUrl?: string;
   footerBlurb?: string;
   social?: {
     facebook?: string;
@@ -493,6 +600,13 @@ export type SiteSettings = {
   };
 };
 
+export type SanityFileAssetReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "sanity.fileAsset";
+};
+
 export type Newsletter = {
   _id: string;
   _type: "newsletter";
@@ -506,65 +620,15 @@ export type Newsletter = {
   readTime?: string;
   excerpt?: string;
   coverImage?: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
+    asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
     _type: "image";
   };
-  body?: Array<{
-    children?: Array<{
-      marks?: Array<string>;
-      text?: string;
-      _type: "span";
-      _key: string;
-    }>;
-    style?: "normal" | "h1" | "h2" | "h3" | "h4" | "blockquote";
-    listItem?: "bullet" | "number";
-    markDefs?: Array<{
-      href?: string;
-      newTab?: boolean;
-      _type: "link";
-      _key: string;
-    }>;
-    level?: number;
-    _type: "block";
-    _key: string;
-  } | {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    _type: "image";
-    _key: string;
-  } | {
-    filename?: string;
-    language?: "javascript" | "typescript" | "json" | "shell" | "markdown";
-    code?: string;
-    _type: "codeBlock";
-    _key: string;
-  } | {
-    style?: string;
-    _type: "divider";
-    _key: string;
-  }>;
+  body?: BlockContent;
   attachment?: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.fileAsset";
-    };
+    asset?: SanityFileAssetReference;
     media?: unknown;
     _type: "file";
   };
@@ -595,10 +659,7 @@ export type VolunteerApplication = {
       label?: string;
       _key: string;
     }>;
-    cta?: {
-      label?: string;
-      href?: string;
-    };
+    cta?: ObjectCta;
     _key: string;
   }>;
   supportHeading?: string;
@@ -660,16 +721,14 @@ export type VolunteerTracks = {
     _type: "track";
     _key: string;
   }>;
-  callout?: {
-    heading?: string;
-    body?: string;
-    links?: Array<{
-      label?: string;
-      href?: string;
-      _type: "link";
-      _key: string;
-    }>;
-  };
+  callout?: Callout;
+};
+
+export type BrandReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "brand";
 };
 
 export type BrandPromos = {
@@ -677,13 +736,11 @@ export type BrandPromos = {
   sectionId?: string;
   heading?: string;
   intro?: string;
-  brands?: Array<{
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    _key: string;
-    [internalGroqTypeReferenceTo]?: "brand";
-  }>;
+  brands?: Array<
+    {
+      _key: string;
+    } & BrandReference
+  >;
 };
 
 export type VolunteersDirectory = {
@@ -700,13 +757,11 @@ export type WorkshopsDirectory = {
   heading?: string;
   intro?: string;
   searchPlaceholder?: string;
-  categoryCards?: Array<{
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    _key: string;
-    [internalGroqTypeReferenceTo]?: "workshopCategory";
-  }>;
+  categoryCards?: Array<
+    {
+      _key: string;
+    } & WorkshopCategoryReference
+  >;
   showVolunteerBadge?: boolean;
 };
 
@@ -724,19 +779,7 @@ export type PodcastHighlights = {
     guestTitle?: string;
     programTag?: string;
     summary?: string;
-    heroImage?: {
-      asset?: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-      };
-      media?: unknown;
-      hotspot?: SanityImageHotspot;
-      crop?: SanityImageCrop;
-      alt?: string;
-      _type: "image";
-    };
+    heroImage?: HeroImage;
     youtubeUrl?: string;
     spotifyUrl?: string;
     appleUrl?: string;
@@ -749,10 +792,7 @@ export type PodcastHighlights = {
     platform?: "spotify" | "apple" | "youtube" | "other";
     _key: string;
   }>;
-  viewAllCta?: {
-    label?: string;
-    href?: string;
-  };
+  viewAllCta?: ViewAllCta;
 };
 
 export type LeadershipSection = {
@@ -767,18 +807,7 @@ export type LeadershipSection = {
     title?: string;
     credential?: string;
     bio?: string;
-    headshot?: {
-      asset?: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-      };
-      media?: unknown;
-      hotspot?: SanityImageHotspot;
-      crop?: SanityImageCrop;
-      _type: "image";
-    };
+    headshot?: Headshot;
     linkedin?: string;
     email?: string;
     _key: string;
@@ -792,18 +821,7 @@ export type LeadershipSection = {
     bio?: string;
     _key: string;
   }>;
-  ctaCard?: {
-    heading?: string;
-    body?: string;
-    primaryCta?: {
-      label?: string;
-      href?: string;
-    };
-    secondaryCta?: {
-      label?: string;
-      href?: string;
-    };
-  };
+  ctaCard?: CtaCard;
 };
 
 export type StoriesImpact = {
@@ -819,16 +837,7 @@ export type StoriesImpact = {
     program?: string;
     _key: string;
   }>;
-  statsCard?: {
-    heading?: string;
-    description?: string;
-    stats?: Array<{
-      value?: string;
-      label?: string;
-      color?: "primary" | "secondary" | "accent";
-      _key: string;
-    }>;
-  };
+  statsCard?: StatsCard;
 };
 
 export type MissionStatement = {
@@ -856,7 +865,14 @@ export type AboutOverview = {
     _key: string;
   }>;
   stats?: Array<{
-    icon?: "users" | "calendar" | "globe" | "award" | "sparkles" | "book-open" | "heart";
+    icon?:
+      | "users"
+      | "calendar"
+      | "globe"
+      | "award"
+      | "sparkles"
+      | "book-open"
+      | "heart";
     value?: string;
     label?: string;
     description?: string;
@@ -871,27 +887,22 @@ export type ChapterRequirements = {
   intro?: string;
   cards?: Array<{
     title?: string;
-    icon?: "users" | "book-open" | "calendar" | "target" | "globe" | "heart" | "award" | "lightbulb" | "sparkles";
+    icon?:
+      | "users"
+      | "book-open"
+      | "calendar"
+      | "target"
+      | "globe"
+      | "heart"
+      | "award"
+      | "lightbulb"
+      | "sparkles";
     tone?: "primary" | "secondary" | "accent" | "muted";
     points?: Array<string>;
     _key: string;
   }>;
-  processCard?: {
-    title?: string;
-    steps?: Array<{
-      label?: string;
-      duration?: string;
-      _key: string;
-    }>;
-  };
-  metricsCard?: {
-    title?: string;
-    metrics?: Array<{
-      label?: string;
-      value?: string;
-      _key: string;
-    }>;
-  };
+  processCard?: ProcessCard;
+  metricsCard?: MetricsCard;
 };
 
 export type ChapterApplication = {
@@ -901,7 +912,15 @@ export type ChapterApplication = {
   title?: string;
   description?: string;
   highlights?: Array<{
-    icon?: "book-open" | "calendar" | "users" | "award" | "sparkles" | "lightbulb" | "handshake" | "graduation-cap";
+    icon?:
+      | "book-open"
+      | "calendar"
+      | "users"
+      | "award"
+      | "sparkles"
+      | "lightbulb"
+      | "handshake"
+      | "graduation-cap";
     title?: string;
     body?: string;
     _type: "highlight";
@@ -923,10 +942,7 @@ export type ChapterApplication = {
     _type: "fact";
     _key: string;
   }>;
-  cta?: {
-    label?: string;
-    href?: string;
-  };
+  cta?: ChapterApplicationCta;
   cardFootnote?: string;
 };
 
@@ -935,12 +951,7 @@ export type SplitImage = {
   orientation?: "imageLeft" | "imageRight";
   title?: string;
   image?: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
+    asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
@@ -960,29 +971,11 @@ export type NewsletterArchive = {
     issue?: string;
     date?: string;
     readTime?: string;
-    image?: {
-      asset?: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-      };
-      media?: unknown;
-      hotspot?: SanityImageHotspot;
-      crop?: SanityImageCrop;
-      _type: "image";
-    };
+    image?: ObjectImage;
     href?: string;
     _key: string;
   }>;
-  cta?: {
-    title?: string;
-    body?: string;
-    disclaimer?: string;
-    placeholder?: string;
-    buttonLabel?: string;
-    buttonHref?: string;
-  };
+  cta?: Cta;
   loadMoreLabel?: string;
 };
 
@@ -991,12 +984,7 @@ export type ResourcesHero = {
   heading?: string;
   tagline?: string;
   backgroundImage?: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
+    asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
@@ -1008,7 +996,17 @@ export type ResourcesHero = {
   highlights?: Array<{
     title?: string;
     description?: string;
-    icon?: "book-open" | "headphones" | "file-text" | "archive" | "star" | "users" | "globe" | "heart" | "award" | "lightbulb";
+    icon?:
+      | "book-open"
+      | "headphones"
+      | "file-text"
+      | "archive"
+      | "star"
+      | "users"
+      | "globe"
+      | "heart"
+      | "award"
+      | "lightbulb";
     tone?: "primary" | "secondary" | "accent";
     _key: string;
   }>;
@@ -1016,14 +1014,8 @@ export type ResourcesHero = {
   highlightBodyColor?: Color;
   enablePetalAnimation?: boolean;
   ctaLabel?: string;
-  primaryCta?: {
-    label?: string;
-    href?: string;
-  };
-  secondaryCta?: {
-    label?: string;
-    href?: string;
-  };
+  primaryCta?: ResourcesHeroPrimaryCta;
+  secondaryCta?: ResourcesHeroSecondaryCta;
 };
 
 export type InitiativesGrid = {
@@ -1033,83 +1025,21 @@ export type InitiativesGrid = {
   cards?: Array<{
     title?: string;
     description?: string;
-    image?: {
-      asset?: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-      };
-      media?: unknown;
-      hotspot?: SanityImageHotspot;
-      crop?: SanityImageCrop;
-      _type: "image";
-    };
+    image?: CardImage;
     alt?: string;
-    cta?: {
-      label?: string;
-      href?: string;
-    };
+    cta?: CardCta;
     _type: "card";
     _key: string;
   }>;
-  sectionCta?: {
-    label?: string;
-    href?: string;
-  };
+  sectionCta?: SectionCta;
 };
 
 export type Hero = {
   _type: "hero";
   title?: string;
-  text?: Array<{
-    children?: Array<{
-      marks?: Array<string>;
-      text?: string;
-      _type: "span";
-      _key: string;
-    }>;
-    style?: "normal" | "h1" | "h2" | "h3" | "h4" | "blockquote";
-    listItem?: "bullet" | "number";
-    markDefs?: Array<{
-      href?: string;
-      newTab?: boolean;
-      _type: "link";
-      _key: string;
-    }>;
-    level?: number;
-    _type: "block";
-    _key: string;
-  } | {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    _type: "image";
-    _key: string;
-  } | {
-    filename?: string;
-    language?: "javascript" | "typescript" | "json" | "shell" | "markdown";
-    code?: string;
-    _type: "codeBlock";
-    _key: string;
-  } | {
-    style?: string;
-    _type: "divider";
-    _key: string;
-  }>;
+  text?: BlockContent;
   image?: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
+    asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
@@ -1128,16 +1058,21 @@ export type Features = {
   }>;
 };
 
+export type FaqReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "faq";
+};
+
 export type Faqs = {
   _type: "faqs";
   title?: string;
-  faqs?: Array<{
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    _key: string;
-    [internalGroqTypeReferenceTo]?: "faq";
-  }>;
+  faqs?: Array<
+    {
+      _key: string;
+    } & FaqReference
+  >;
 };
 
 export type Faq = {
@@ -1147,92 +1082,74 @@ export type Faq = {
   _updatedAt: string;
   _rev: string;
   title?: string;
-  body?: Array<{
-    children?: Array<{
-      marks?: Array<string>;
-      text?: string;
-      _type: "span";
-      _key: string;
-    }>;
-    style?: "normal" | "h1" | "h2" | "h3" | "h4" | "blockquote";
-    listItem?: "bullet" | "number";
-    markDefs?: Array<{
-      href?: string;
-      newTab?: boolean;
-      _type: "link";
-      _key: string;
-    }>;
-    level?: number;
-    _type: "block";
-    _key: string;
-  } | {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    _type: "image";
-    _key: string;
-  } | {
-    filename?: string;
-    language?: "javascript" | "typescript" | "json" | "shell" | "markdown";
-    code?: string;
-    _type: "codeBlock";
-    _key: string;
-  } | {
-    style?: string;
-    _type: "divider";
-    _key: string;
-  }>;
+  body?: BlockContent;
 };
 
-export type PageBuilder = Array<{
-  _key: string;
-} & HeroBanner | {
-  _key: string;
-} & Hero | {
-  _key: string;
-} & SplitImage | {
-  _key: string;
-} & Features | {
-  _key: string;
-} & ResourcesHero | {
-  _key: string;
-} & NewsletterArchive | {
-  _key: string;
-} & InitiativesGrid | {
-  _key: string;
-} & Faqs | {
-  _key: string;
-} & ChapterApplication | {
-  _key: string;
-} & ChapterRequirements | {
-  _key: string;
-} & AboutOverview | {
-  _key: string;
-} & MissionStatement | {
-  _key: string;
-} & StoriesImpact | {
-  _key: string;
-} & LeadershipSection | {
-  _key: string;
-} & PodcastHighlights | {
-  _key: string;
-} & WorkshopsDirectory | {
-  _key: string;
-} & VolunteersDirectory | {
-  _key: string;
-} & BrandPromos | {
-  _key: string;
-} & VolunteerTracks | {
-  _key: string;
-} & VolunteerBenefits | {
-  _key: string;
-} & VolunteerApplication>;
+export type PageBuilder = Array<
+  | ({
+      _key: string;
+    } & HeroBanner)
+  | ({
+      _key: string;
+    } & Hero)
+  | ({
+      _key: string;
+    } & SplitImage)
+  | ({
+      _key: string;
+    } & Features)
+  | ({
+      _key: string;
+    } & ResourcesHero)
+  | ({
+      _key: string;
+    } & NewsletterArchive)
+  | ({
+      _key: string;
+    } & InitiativesGrid)
+  | ({
+      _key: string;
+    } & Faqs)
+  | ({
+      _key: string;
+    } & ChapterApplication)
+  | ({
+      _key: string;
+    } & ChapterRequirements)
+  | ({
+      _key: string;
+    } & AboutOverview)
+  | ({
+      _key: string;
+    } & MissionStatement)
+  | ({
+      _key: string;
+    } & StoriesImpact)
+  | ({
+      _key: string;
+    } & LeadershipSection)
+  | ({
+      _key: string;
+    } & PodcastHighlights)
+  | ({
+      _key: string;
+    } & WorkshopsDirectory)
+  | ({
+      _key: string;
+    } & VolunteersDirectory)
+  | ({
+      _key: string;
+    } & BrandPromos)
+  | ({
+      _key: string;
+    } & VolunteerTracks)
+  | ({
+      _key: string;
+    } & VolunteerBenefits)
+  | ({
+      _key: string;
+    } & VolunteerApplication)
+>;
 
 export type Page = {
   _id: string;
@@ -1258,12 +1175,7 @@ export type Event = {
   link?: string;
   needsVolunteer?: boolean;
   image?: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
+    asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
@@ -1284,47 +1196,26 @@ export type Category = {
   description?: string;
 };
 
-export type BlockContent = Array<{
-  children?: Array<{
-    marks?: Array<string>;
-    text?: string;
-    _type: "span";
-    _key: string;
-  }>;
-  style?: "normal" | "h1" | "h2" | "h3" | "h4" | "blockquote";
-  listItem?: "bullet" | "number";
-  markDefs?: Array<{
-    href?: string;
-    newTab?: boolean;
-    _type: "link";
-    _key: string;
-  }>;
-  level?: number;
-  _type: "block";
-  _key: string;
-} | {
-  asset?: {
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-  };
-  media?: unknown;
-  hotspot?: SanityImageHotspot;
-  crop?: SanityImageCrop;
-  _type: "image";
-  _key: string;
-} | {
-  filename?: string;
-  language?: "javascript" | "typescript" | "json" | "shell" | "markdown";
-  code?: string;
-  _type: "codeBlock";
-  _key: string;
-} | {
-  style?: string;
-  _type: "divider";
-  _key: string;
-}>;
+export type CategoryReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "category";
+};
+
+export type AuthorReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "author";
+};
+
+export type BlogPostReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "blogPost";
+};
 
 export type BlogPost = {
   _id: string;
@@ -1336,12 +1227,7 @@ export type BlogPost = {
   slug?: Slug;
   publishedAt?: string;
   mainImage?: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
+    asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
@@ -1349,26 +1235,17 @@ export type BlogPost = {
     _type: "image";
   };
   body?: BlockContent;
-  categories?: Array<{
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    _key: string;
-    [internalGroqTypeReferenceTo]?: "category";
-  }>;
-  author?: {
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "author";
-  };
-  relatedBlogPosts?: Array<{
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    _key: string;
-    [internalGroqTypeReferenceTo]?: "blogPost";
-  }>;
+  categories?: Array<
+    {
+      _key: string;
+    } & CategoryReference
+  >;
+  author?: AuthorReference;
+  relatedBlogPosts?: Array<
+    {
+      _key: string;
+    } & BlogPostReference
+  >;
 };
 
 export type Author = {
@@ -1380,12 +1257,7 @@ export type Author = {
   name?: string;
   slug?: Slug;
   image?: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
+    asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
@@ -1409,15 +1281,6 @@ export type Author = {
     _type: "block";
     _key: string;
   }>;
-};
-
-export type Color = {
-  _type: "color";
-  hex?: string;
-  alpha?: number;
-  hsl?: HslaColor;
-  hsv?: HsvaColor;
-  rgb?: RgbaColor;
 };
 
 export type RgbaColor = {
@@ -1470,20 +1333,16 @@ export type SanityImageDimensions = {
   aspectRatio?: number;
 };
 
-export type SanityImageHotspot = {
-  _type: "sanity.imageHotspot";
-  x?: number;
-  y?: number;
-  height?: number;
-  width?: number;
-};
-
-export type SanityImageCrop = {
-  _type: "sanity.imageCrop";
-  top?: number;
-  bottom?: number;
-  left?: number;
-  right?: number;
+export type SanityImageMetadata = {
+  _type: "sanity.imageMetadata";
+  location?: Geopoint;
+  dimensions?: SanityImageDimensions;
+  palette?: SanityImagePalette;
+  lqip?: string;
+  blurHash?: string;
+  thumbHash?: string;
+  hasAlpha?: boolean;
+  isOpaque?: boolean;
 };
 
 export type SanityFileAsset = {
@@ -1506,6 +1365,13 @@ export type SanityFileAsset = {
   path?: string;
   url?: string;
   source?: SanityAssetSourceData;
+};
+
+export type SanityAssetSourceData = {
+  _type: "sanity.assetSourceData";
+  name?: string;
+  id?: string;
+  url?: string;
 };
 
 export type SanityImageAsset = {
@@ -1531,17 +1397,6 @@ export type SanityImageAsset = {
   source?: SanityAssetSourceData;
 };
 
-export type SanityImageMetadata = {
-  _type: "sanity.imageMetadata";
-  location?: Geopoint;
-  dimensions?: SanityImageDimensions;
-  palette?: SanityImagePalette;
-  lqip?: string;
-  blurHash?: string;
-  hasAlpha?: boolean;
-  isOpaque?: boolean;
-};
-
 export type Geopoint = {
   _type: "geopoint";
   lat?: number;
@@ -1549,35 +1404,109 @@ export type Geopoint = {
   alt?: number;
 };
 
-export type Slug = {
-  _type: "slug";
-  current?: string;
-  source?: string;
-};
+export type AllSanitySchemaTypes =
+  | PrimaryCta
+  | SecondaryCta
+  | ResourcesHeroPrimaryCta
+  | ResourcesHeroSecondaryCta
+  | Cta
+  | SectionCta
+  | ChapterApplicationCta
+  | ProcessCard
+  | MetricsCard
+  | StatsCard
+  | CtaCard
+  | ViewAllCta
+  | Callout
+  | SanityImageAssetReference
+  | ObjectImage
+  | CardImage
+  | CardCta
+  | Headshot
+  | CtaCardPrimaryCta
+  | CtaCardSecondaryCta
+  | HeroImage
+  | ObjectCta
+  | GallerySettings
+  | SanityImageCrop
+  | SanityImageHotspot
+  | GalleryAlbum
+  | ContactGroup
+  | Slug
+  | Brand
+  | Color
+  | VolunteerOpportunity
+  | BlockContent
+  | WorkshopReference
+  | WorkshopVolunteer
+  | WorkshopCategory
+  | WorkshopCategoryReference
+  | WorkshopVolunteerReference
+  | Workshop
+  | ColorChoice
+  | HeroBanner
+  | PageReference
+  | SiteSettings
+  | SanityFileAssetReference
+  | Newsletter
+  | VolunteerApplication
+  | VolunteerBenefits
+  | VolunteerTracks
+  | BrandReference
+  | BrandPromos
+  | VolunteersDirectory
+  | WorkshopsDirectory
+  | PodcastHighlights
+  | LeadershipSection
+  | StoriesImpact
+  | MissionStatement
+  | AboutOverview
+  | ChapterRequirements
+  | ChapterApplication
+  | SplitImage
+  | NewsletterArchive
+  | ResourcesHero
+  | InitiativesGrid
+  | Hero
+  | Features
+  | FaqReference
+  | Faqs
+  | Faq
+  | PageBuilder
+  | Page
+  | Event
+  | Category
+  | CategoryReference
+  | AuthorReference
+  | BlogPostReference
+  | BlogPost
+  | Author
+  | RgbaColor
+  | HsvaColor
+  | HslaColor
+  | SanityImagePaletteSwatch
+  | SanityImagePalette
+  | SanityImageDimensions
+  | SanityImageMetadata
+  | SanityFileAsset
+  | SanityAssetSourceData
+  | SanityImageAsset
+  | Geopoint;
 
-export type SanityAssetSourceData = {
-  _type: "sanity.assetSourceData";
-  name?: string;
-  id?: string;
-  url?: string;
-};
-
-export type AllSanitySchemaTypes = GallerySettings | GalleryAlbum | ContactGroup | Brand | VolunteerOpportunity | WorkshopVolunteer | WorkshopCategory | Workshop | ColorChoice | HeroBanner | SiteSettings | Newsletter | VolunteerApplication | VolunteerBenefits | VolunteerTracks | BrandPromos | VolunteersDirectory | WorkshopsDirectory | PodcastHighlights | LeadershipSection | StoriesImpact | MissionStatement | AboutOverview | ChapterRequirements | ChapterApplication | SplitImage | NewsletterArchive | ResourcesHero | InitiativesGrid | Hero | Features | Faqs | Faq | PageBuilder | Page | Event | Category | BlockContent | BlogPost | Author | Color | RgbaColor | HsvaColor | HslaColor | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageHotspot | SanityImageCrop | SanityFileAsset | SanityImageAsset | SanityImageMetadata | Geopoint | Slug | SanityAssetSourceData;
-export declare const internalGroqTypeReferenceTo: unique symbol;
-// Source: ./src/app/api/_lib/recipients.ts
+// Source: src/app/api/_lib/recipients.ts
 // Variable: CONTACT_GROUP_QUERY
 // Query: *[_type == "contactGroup" && notifyChapterApplications == true][0]{    title,    recipients[]{      email    }  }
-export type CONTACT_GROUP_QUERYResult = {
+export type CONTACT_GROUP_QUERY_RESULT = {
   title: string | null;
   recipients: Array<{
     email: string | null;
   }> | null;
 } | null;
 
-// Source: ./src/app/api/workshops/volunteer/route.ts
+// Source: src/app/api/workshops/volunteer/route.ts
 // Variable: WORKSHOP_CONTACT_QUERY
 // Query: *[_type == "workshop" && (    (defined($workshopId) && _id == $workshopId) ||    (defined($workshopSlug) && slug.current == $workshopSlug)  )][0]{    _id,    title,    "slug": slug.current,    contact{      email,      phone    }  }
-export type WORKSHOP_CONTACT_QUERYResult = {
+export type WORKSHOP_CONTACT_QUERY_RESULT = {
   _id: string;
   title: string | null;
   slug: string | null;
@@ -1587,21 +1516,16 @@ export type WORKSHOP_CONTACT_QUERYResult = {
   } | null;
 } | null;
 
-// Source: ./src/sanity/lib/queries.ts
+// Source: src/sanity/lib/queries.ts
 // Variable: BLOG_POSTS_QUERY
 // Query: *[_type == "blogPost" && defined(slug.current)]    | order(publishedAt desc)[]{      _id,      title,      slug,      body,      mainImage,      publishedAt,      "categories": coalesce(        categories[]->{          _id,          slug,          title        },        []      ),      author->{        name,        image      }    }
-export type BLOG_POSTS_QUERYResult = Array<{
+export type BLOG_POSTS_QUERY_RESULT = Array<{
   _id: string;
   title: string | null;
   slug: Slug | null;
   body: BlockContent | null;
   mainImage: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
+    asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
@@ -1609,20 +1533,17 @@ export type BLOG_POSTS_QUERYResult = Array<{
     _type: "image";
   } | null;
   publishedAt: string | null;
-  categories: Array<{
-    _id: string;
-    slug: Slug | null;
-    title: string | null;
-  }> | Array<never>;
+  categories:
+    | Array<{
+        _id: string;
+        slug: Slug | null;
+        title: string | null;
+      }>
+    | Array<never>;
   author: {
     name: string | null;
     image: {
-      asset?: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-      };
+      asset?: SanityImageAssetReference;
       media?: unknown;
       hotspot?: SanityImageHotspot;
       crop?: SanityImageCrop;
@@ -1630,24 +1551,23 @@ export type BLOG_POSTS_QUERYResult = Array<{
     } | null;
   } | null;
 }>;
+
+// Source: src/sanity/lib/queries.ts
 // Variable: BLOG_POSTS_SLUGS_QUERY
 // Query: *[_type == "blogPost" && defined(slug.current)]{    "slug": slug.current  }
-export type BLOG_POSTS_SLUGS_QUERYResult = Array<{
+export type BLOG_POSTS_SLUGS_QUERY_RESULT = Array<{
   slug: string | null;
 }>;
+
+// Source: src/sanity/lib/queries.ts
 // Variable: BLOG_POST_QUERY
 // Query: *[_type == "blogPost" && slug.current == $slug][0]{    _id,    title,    body,    mainImage,    publishedAt,    "categories": coalesce(      categories[]->{        _id,        slug,        title      },      []    ),    author->{      name,      image    },    relatedBlogPosts[] {      _key,      ...@->{ _id, title, slug }    }  }
-export type BLOG_POST_QUERYResult = {
+export type BLOG_POST_QUERY_RESULT = {
   _id: string;
   title: string | null;
   body: BlockContent | null;
   mainImage: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
+    asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
@@ -1655,20 +1575,17 @@ export type BLOG_POST_QUERYResult = {
     _type: "image";
   } | null;
   publishedAt: string | null;
-  categories: Array<{
-    _id: string;
-    slug: Slug | null;
-    title: string | null;
-  }> | Array<never>;
+  categories:
+    | Array<{
+        _id: string;
+        slug: Slug | null;
+        title: string | null;
+      }>
+    | Array<never>;
   author: {
     name: string | null;
     image: {
-      asset?: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-      };
+      asset?: SanityImageAssetReference;
       media?: unknown;
       hotspot?: SanityImageHotspot;
       crop?: SanityImageCrop;
@@ -1682,9 +1599,11 @@ export type BLOG_POST_QUERYResult = {
     slug: Slug | null;
   }> | null;
 } | null;
+
+// Source: src/sanity/lib/queries.ts
 // Variable: NEWSLETTERS_QUERY
 // Query: *[_type == "newsletter" && defined(slug.current)]    | order(publishedAt desc){      _id,      title,      "slug": slug.current,      issueLabel,      publishedAt,      readTime,      excerpt,      coverImage    }
-export type NEWSLETTERS_QUERYResult = Array<{
+export type NEWSLETTERS_QUERY_RESULT = Array<{
   _id: string;
   title: string | null;
   slug: string | null;
@@ -1693,21 +1612,18 @@ export type NEWSLETTERS_QUERYResult = Array<{
   readTime: string | null;
   excerpt: string | null;
   coverImage: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
+    asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
     _type: "image";
   } | null;
 }>;
+
+// Source: src/sanity/lib/queries.ts
 // Variable: NEWSLETTER_QUERY
 // Query: *[_type == "newsletter" && slug.current == $slug][0]{    _id,    title,    issueLabel,    publishedAt,    readTime,    excerpt,    coverImage,    body,    "attachment": attachment{      "url": asset->url,      "filename": asset->originalFilename,      "size": asset->size    }  }
-export type NEWSLETTER_QUERYResult = {
+export type NEWSLETTER_QUERY_RESULT = {
   _id: string;
   title: string | null;
   issueLabel: string | null;
@@ -1715,67 +1631,24 @@ export type NEWSLETTER_QUERYResult = {
   readTime: string | null;
   excerpt: string | null;
   coverImage: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
+    asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
     _type: "image";
   } | null;
-  body: Array<{
-    children?: Array<{
-      marks?: Array<string>;
-      text?: string;
-      _type: "span";
-      _key: string;
-    }>;
-    style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "normal";
-    listItem?: "bullet" | "number";
-    markDefs?: Array<{
-      href?: string;
-      newTab?: boolean;
-      _type: "link";
-      _key: string;
-    }>;
-    level?: number;
-    _type: "block";
-    _key: string;
-  } | {
-    filename?: string;
-    language?: "javascript" | "json" | "markdown" | "shell" | "typescript";
-    code?: string;
-    _type: "codeBlock";
-    _key: string;
-  } | {
-    style?: string;
-    _type: "divider";
-    _key: string;
-  } | {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    _type: "image";
-    _key: string;
-  }> | null;
+  body: BlockContent | null;
   attachment: {
     url: string | null;
     filename: string | null;
     size: number | null;
   } | null;
 } | null;
+
+// Source: src/sanity/lib/queries.ts
 // Variable: EVENTS_QUERY
 // Query: *[_type == "event" && defined(slug.current)] | order(date asc)[0...20]{    _id,    title,    slug,    date,    location,    needsVolunteer  }
-export type EVENTS_QUERYResult = Array<{
+export type EVENTS_QUERY_RESULT = Array<{
   _id: string;
   title: string | null;
   slug: Slug | null;
@@ -1783,9 +1656,11 @@ export type EVENTS_QUERYResult = Array<{
   location: string | null;
   needsVolunteer: boolean | null;
 }>;
+
+// Source: src/sanity/lib/queries.ts
 // Variable: EVENT_QUERY
 // Query: *[_type == "event" && slug.current == $slug][0]{    _id,    title,    slug,    description,    date,    location,    link,    needsVolunteer,    image  }
-export type EVENT_QUERYResult = {
+export type EVENT_QUERY_RESULT = {
   _id: string;
   title: string | null;
   slug: Slug | null;
@@ -1795,12 +1670,7 @@ export type EVENT_QUERYResult = {
   link: string | null;
   needsVolunteer: boolean | null;
   image: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
+    asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
@@ -1808,1407 +1678,1071 @@ export type EVENT_QUERYResult = {
     _type: "image";
   } | null;
 } | null;
+
+// Source: src/sanity/lib/queries.ts
 // Variable: PAGE_QUERY
 // Query: *[_type == "page" && slug.current == $slug][0]{  _id,  _type,  title,  slug,  content[]{    ...,    _type == "heroBanner" => {      ...,      titleColor,      kickerColor,      bodyColor,      overlayOpacity    },    _type == "faqs" => {      ...,      faqs[]->    },    _type == "workshopsDirectory" => {      ...,      categoryCards[]->{        _id,        title,        slug,        icon,        description      },      "workshops": *[_type == "workshop"]        | order(start asc){          _id,          title,          "slug": slug.current,          summary,          categories[]->{            _id,            title,            slug,            icon,            description          },          start,          end,          location,          capacity,          registeredCount,          needsVolunteers,          registerUrl,          volunteerUrl,          heroImage        }    },    _type == "volunteersDirectory" => {      ...,      "opportunities": *[_type == "volunteerOpportunity"]        | order(title asc){          _id,          title,          "slug": slug.current,          summary,          trackLabel,          isUrgent,          isRemoteFriendly,          location,          commitmentSummary,          openings,          experienceLevel,          applyUrl,          heroImage,          contact{            ctaLabel          }        }    },    _type == "brandPromos" => {      ...,      brands[]->{        _id,        title,        kicker,        headline,        subhead,        footnote,        themeColor,        textColor,        imageOverlayStrength,        primaryCta{          label,          href        },        secondaryCta{          label,          href        },        promoLink{          href,          label        },        heroImage{          asset,          alt        },        logo{          asset,          alt        }      }    }  }}
-export type PAGE_QUERYResult = {
+export type PAGE_QUERY_RESULT = {
   _id: string;
   _type: "page";
   title: string | null;
   slug: Slug | null;
-  content: Array<{
-    _key: string;
-    _type: "aboutOverview";
-    sectionId?: string;
-    heading?: string;
-    intro?: Array<string>;
-    pillars?: Array<{
-      title?: string;
-      description?: string;
-      _key: string;
-    }>;
-    stats?: Array<{
-      icon?: "award" | "book-open" | "calendar" | "globe" | "heart" | "sparkles" | "users";
-      value?: string;
-      label?: string;
-      description?: string;
-      _key: string;
-    }>;
-  } | {
-    _key: string;
-    _type: "brandPromos";
-    sectionId?: string;
-    heading?: string;
-    intro?: string;
-    brands: Array<{
-      _id: string;
-      title: string | null;
-      kicker: string | null;
-      headline: string | null;
-      subhead: string | null;
-      footnote: string | null;
-      themeColor: Color | null;
-      textColor: Color | null;
-      imageOverlayStrength: number | null;
-      primaryCta: {
-        label: string | null;
-        href: string | null;
-      } | null;
-      secondaryCta: {
-        label: string | null;
-        href: string | null;
-      } | null;
-      promoLink: {
-        href: string | null;
-        label: string | null;
-      } | null;
-      heroImage: {
-        asset: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        } | null;
-        alt: string | null;
-      } | null;
-      logo: {
-        asset: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        } | null;
-        alt: string | null;
-      } | null;
-    }> | null;
-  } | {
-    _key: string;
-    _type: "chapterApplication";
-    sectionId?: string;
-    kicker?: string;
-    title?: string;
-    description?: string;
-    highlights?: Array<{
-      icon?: "award" | "book-open" | "calendar" | "graduation-cap" | "handshake" | "lightbulb" | "sparkles" | "users";
-      title?: string;
-      body?: string;
-      _type: "highlight";
-      _key: string;
-    }>;
-    benefitsHeading?: string;
-    benefitsIntro?: string;
-    benefits?: Array<{
-      title?: string;
-      description?: string;
-      _type: "benefit";
-      _key: string;
-    }>;
-    cardTitle?: string;
-    cardSubtitle?: string;
-    cardFacts?: Array<{
-      label?: string;
-      value?: string;
-      _type: "fact";
-      _key: string;
-    }>;
-    cta?: {
-      label?: string;
-      href?: string;
-    };
-    cardFootnote?: string;
-  } | {
-    _key: string;
-    _type: "chapterRequirements";
-    sectionId?: string;
-    heading?: string;
-    intro?: string;
-    cards?: Array<{
-      title?: string;
-      icon?: "award" | "book-open" | "calendar" | "globe" | "heart" | "lightbulb" | "sparkles" | "target" | "users";
-      tone?: "accent" | "muted" | "primary" | "secondary";
-      points?: Array<string>;
-      _key: string;
-    }>;
-    processCard?: {
-      title?: string;
-      steps?: Array<{
-        label?: string;
-        duration?: string;
+  content: Array<
+    | {
         _key: string;
-      }>;
-    };
-    metricsCard?: {
-      title?: string;
-      metrics?: Array<{
-        label?: string;
-        value?: string;
-        _key: string;
-      }>;
-    };
-  } | {
-    _key: string;
-    _type: "faqs";
-    title?: string;
-    faqs: Array<{
-      _id: string;
-      _type: "faq";
-      _createdAt: string;
-      _updatedAt: string;
-      _rev: string;
-      title?: string;
-      body?: Array<{
-        children?: Array<{
-          marks?: Array<string>;
-          text?: string;
-          _type: "span";
-          _key: string;
-        }>;
-        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "normal";
-        listItem?: "bullet" | "number";
-        markDefs?: Array<{
-          href?: string;
-          newTab?: boolean;
-          _type: "link";
-          _key: string;
-        }>;
-        level?: number;
-        _type: "block";
-        _key: string;
-      } | {
-        filename?: string;
-        language?: "javascript" | "json" | "markdown" | "shell" | "typescript";
-        code?: string;
-        _type: "codeBlock";
-        _key: string;
-      } | {
-        style?: string;
-        _type: "divider";
-        _key: string;
-      } | {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
-        media?: unknown;
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        _type: "image";
-        _key: string;
-      }>;
-    }> | null;
-  } | {
-    _key: string;
-    _type: "features";
-    title?: string;
-    features?: Array<{
-      title?: string;
-      text?: string;
-      _type: "feature";
-      _key: string;
-    }>;
-  } | {
-    _key: string;
-    _type: "hero";
-    title?: string;
-    text?: Array<{
-      children?: Array<{
-        marks?: Array<string>;
-        text?: string;
-        _type: "span";
-        _key: string;
-      }>;
-      style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "normal";
-      listItem?: "bullet" | "number";
-      markDefs?: Array<{
-        href?: string;
-        newTab?: boolean;
-        _type: "link";
-        _key: string;
-      }>;
-      level?: number;
-      _type: "block";
-      _key: string;
-    } | {
-      filename?: string;
-      language?: "javascript" | "json" | "markdown" | "shell" | "typescript";
-      code?: string;
-      _type: "codeBlock";
-      _key: string;
-    } | {
-      style?: string;
-      _type: "divider";
-      _key: string;
-    } | {
-      asset?: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-      };
-      media?: unknown;
-      hotspot?: SanityImageHotspot;
-      crop?: SanityImageCrop;
-      _type: "image";
-      _key: string;
-    }>;
-    image?: {
-      asset?: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-      };
-      media?: unknown;
-      hotspot?: SanityImageHotspot;
-      crop?: SanityImageCrop;
-      _type: "image";
-    };
-  } | {
-    _key: string;
-    _type: "heroBanner";
-    background?: {
-      asset?: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-      };
-      media?: unknown;
-      hotspot?: SanityImageHotspot;
-      crop?: SanityImageCrop;
-      _type: "image";
-    };
-    overlayOpacity: number | null;
-    title?: string;
-    titleColor: Color | null;
-    kicker?: string;
-    kickerColor: Color | null;
-    body?: string;
-    bodyColor: Color | null;
-    primaryCta?: {
-      label?: string;
-      href?: string;
-    };
-    secondaryCta?: {
-      label?: string;
-      href?: string;
-    };
-  } | {
-    _key: string;
-    _type: "initiativesGrid";
-    heading?: string;
-    intro?: string;
-    cards?: Array<{
-      title?: string;
-      description?: string;
-      image?: {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
-        media?: unknown;
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        _type: "image";
-      };
-      alt?: string;
-      cta?: {
-        label?: string;
-        href?: string;
-      };
-      _type: "card";
-      _key: string;
-    }>;
-    sectionCta?: {
-      label?: string;
-      href?: string;
-    };
-  } | {
-    _key: string;
-    _type: "leadershipSection";
-    sectionId?: string;
-    heading?: string;
-    intro?: string;
-    executiveHeading?: string;
-    executiveSubheading?: string;
-    executiveTeam?: Array<{
-      name?: string;
-      title?: string;
-      credential?: string;
-      bio?: string;
-      headshot?: {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
-        media?: unknown;
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        _type: "image";
-      };
-      linkedin?: string;
-      email?: string;
-      _key: string;
-    }>;
-    advisoryHeading?: string;
-    advisorySubheading?: string;
-    advisors?: Array<{
-      name?: string;
-      role?: string;
-      expertise?: string;
-      bio?: string;
-      _key: string;
-    }>;
-    ctaCard?: {
-      heading?: string;
-      body?: string;
-      primaryCta?: {
-        label?: string;
-        href?: string;
-      };
-      secondaryCta?: {
-        label?: string;
-        href?: string;
-      };
-    };
-  } | {
-    _key: string;
-    _type: "missionStatement";
-    sectionId?: string;
-    heading?: string;
-    mission?: string;
-    pillars?: Array<{
-      title?: string;
-      description?: string;
-      _key: string;
-    }>;
-    visionHeading?: string;
-    vision?: string;
-  } | {
-    _key: string;
-    _type: "newsletterArchive";
-    heading?: string;
-    description?: string;
-    searchPlaceholder?: string;
-    filterLabel?: string;
-    newsletters?: Array<{
-      title?: string;
-      summary?: string;
-      issue?: string;
-      date?: string;
-      readTime?: string;
-      image?: {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
-        media?: unknown;
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        _type: "image";
-      };
-      href?: string;
-      _key: string;
-    }>;
-    cta?: {
-      title?: string;
-      body?: string;
-      disclaimer?: string;
-      placeholder?: string;
-      buttonLabel?: string;
-      buttonHref?: string;
-    };
-    loadMoreLabel?: string;
-  } | {
-    _key: string;
-    _type: "podcastHighlights";
-    sectionId?: string;
-    heading?: string;
-    intro?: string;
-    episodes?: Array<{
-      episodeLabel?: string;
-      duration?: string;
-      publishedAt?: string;
-      title?: string;
-      guestName?: string;
-      guestTitle?: string;
-      programTag?: string;
-      summary?: string;
-      heroImage?: {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
-        media?: unknown;
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        alt?: string;
-        _type: "image";
-      };
-      youtubeUrl?: string;
-      spotifyUrl?: string;
-      appleUrl?: string;
-      _key: string;
-    }>;
-    platformHeading?: string;
-    platforms?: Array<{
-      label?: string;
-      href?: string;
-      platform?: "apple" | "other" | "spotify" | "youtube";
-      _key: string;
-    }>;
-    viewAllCta?: {
-      label?: string;
-      href?: string;
-    };
-  } | {
-    _key: string;
-    _type: "resourcesHero";
-    heading?: string;
-    tagline?: string;
-    backgroundImage?: {
-      asset?: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-      };
-      media?: unknown;
-      hotspot?: SanityImageHotspot;
-      crop?: SanityImageCrop;
-      _type: "image";
-    };
-    overlayOpacity?: number;
-    headingColor?: Color;
-    taglineColor?: Color;
-    highlights?: Array<{
-      title?: string;
-      description?: string;
-      icon?: "archive" | "award" | "book-open" | "file-text" | "globe" | "headphones" | "heart" | "lightbulb" | "star" | "users";
-      tone?: "accent" | "primary" | "secondary";
-      _key: string;
-    }>;
-    highlightTitleColor?: Color;
-    highlightBodyColor?: Color;
-    enablePetalAnimation?: boolean;
-    ctaLabel?: string;
-    primaryCta?: {
-      label?: string;
-      href?: string;
-    };
-    secondaryCta?: {
-      label?: string;
-      href?: string;
-    };
-  } | {
-    _key: string;
-    _type: "splitImage";
-    orientation?: "imageLeft" | "imageRight";
-    title?: string;
-    image?: {
-      asset?: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-      };
-      media?: unknown;
-      hotspot?: SanityImageHotspot;
-      crop?: SanityImageCrop;
-      _type: "image";
-    };
-  } | {
-    _key: string;
-    _type: "storiesImpact";
-    sectionId?: string;
-    heading?: string;
-    intro?: string;
-    stories?: Array<{
-      quote?: string;
-      name?: string;
-      role?: string;
-      location?: string;
-      program?: string;
-      _key: string;
-    }>;
-    statsCard?: {
-      heading?: string;
-      description?: string;
-      stats?: Array<{
-        value?: string;
-        label?: string;
-        color?: "accent" | "primary" | "secondary";
-        _key: string;
-      }>;
-    };
-  } | {
-    _key: string;
-    _type: "volunteerApplication";
-    sectionId?: string;
-    heading?: string;
-    intro?: string;
-    processHeading?: string;
-    processSubheading?: string;
-    steps?: Array<{
-      title?: string;
-      description?: string;
-      timeEstimate?: string;
-      _key: string;
-    }>;
-    requirementsHeading?: string;
-    requirementsIntro?: string;
-    requirements?: Array<string>;
-    tracks?: Array<{
-      title?: string;
-      description?: string;
-      tone?: "accent" | "primary" | "secondary";
-      highlights?: Array<{
-        icon?: "calendar" | "clock" | "globe" | "map" | "sparkles" | "users";
-        label?: string;
-        _key: string;
-      }>;
-      cta?: {
-        label?: string;
-        href?: string;
-      };
-      _key: string;
-    }>;
-    supportHeading?: string;
-    supportBody?: string;
-    supportLinks?: Array<{
-      label?: string;
-      href?: string;
-      _key: string;
-    }>;
-  } | {
-    _key: string;
-    _type: "volunteerBenefits";
-    sectionId?: string;
-    heading?: string;
-    intro?: string;
-    benefits?: Array<{
-      icon?: string;
-      tone?: "accent" | "primary" | "secondary";
-      title?: string;
-      description?: string;
-      points?: Array<string>;
-      _type: "benefit";
-      _key: string;
-    }>;
-    testimonialsHeading?: string;
-    testimonialsIntro?: string;
-    testimonials?: Array<{
-      quote?: string;
-      name?: string;
-      role?: string;
-      _type: "testimonial";
-      _key: string;
-    }>;
-  } | {
-    _key: string;
-    _type: "volunteersDirectory";
-    sectionId?: string;
-    heading?: string;
-    intro?: string;
-    searchPlaceholder?: string;
-    opportunities: Array<{
-      _id: string;
-      title: string | null;
-      slug: string | null;
-      summary: string | null;
-      trackLabel: string | null;
-      isUrgent: boolean | null;
-      isRemoteFriendly: boolean | null;
-      location: string | null;
-      commitmentSummary: string | null;
-      openings: number | null;
-      experienceLevel: string | null;
-      applyUrl: string | null;
-      heroImage: {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
-        media?: unknown;
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        alt?: string;
-        _type: "image";
-      } | null;
-      contact: {
-        ctaLabel: string | null;
-      } | null;
-    }>;
-  } | {
-    _key: string;
-    _type: "volunteerTracks";
-    sectionId?: string;
-    heading?: string;
-    intro?: string;
-    tracks?: Array<{
-      badgeLabel?: string;
-      tone?: "accent" | "muted" | "primary" | "secondary";
-      icon?: string;
-      title?: string;
-      description?: string;
-      keyAreasHeading?: string;
-      keyAreas?: Array<string>;
-      commitmentHeading?: string;
-      commitmentItems?: Array<{
-        icon?: string;
-        text?: string;
-        _type: "commitment";
-        _key: string;
-      }>;
-      benefitsHeading?: string;
-      benefits?: Array<string>;
-      _type: "track";
-      _key: string;
-    }>;
-    callout?: {
-      heading?: string;
-      body?: string;
-      links?: Array<{
-        label?: string;
-        href?: string;
-        _type: "link";
-        _key: string;
-      }>;
-    };
-  } | {
-    _key: string;
-    _type: "workshopsDirectory";
-    sectionId?: string;
-    heading?: string;
-    intro?: string;
-    searchPlaceholder?: string;
-    categoryCards: Array<{
-      _id: string;
-      title: string | null;
-      slug: Slug | null;
-      icon: string | null;
-      description: string | null;
-    }> | null;
-    showVolunteerBadge?: boolean;
-    workshops: Array<{
-      _id: string;
-      title: string | null;
-      slug: string | null;
-      summary: string | null;
-      categories: Array<{
-        _id: string;
-        title: string | null;
-        slug: Slug | null;
-        icon: string | null;
-        description: string | null;
-      }> | null;
-      start: string | null;
-      end: string | null;
-      location: string | null;
-      capacity: number | null;
-      registeredCount: number | null;
-      needsVolunteers: boolean | null;
-      registerUrl: string | null;
-      volunteerUrl: string | null;
-      heroImage: {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
-        media?: unknown;
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        alt?: string;
-        _type: "image";
-      } | null;
-    }>;
-  }> | null;
-} | null;
-// Variable: HOME_PAGE_QUERY
-// Query: *[_id == "siteSettings"][0]{  homePage->{    _id,    _type,    title,    slug,    content[]{      ...,      _type == "heroBanner" => {        ...,        titleColor,        kickerColor,        bodyColor,        overlayOpacity      },      _type == "faqs" => { ..., faqs[]-> },      _type == "workshopsDirectory" => {        ...,        categoryCards[]->{          _id,          title,          slug,          icon,          description        },        "workshops": *[_type == "workshop"]          | order(start asc){            _id,            title,            "slug": slug.current,            summary,            categories[]->{              _id,              title,              slug,              icon,              description            },            start,            end,            location,            capacity,            registeredCount,            needsVolunteers,            registerUrl,            volunteerUrl,            heroImage          }      }    },      _type == "volunteersDirectory" => {        ...,        "opportunities": *[_type == "volunteerOpportunity"]          | order(title asc){            _id,            title,            "slug": slug.current,            summary,            trackLabel,            isUrgent,            isRemoteFriendly,            location,            commitmentSummary,            openings,            experienceLevel,            applyUrl,            heroImage,            contact{              ctaLabel            }          }      },      _type == "brandPromos" => {        ...,        brands[]->{          _id,          title,          kicker,          headline,          subhead,        footnote,        themeColor,        textColor,        imageOverlayStrength,        primaryCta{          label,          href          },          secondaryCta{            label,            href          },        promoLink{          href,          label        },        heroImage{          asset,          alt        },        logo{          asset,          alt        }        }      }    }  }
-export type HOME_PAGE_QUERYResult = {
-  homePage: null;
-} | {
-  homePage: {
-    _id: string;
-    _type: "page";
-    title: string | null;
-    slug: Slug | null;
-    content: Array<{
-      _key: string;
-      _type: "aboutOverview";
-      sectionId?: string;
-      heading?: string;
-      intro?: Array<string>;
-      pillars?: Array<{
-        title?: string;
-        description?: string;
-        _key: string;
-      }>;
-      stats?: Array<{
-        icon?: "award" | "book-open" | "calendar" | "globe" | "heart" | "sparkles" | "users";
-        value?: string;
-        label?: string;
-        description?: string;
-        _key: string;
-      }>;
-    } | {
-      _key: string;
-      _type: "brandPromos";
-      sectionId?: string;
-      heading?: string;
-      intro?: string;
-      brands?: Array<{
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        _key: string;
-        [internalGroqTypeReferenceTo]?: "brand";
-      }>;
-    } | {
-      _key: string;
-      _type: "chapterApplication";
-      sectionId?: string;
-      kicker?: string;
-      title?: string;
-      description?: string;
-      highlights?: Array<{
-        icon?: "award" | "book-open" | "calendar" | "graduation-cap" | "handshake" | "lightbulb" | "sparkles" | "users";
-        title?: string;
-        body?: string;
-        _type: "highlight";
-        _key: string;
-      }>;
-      benefitsHeading?: string;
-      benefitsIntro?: string;
-      benefits?: Array<{
-        title?: string;
-        description?: string;
-        _type: "benefit";
-        _key: string;
-      }>;
-      cardTitle?: string;
-      cardSubtitle?: string;
-      cardFacts?: Array<{
-        label?: string;
-        value?: string;
-        _type: "fact";
-        _key: string;
-      }>;
-      cta?: {
-        label?: string;
-        href?: string;
-      };
-      cardFootnote?: string;
-    } | {
-      _key: string;
-      _type: "chapterRequirements";
-      sectionId?: string;
-      heading?: string;
-      intro?: string;
-      cards?: Array<{
-        title?: string;
-        icon?: "award" | "book-open" | "calendar" | "globe" | "heart" | "lightbulb" | "sparkles" | "target" | "users";
-        tone?: "accent" | "muted" | "primary" | "secondary";
-        points?: Array<string>;
-        _key: string;
-      }>;
-      processCard?: {
-        title?: string;
-        steps?: Array<{
-          label?: string;
-          duration?: string;
-          _key: string;
-        }>;
-      };
-      metricsCard?: {
-        title?: string;
-        metrics?: Array<{
-          label?: string;
-          value?: string;
-          _key: string;
-        }>;
-      };
-    } | {
-      _key: string;
-      _type: "faqs";
-      title?: string;
-      faqs: Array<{
-        _id: string;
-        _type: "faq";
-        _createdAt: string;
-        _updatedAt: string;
-        _rev: string;
-        title?: string;
-        body?: Array<{
-          children?: Array<{
-            marks?: Array<string>;
-            text?: string;
-            _type: "span";
-            _key: string;
-          }>;
-          style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "normal";
-          listItem?: "bullet" | "number";
-          markDefs?: Array<{
-            href?: string;
-            newTab?: boolean;
-            _type: "link";
-            _key: string;
-          }>;
-          level?: number;
-          _type: "block";
-          _key: string;
-        } | {
-          filename?: string;
-          language?: "javascript" | "json" | "markdown" | "shell" | "typescript";
-          code?: string;
-          _type: "codeBlock";
-          _key: string;
-        } | {
-          style?: string;
-          _type: "divider";
-          _key: string;
-        } | {
-          asset?: {
-            _ref: string;
-            _type: "reference";
-            _weak?: boolean;
-            [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-          };
-          media?: unknown;
-          hotspot?: SanityImageHotspot;
-          crop?: SanityImageCrop;
-          _type: "image";
-          _key: string;
-        }>;
-      }> | null;
-    } | {
-      _key: string;
-      _type: "features";
-      title?: string;
-      features?: Array<{
-        title?: string;
-        text?: string;
-        _type: "feature";
-        _key: string;
-      }>;
-    } | {
-      _key: string;
-      _type: "hero";
-      title?: string;
-      text?: Array<{
-        children?: Array<{
-          marks?: Array<string>;
-          text?: string;
-          _type: "span";
-          _key: string;
-        }>;
-        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "normal";
-        listItem?: "bullet" | "number";
-        markDefs?: Array<{
-          href?: string;
-          newTab?: boolean;
-          _type: "link";
-          _key: string;
-        }>;
-        level?: number;
-        _type: "block";
-        _key: string;
-      } | {
-        filename?: string;
-        language?: "javascript" | "json" | "markdown" | "shell" | "typescript";
-        code?: string;
-        _type: "codeBlock";
-        _key: string;
-      } | {
-        style?: string;
-        _type: "divider";
-        _key: string;
-      } | {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
-        media?: unknown;
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        _type: "image";
-        _key: string;
-      }>;
-      image?: {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
-        media?: unknown;
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        _type: "image";
-      };
-    } | {
-      _key: string;
-      _type: "heroBanner";
-      background?: {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
-        media?: unknown;
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        _type: "image";
-      };
-      overlayOpacity: number | null;
-      title?: string;
-      titleColor: Color | null;
-      kicker?: string;
-      kickerColor: Color | null;
-      body?: string;
-      bodyColor: Color | null;
-      primaryCta?: {
-        label?: string;
-        href?: string;
-      };
-      secondaryCta?: {
-        label?: string;
-        href?: string;
-      };
-    } | {
-      _key: string;
-      _type: "initiativesGrid";
-      heading?: string;
-      intro?: string;
-      cards?: Array<{
-        title?: string;
-        description?: string;
-        image?: {
-          asset?: {
-            _ref: string;
-            _type: "reference";
-            _weak?: boolean;
-            [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-          };
-          media?: unknown;
-          hotspot?: SanityImageHotspot;
-          crop?: SanityImageCrop;
-          _type: "image";
-        };
-        alt?: string;
-        cta?: {
-          label?: string;
-          href?: string;
-        };
-        _type: "card";
-        _key: string;
-      }>;
-      sectionCta?: {
-        label?: string;
-        href?: string;
-      };
-    } | {
-      _key: string;
-      _type: "leadershipSection";
-      sectionId?: string;
-      heading?: string;
-      intro?: string;
-      executiveHeading?: string;
-      executiveSubheading?: string;
-      executiveTeam?: Array<{
-        name?: string;
-        title?: string;
-        credential?: string;
-        bio?: string;
-        headshot?: {
-          asset?: {
-            _ref: string;
-            _type: "reference";
-            _weak?: boolean;
-            [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-          };
-          media?: unknown;
-          hotspot?: SanityImageHotspot;
-          crop?: SanityImageCrop;
-          _type: "image";
-        };
-        linkedin?: string;
-        email?: string;
-        _key: string;
-      }>;
-      advisoryHeading?: string;
-      advisorySubheading?: string;
-      advisors?: Array<{
-        name?: string;
-        role?: string;
-        expertise?: string;
-        bio?: string;
-        _key: string;
-      }>;
-      ctaCard?: {
+        _type: "aboutOverview";
+        sectionId?: string;
         heading?: string;
-        body?: string;
-        primaryCta?: {
-          label?: string;
-          href?: string;
-        };
-        secondaryCta?: {
-          label?: string;
-          href?: string;
-        };
-      };
-    } | {
-      _key: string;
-      _type: "missionStatement";
-      sectionId?: string;
-      heading?: string;
-      mission?: string;
-      pillars?: Array<{
-        title?: string;
-        description?: string;
-        _key: string;
-      }>;
-      visionHeading?: string;
-      vision?: string;
-    } | {
-      _key: string;
-      _type: "newsletterArchive";
-      heading?: string;
-      description?: string;
-      searchPlaceholder?: string;
-      filterLabel?: string;
-      newsletters?: Array<{
-        title?: string;
-        summary?: string;
-        issue?: string;
-        date?: string;
-        readTime?: string;
-        image?: {
-          asset?: {
-            _ref: string;
-            _type: "reference";
-            _weak?: boolean;
-            [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-          };
-          media?: unknown;
-          hotspot?: SanityImageHotspot;
-          crop?: SanityImageCrop;
-          _type: "image";
-        };
-        href?: string;
-        _key: string;
-      }>;
-      cta?: {
-        title?: string;
-        body?: string;
-        disclaimer?: string;
-        placeholder?: string;
-        buttonLabel?: string;
-        buttonHref?: string;
-      };
-      loadMoreLabel?: string;
-    } | {
-      _key: string;
-      _type: "podcastHighlights";
-      sectionId?: string;
-      heading?: string;
-      intro?: string;
-      episodes?: Array<{
-        episodeLabel?: string;
-        duration?: string;
-        publishedAt?: string;
-        title?: string;
-        guestName?: string;
-        guestTitle?: string;
-        programTag?: string;
-        summary?: string;
-        heroImage?: {
-          asset?: {
-            _ref: string;
-            _type: "reference";
-            _weak?: boolean;
-            [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-          };
-          media?: unknown;
-          hotspot?: SanityImageHotspot;
-          crop?: SanityImageCrop;
-          alt?: string;
-          _type: "image";
-        };
-        youtubeUrl?: string;
-        spotifyUrl?: string;
-        appleUrl?: string;
-        _key: string;
-      }>;
-      platformHeading?: string;
-      platforms?: Array<{
-        label?: string;
-        href?: string;
-        platform?: "apple" | "other" | "spotify" | "youtube";
-        _key: string;
-      }>;
-      viewAllCta?: {
-        label?: string;
-        href?: string;
-      };
-    } | {
-      _key: string;
-      _type: "resourcesHero";
-      heading?: string;
-      tagline?: string;
-      backgroundImage?: {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
-        media?: unknown;
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        _type: "image";
-      };
-      overlayOpacity?: number;
-      headingColor?: Color;
-      taglineColor?: Color;
-      highlights?: Array<{
-        title?: string;
-        description?: string;
-        icon?: "archive" | "award" | "book-open" | "file-text" | "globe" | "headphones" | "heart" | "lightbulb" | "star" | "users";
-        tone?: "accent" | "primary" | "secondary";
-        _key: string;
-      }>;
-      highlightTitleColor?: Color;
-      highlightBodyColor?: Color;
-      enablePetalAnimation?: boolean;
-      ctaLabel?: string;
-      primaryCta?: {
-        label?: string;
-        href?: string;
-      };
-      secondaryCta?: {
-        label?: string;
-        href?: string;
-      };
-    } | {
-      _key: string;
-      _type: "splitImage";
-      orientation?: "imageLeft" | "imageRight";
-      title?: string;
-      image?: {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
-        media?: unknown;
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        _type: "image";
-      };
-    } | {
-      _key: string;
-      _type: "storiesImpact";
-      sectionId?: string;
-      heading?: string;
-      intro?: string;
-      stories?: Array<{
-        quote?: string;
-        name?: string;
-        role?: string;
-        location?: string;
-        program?: string;
-        _key: string;
-      }>;
-      statsCard?: {
-        heading?: string;
-        description?: string;
+        intro?: Array<string>;
+        pillars?: Array<{
+          title?: string;
+          description?: string;
+          _key: string;
+        }>;
         stats?: Array<{
+          icon?:
+            | "award"
+            | "book-open"
+            | "calendar"
+            | "globe"
+            | "heart"
+            | "sparkles"
+            | "users";
           value?: string;
           label?: string;
-          color?: "accent" | "primary" | "secondary";
+          description?: string;
           _key: string;
         }>;
-      };
-    } | {
-      _key: string;
-      _type: "volunteerApplication";
-      sectionId?: string;
-      heading?: string;
-      intro?: string;
-      processHeading?: string;
-      processSubheading?: string;
-      steps?: Array<{
-        title?: string;
-        description?: string;
-        timeEstimate?: string;
+      }
+    | {
         _key: string;
-      }>;
-      requirementsHeading?: string;
-      requirementsIntro?: string;
-      requirements?: Array<string>;
-      tracks?: Array<{
+        _type: "brandPromos";
+        sectionId?: string;
+        heading?: string;
+        intro?: string;
+        brands: Array<{
+          _id: string;
+          title: string | null;
+          kicker: string | null;
+          headline: string | null;
+          subhead: string | null;
+          footnote: string | null;
+          themeColor: Color | null;
+          textColor: Color | null;
+          imageOverlayStrength: number | null;
+          primaryCta: {
+            label: string | null;
+            href: string | null;
+          } | null;
+          secondaryCta: {
+            label: string | null;
+            href: string | null;
+          } | null;
+          promoLink: {
+            href: string | null;
+            label: string | null;
+          } | null;
+          heroImage: {
+            asset: SanityImageAssetReference | null;
+            alt: string | null;
+          } | null;
+          logo: {
+            asset: SanityImageAssetReference | null;
+            alt: string | null;
+          } | null;
+        }> | null;
+      }
+    | {
+        _key: string;
+        _type: "chapterApplication";
+        sectionId?: string;
+        kicker?: string;
         title?: string;
         description?: string;
-        tone?: "accent" | "primary" | "secondary";
         highlights?: Array<{
-          icon?: "calendar" | "clock" | "globe" | "map" | "sparkles" | "users";
-          label?: string;
-          _key: string;
-        }>;
-        cta?: {
-          label?: string;
-          href?: string;
-        };
-        _key: string;
-      }>;
-      supportHeading?: string;
-      supportBody?: string;
-      supportLinks?: Array<{
-        label?: string;
-        href?: string;
-        _key: string;
-      }>;
-    } | {
-      _key: string;
-      _type: "volunteerBenefits";
-      sectionId?: string;
-      heading?: string;
-      intro?: string;
-      benefits?: Array<{
-        icon?: string;
-        tone?: "accent" | "primary" | "secondary";
-        title?: string;
-        description?: string;
-        points?: Array<string>;
-        _type: "benefit";
-        _key: string;
-      }>;
-      testimonialsHeading?: string;
-      testimonialsIntro?: string;
-      testimonials?: Array<{
-        quote?: string;
-        name?: string;
-        role?: string;
-        _type: "testimonial";
-        _key: string;
-      }>;
-    } | {
-      _key: string;
-      _type: "volunteersDirectory";
-      sectionId?: string;
-      heading?: string;
-      intro?: string;
-      searchPlaceholder?: string;
-    } | {
-      _key: string;
-      _type: "volunteerTracks";
-      sectionId?: string;
-      heading?: string;
-      intro?: string;
-      tracks?: Array<{
-        badgeLabel?: string;
-        tone?: "accent" | "muted" | "primary" | "secondary";
-        icon?: string;
-        title?: string;
-        description?: string;
-        keyAreasHeading?: string;
-        keyAreas?: Array<string>;
-        commitmentHeading?: string;
-        commitmentItems?: Array<{
-          icon?: string;
-          text?: string;
-          _type: "commitment";
+          icon?:
+            | "award"
+            | "book-open"
+            | "calendar"
+            | "graduation-cap"
+            | "handshake"
+            | "lightbulb"
+            | "sparkles"
+            | "users";
+          title?: string;
+          body?: string;
+          _type: "highlight";
           _key: string;
         }>;
         benefitsHeading?: string;
-        benefits?: Array<string>;
-        _type: "track";
-        _key: string;
-      }>;
-      callout?: {
-        heading?: string;
-        body?: string;
-        links?: Array<{
-          label?: string;
-          href?: string;
-          _type: "link";
+        benefitsIntro?: string;
+        benefits?: Array<{
+          title?: string;
+          description?: string;
+          _type: "benefit";
           _key: string;
         }>;
-      };
-    } | {
-      _key: string;
-      _type: "workshopsDirectory";
-      sectionId?: string;
-      heading?: string;
-      intro?: string;
-      searchPlaceholder?: string;
-      categoryCards: Array<{
-        _id: string;
-        title: string | null;
-        slug: Slug | null;
-        icon: string | null;
-        description: string | null;
-      }> | null;
-      showVolunteerBadge?: boolean;
-      workshops: Array<{
-        _id: string;
-        title: string | null;
-        slug: string | null;
-        summary: string | null;
-        categories: Array<{
+        cardTitle?: string;
+        cardSubtitle?: string;
+        cardFacts?: Array<{
+          label?: string;
+          value?: string;
+          _type: "fact";
+          _key: string;
+        }>;
+        cta?: ChapterApplicationCta;
+        cardFootnote?: string;
+      }
+    | {
+        _key: string;
+        _type: "chapterRequirements";
+        sectionId?: string;
+        heading?: string;
+        intro?: string;
+        cards?: Array<{
+          title?: string;
+          icon?:
+            | "award"
+            | "book-open"
+            | "calendar"
+            | "globe"
+            | "heart"
+            | "lightbulb"
+            | "sparkles"
+            | "target"
+            | "users";
+          tone?: "accent" | "muted" | "primary" | "secondary";
+          points?: Array<string>;
+          _key: string;
+        }>;
+        processCard?: ProcessCard;
+        metricsCard?: MetricsCard;
+      }
+    | {
+        _key: string;
+        _type: "faqs";
+        title?: string;
+        faqs: Array<{
+          _id: string;
+          _type: "faq";
+          _createdAt: string;
+          _updatedAt: string;
+          _rev: string;
+          title?: string;
+          body?: BlockContent;
+        }> | null;
+      }
+    | {
+        _key: string;
+        _type: "features";
+        title?: string;
+        features?: Array<{
+          title?: string;
+          text?: string;
+          _type: "feature";
+          _key: string;
+        }>;
+      }
+    | {
+        _key: string;
+        _type: "hero";
+        title?: string;
+        text?: BlockContent;
+        image?: {
+          asset?: SanityImageAssetReference;
+          media?: unknown;
+          hotspot?: SanityImageHotspot;
+          crop?: SanityImageCrop;
+          _type: "image";
+        };
+      }
+    | {
+        _key: string;
+        _type: "heroBanner";
+        background?: {
+          asset?: SanityImageAssetReference;
+          media?: unknown;
+          hotspot?: SanityImageHotspot;
+          crop?: SanityImageCrop;
+          _type: "image";
+        };
+        overlayOpacity: number | null;
+        title?: string;
+        titleColor: Color | null;
+        kicker?: string;
+        kickerColor: Color | null;
+        body?: string;
+        bodyColor: Color | null;
+        primaryCta?: PrimaryCta;
+        secondaryCta?: SecondaryCta;
+      }
+    | {
+        _key: string;
+        _type: "initiativesGrid";
+        heading?: string;
+        intro?: string;
+        cards?: Array<{
+          title?: string;
+          description?: string;
+          image?: CardImage;
+          alt?: string;
+          cta?: CardCta;
+          _type: "card";
+          _key: string;
+        }>;
+        sectionCta?: SectionCta;
+      }
+    | {
+        _key: string;
+        _type: "leadershipSection";
+        sectionId?: string;
+        heading?: string;
+        intro?: string;
+        executiveHeading?: string;
+        executiveSubheading?: string;
+        executiveTeam?: Array<{
+          name?: string;
+          title?: string;
+          credential?: string;
+          bio?: string;
+          headshot?: Headshot;
+          linkedin?: string;
+          email?: string;
+          _key: string;
+        }>;
+        advisoryHeading?: string;
+        advisorySubheading?: string;
+        advisors?: Array<{
+          name?: string;
+          role?: string;
+          expertise?: string;
+          bio?: string;
+          _key: string;
+        }>;
+        ctaCard?: CtaCard;
+      }
+    | {
+        _key: string;
+        _type: "missionStatement";
+        sectionId?: string;
+        heading?: string;
+        mission?: string;
+        pillars?: Array<{
+          title?: string;
+          description?: string;
+          _key: string;
+        }>;
+        visionHeading?: string;
+        vision?: string;
+      }
+    | {
+        _key: string;
+        _type: "newsletterArchive";
+        heading?: string;
+        description?: string;
+        searchPlaceholder?: string;
+        filterLabel?: string;
+        newsletters?: Array<{
+          title?: string;
+          summary?: string;
+          issue?: string;
+          date?: string;
+          readTime?: string;
+          image?: ObjectImage;
+          href?: string;
+          _key: string;
+        }>;
+        cta?: Cta;
+        loadMoreLabel?: string;
+      }
+    | {
+        _key: string;
+        _type: "podcastHighlights";
+        sectionId?: string;
+        heading?: string;
+        intro?: string;
+        episodes?: Array<{
+          episodeLabel?: string;
+          duration?: string;
+          publishedAt?: string;
+          title?: string;
+          guestName?: string;
+          guestTitle?: string;
+          programTag?: string;
+          summary?: string;
+          heroImage?: HeroImage;
+          youtubeUrl?: string;
+          spotifyUrl?: string;
+          appleUrl?: string;
+          _key: string;
+        }>;
+        platformHeading?: string;
+        platforms?: Array<{
+          label?: string;
+          href?: string;
+          platform?: "apple" | "other" | "spotify" | "youtube";
+          _key: string;
+        }>;
+        viewAllCta?: ViewAllCta;
+      }
+    | {
+        _key: string;
+        _type: "resourcesHero";
+        heading?: string;
+        tagline?: string;
+        backgroundImage?: {
+          asset?: SanityImageAssetReference;
+          media?: unknown;
+          hotspot?: SanityImageHotspot;
+          crop?: SanityImageCrop;
+          _type: "image";
+        };
+        overlayOpacity?: number;
+        headingColor?: Color;
+        taglineColor?: Color;
+        highlights?: Array<{
+          title?: string;
+          description?: string;
+          icon?:
+            | "archive"
+            | "award"
+            | "book-open"
+            | "file-text"
+            | "globe"
+            | "headphones"
+            | "heart"
+            | "lightbulb"
+            | "star"
+            | "users";
+          tone?: "accent" | "primary" | "secondary";
+          _key: string;
+        }>;
+        highlightTitleColor?: Color;
+        highlightBodyColor?: Color;
+        enablePetalAnimation?: boolean;
+        ctaLabel?: string;
+        primaryCta?: ResourcesHeroPrimaryCta;
+        secondaryCta?: ResourcesHeroSecondaryCta;
+      }
+    | {
+        _key: string;
+        _type: "splitImage";
+        orientation?: "imageLeft" | "imageRight";
+        title?: string;
+        image?: {
+          asset?: SanityImageAssetReference;
+          media?: unknown;
+          hotspot?: SanityImageHotspot;
+          crop?: SanityImageCrop;
+          _type: "image";
+        };
+      }
+    | {
+        _key: string;
+        _type: "storiesImpact";
+        sectionId?: string;
+        heading?: string;
+        intro?: string;
+        stories?: Array<{
+          quote?: string;
+          name?: string;
+          role?: string;
+          location?: string;
+          program?: string;
+          _key: string;
+        }>;
+        statsCard?: StatsCard;
+      }
+    | {
+        _key: string;
+        _type: "volunteerApplication";
+        sectionId?: string;
+        heading?: string;
+        intro?: string;
+        processHeading?: string;
+        processSubheading?: string;
+        steps?: Array<{
+          title?: string;
+          description?: string;
+          timeEstimate?: string;
+          _key: string;
+        }>;
+        requirementsHeading?: string;
+        requirementsIntro?: string;
+        requirements?: Array<string>;
+        tracks?: Array<{
+          title?: string;
+          description?: string;
+          tone?: "accent" | "primary" | "secondary";
+          highlights?: Array<{
+            icon?:
+              "calendar" | "clock" | "globe" | "map" | "sparkles" | "users";
+            label?: string;
+            _key: string;
+          }>;
+          cta?: ObjectCta;
+          _key: string;
+        }>;
+        supportHeading?: string;
+        supportBody?: string;
+        supportLinks?: Array<{
+          label?: string;
+          href?: string;
+          _key: string;
+        }>;
+      }
+    | {
+        _key: string;
+        _type: "volunteerBenefits";
+        sectionId?: string;
+        heading?: string;
+        intro?: string;
+        benefits?: Array<{
+          icon?: string;
+          tone?: "accent" | "primary" | "secondary";
+          title?: string;
+          description?: string;
+          points?: Array<string>;
+          _type: "benefit";
+          _key: string;
+        }>;
+        testimonialsHeading?: string;
+        testimonialsIntro?: string;
+        testimonials?: Array<{
+          quote?: string;
+          name?: string;
+          role?: string;
+          _type: "testimonial";
+          _key: string;
+        }>;
+      }
+    | {
+        _key: string;
+        _type: "volunteersDirectory";
+        sectionId?: string;
+        heading?: string;
+        intro?: string;
+        searchPlaceholder?: string;
+        opportunities: Array<{
+          _id: string;
+          title: string | null;
+          slug: string | null;
+          summary: string | null;
+          trackLabel: string | null;
+          isUrgent: boolean | null;
+          isRemoteFriendly: boolean | null;
+          location: string | null;
+          commitmentSummary: string | null;
+          openings: number | null;
+          experienceLevel: string | null;
+          applyUrl: string | null;
+          heroImage: {
+            asset?: SanityImageAssetReference;
+            media?: unknown;
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            alt?: string;
+            _type: "image";
+          } | null;
+          contact: {
+            ctaLabel: string | null;
+          } | null;
+        }>;
+      }
+    | {
+        _key: string;
+        _type: "volunteerTracks";
+        sectionId?: string;
+        heading?: string;
+        intro?: string;
+        tracks?: Array<{
+          badgeLabel?: string;
+          tone?: "accent" | "muted" | "primary" | "secondary";
+          icon?: string;
+          title?: string;
+          description?: string;
+          keyAreasHeading?: string;
+          keyAreas?: Array<string>;
+          commitmentHeading?: string;
+          commitmentItems?: Array<{
+            icon?: string;
+            text?: string;
+            _type: "commitment";
+            _key: string;
+          }>;
+          benefitsHeading?: string;
+          benefits?: Array<string>;
+          _type: "track";
+          _key: string;
+        }>;
+        callout?: Callout;
+      }
+    | {
+        _key: string;
+        _type: "workshopsDirectory";
+        sectionId?: string;
+        heading?: string;
+        intro?: string;
+        searchPlaceholder?: string;
+        categoryCards: Array<{
           _id: string;
           title: string | null;
           slug: Slug | null;
           icon: string | null;
           description: string | null;
         }> | null;
-        start: string | null;
-        end: string | null;
-        location: string | null;
-        capacity: number | null;
-        registeredCount: number | null;
-        needsVolunteers: boolean | null;
-        registerUrl: string | null;
-        volunteerUrl: string | null;
-        heroImage: {
-          asset?: {
-            _ref: string;
-            _type: "reference";
-            _weak?: boolean;
-            [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-          };
-          media?: unknown;
-          hotspot?: SanityImageHotspot;
-          crop?: SanityImageCrop;
-          alt?: string;
-          _type: "image";
-        } | null;
-      }>;
-    }> | null;
-  } | null;
+        showVolunteerBadge?: boolean;
+        workshops: Array<{
+          _id: string;
+          title: string | null;
+          slug: string | null;
+          summary: string | null;
+          categories: Array<{
+            _id: string;
+            title: string | null;
+            slug: Slug | null;
+            icon: string | null;
+            description: string | null;
+          }> | null;
+          start: string | null;
+          end: string | null;
+          location: string | null;
+          capacity: number | null;
+          registeredCount: number | null;
+          needsVolunteers: boolean | null;
+          registerUrl: string | null;
+          volunteerUrl: string | null;
+          heroImage: {
+            asset?: SanityImageAssetReference;
+            media?: unknown;
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            alt?: string;
+            _type: "image";
+          } | null;
+        }>;
+      }
+  > | null;
 } | null;
+
+// Source: src/sanity/lib/queries.ts
+// Variable: PAGE_SLUGS_QUERY
+// Query: *[_type == "page" && defined(slug.current)]{    "slug": slug.current  }
+export type PAGE_SLUGS_QUERY_RESULT = Array<{
+  slug: string | null;
+}>;
+
+// Source: src/sanity/lib/queries.ts
+// Variable: HOME_PAGE_QUERY
+// Query: *[_id == "siteSettings"][0]{  homePage->{    _id,    _type,    title,    slug,    content[]{      ...,      _type == "heroBanner" => {        ...,        titleColor,        kickerColor,        bodyColor,        overlayOpacity      },      _type == "faqs" => { ..., faqs[]-> },      _type == "workshopsDirectory" => {        ...,        categoryCards[]->{          _id,          title,          slug,          icon,          description        },        "workshops": *[_type == "workshop"]          | order(start asc){            _id,            title,            "slug": slug.current,            summary,            categories[]->{              _id,              title,              slug,              icon,              description            },            start,            end,            location,            capacity,            registeredCount,            needsVolunteers,            registerUrl,            volunteerUrl,            heroImage          }      }    },      _type == "volunteersDirectory" => {        ...,        "opportunities": *[_type == "volunteerOpportunity"]          | order(title asc){            _id,            title,            "slug": slug.current,            summary,            trackLabel,            isUrgent,            isRemoteFriendly,            location,            commitmentSummary,            openings,            experienceLevel,            applyUrl,            heroImage,            contact{              ctaLabel            }          }      },      _type == "brandPromos" => {        ...,        brands[]->{          _id,          title,          kicker,          headline,          subhead,        footnote,        themeColor,        textColor,        imageOverlayStrength,        primaryCta{          label,          href          },          secondaryCta{            label,            href          },        promoLink{          href,          label        },        heroImage{          asset,          alt        },        logo{          asset,          alt        }        }      }    }  }
+export type HOME_PAGE_QUERY_RESULT =
+  | {
+      homePage: null;
+    }
+  | {
+      homePage: {
+        _id: string;
+        _type: "page";
+        title: string | null;
+        slug: Slug | null;
+        content: Array<
+          | {
+              _key: string;
+              _type: "aboutOverview";
+              sectionId?: string;
+              heading?: string;
+              intro?: Array<string>;
+              pillars?: Array<{
+                title?: string;
+                description?: string;
+                _key: string;
+              }>;
+              stats?: Array<{
+                icon?:
+                  | "award"
+                  | "book-open"
+                  | "calendar"
+                  | "globe"
+                  | "heart"
+                  | "sparkles"
+                  | "users";
+                value?: string;
+                label?: string;
+                description?: string;
+                _key: string;
+              }>;
+            }
+          | {
+              _key: string;
+              _type: "brandPromos";
+              sectionId?: string;
+              heading?: string;
+              intro?: string;
+              brands?: Array<
+                {
+                  _key: string;
+                } & BrandReference
+              >;
+            }
+          | {
+              _key: string;
+              _type: "chapterApplication";
+              sectionId?: string;
+              kicker?: string;
+              title?: string;
+              description?: string;
+              highlights?: Array<{
+                icon?:
+                  | "award"
+                  | "book-open"
+                  | "calendar"
+                  | "graduation-cap"
+                  | "handshake"
+                  | "lightbulb"
+                  | "sparkles"
+                  | "users";
+                title?: string;
+                body?: string;
+                _type: "highlight";
+                _key: string;
+              }>;
+              benefitsHeading?: string;
+              benefitsIntro?: string;
+              benefits?: Array<{
+                title?: string;
+                description?: string;
+                _type: "benefit";
+                _key: string;
+              }>;
+              cardTitle?: string;
+              cardSubtitle?: string;
+              cardFacts?: Array<{
+                label?: string;
+                value?: string;
+                _type: "fact";
+                _key: string;
+              }>;
+              cta?: ChapterApplicationCta;
+              cardFootnote?: string;
+            }
+          | {
+              _key: string;
+              _type: "chapterRequirements";
+              sectionId?: string;
+              heading?: string;
+              intro?: string;
+              cards?: Array<{
+                title?: string;
+                icon?:
+                  | "award"
+                  | "book-open"
+                  | "calendar"
+                  | "globe"
+                  | "heart"
+                  | "lightbulb"
+                  | "sparkles"
+                  | "target"
+                  | "users";
+                tone?: "accent" | "muted" | "primary" | "secondary";
+                points?: Array<string>;
+                _key: string;
+              }>;
+              processCard?: ProcessCard;
+              metricsCard?: MetricsCard;
+            }
+          | {
+              _key: string;
+              _type: "faqs";
+              title?: string;
+              faqs: Array<{
+                _id: string;
+                _type: "faq";
+                _createdAt: string;
+                _updatedAt: string;
+                _rev: string;
+                title?: string;
+                body?: BlockContent;
+              }> | null;
+            }
+          | {
+              _key: string;
+              _type: "features";
+              title?: string;
+              features?: Array<{
+                title?: string;
+                text?: string;
+                _type: "feature";
+                _key: string;
+              }>;
+            }
+          | {
+              _key: string;
+              _type: "hero";
+              title?: string;
+              text?: BlockContent;
+              image?: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                _type: "image";
+              };
+            }
+          | {
+              _key: string;
+              _type: "heroBanner";
+              background?: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                _type: "image";
+              };
+              overlayOpacity: number | null;
+              title?: string;
+              titleColor: Color | null;
+              kicker?: string;
+              kickerColor: Color | null;
+              body?: string;
+              bodyColor: Color | null;
+              primaryCta?: PrimaryCta;
+              secondaryCta?: SecondaryCta;
+            }
+          | {
+              _key: string;
+              _type: "initiativesGrid";
+              heading?: string;
+              intro?: string;
+              cards?: Array<{
+                title?: string;
+                description?: string;
+                image?: CardImage;
+                alt?: string;
+                cta?: CardCta;
+                _type: "card";
+                _key: string;
+              }>;
+              sectionCta?: SectionCta;
+            }
+          | {
+              _key: string;
+              _type: "leadershipSection";
+              sectionId?: string;
+              heading?: string;
+              intro?: string;
+              executiveHeading?: string;
+              executiveSubheading?: string;
+              executiveTeam?: Array<{
+                name?: string;
+                title?: string;
+                credential?: string;
+                bio?: string;
+                headshot?: Headshot;
+                linkedin?: string;
+                email?: string;
+                _key: string;
+              }>;
+              advisoryHeading?: string;
+              advisorySubheading?: string;
+              advisors?: Array<{
+                name?: string;
+                role?: string;
+                expertise?: string;
+                bio?: string;
+                _key: string;
+              }>;
+              ctaCard?: CtaCard;
+            }
+          | {
+              _key: string;
+              _type: "missionStatement";
+              sectionId?: string;
+              heading?: string;
+              mission?: string;
+              pillars?: Array<{
+                title?: string;
+                description?: string;
+                _key: string;
+              }>;
+              visionHeading?: string;
+              vision?: string;
+            }
+          | {
+              _key: string;
+              _type: "newsletterArchive";
+              heading?: string;
+              description?: string;
+              searchPlaceholder?: string;
+              filterLabel?: string;
+              newsletters?: Array<{
+                title?: string;
+                summary?: string;
+                issue?: string;
+                date?: string;
+                readTime?: string;
+                image?: ObjectImage;
+                href?: string;
+                _key: string;
+              }>;
+              cta?: Cta;
+              loadMoreLabel?: string;
+            }
+          | {
+              _key: string;
+              _type: "podcastHighlights";
+              sectionId?: string;
+              heading?: string;
+              intro?: string;
+              episodes?: Array<{
+                episodeLabel?: string;
+                duration?: string;
+                publishedAt?: string;
+                title?: string;
+                guestName?: string;
+                guestTitle?: string;
+                programTag?: string;
+                summary?: string;
+                heroImage?: HeroImage;
+                youtubeUrl?: string;
+                spotifyUrl?: string;
+                appleUrl?: string;
+                _key: string;
+              }>;
+              platformHeading?: string;
+              platforms?: Array<{
+                label?: string;
+                href?: string;
+                platform?: "apple" | "other" | "spotify" | "youtube";
+                _key: string;
+              }>;
+              viewAllCta?: ViewAllCta;
+            }
+          | {
+              _key: string;
+              _type: "resourcesHero";
+              heading?: string;
+              tagline?: string;
+              backgroundImage?: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                _type: "image";
+              };
+              overlayOpacity?: number;
+              headingColor?: Color;
+              taglineColor?: Color;
+              highlights?: Array<{
+                title?: string;
+                description?: string;
+                icon?:
+                  | "archive"
+                  | "award"
+                  | "book-open"
+                  | "file-text"
+                  | "globe"
+                  | "headphones"
+                  | "heart"
+                  | "lightbulb"
+                  | "star"
+                  | "users";
+                tone?: "accent" | "primary" | "secondary";
+                _key: string;
+              }>;
+              highlightTitleColor?: Color;
+              highlightBodyColor?: Color;
+              enablePetalAnimation?: boolean;
+              ctaLabel?: string;
+              primaryCta?: ResourcesHeroPrimaryCta;
+              secondaryCta?: ResourcesHeroSecondaryCta;
+            }
+          | {
+              _key: string;
+              _type: "splitImage";
+              orientation?: "imageLeft" | "imageRight";
+              title?: string;
+              image?: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                _type: "image";
+              };
+            }
+          | {
+              _key: string;
+              _type: "storiesImpact";
+              sectionId?: string;
+              heading?: string;
+              intro?: string;
+              stories?: Array<{
+                quote?: string;
+                name?: string;
+                role?: string;
+                location?: string;
+                program?: string;
+                _key: string;
+              }>;
+              statsCard?: StatsCard;
+            }
+          | {
+              _key: string;
+              _type: "volunteerApplication";
+              sectionId?: string;
+              heading?: string;
+              intro?: string;
+              processHeading?: string;
+              processSubheading?: string;
+              steps?: Array<{
+                title?: string;
+                description?: string;
+                timeEstimate?: string;
+                _key: string;
+              }>;
+              requirementsHeading?: string;
+              requirementsIntro?: string;
+              requirements?: Array<string>;
+              tracks?: Array<{
+                title?: string;
+                description?: string;
+                tone?: "accent" | "primary" | "secondary";
+                highlights?: Array<{
+                  icon?:
+                    | "calendar"
+                    | "clock"
+                    | "globe"
+                    | "map"
+                    | "sparkles"
+                    | "users";
+                  label?: string;
+                  _key: string;
+                }>;
+                cta?: ObjectCta;
+                _key: string;
+              }>;
+              supportHeading?: string;
+              supportBody?: string;
+              supportLinks?: Array<{
+                label?: string;
+                href?: string;
+                _key: string;
+              }>;
+            }
+          | {
+              _key: string;
+              _type: "volunteerBenefits";
+              sectionId?: string;
+              heading?: string;
+              intro?: string;
+              benefits?: Array<{
+                icon?: string;
+                tone?: "accent" | "primary" | "secondary";
+                title?: string;
+                description?: string;
+                points?: Array<string>;
+                _type: "benefit";
+                _key: string;
+              }>;
+              testimonialsHeading?: string;
+              testimonialsIntro?: string;
+              testimonials?: Array<{
+                quote?: string;
+                name?: string;
+                role?: string;
+                _type: "testimonial";
+                _key: string;
+              }>;
+            }
+          | {
+              _key: string;
+              _type: "volunteersDirectory";
+              sectionId?: string;
+              heading?: string;
+              intro?: string;
+              searchPlaceholder?: string;
+            }
+          | {
+              _key: string;
+              _type: "volunteerTracks";
+              sectionId?: string;
+              heading?: string;
+              intro?: string;
+              tracks?: Array<{
+                badgeLabel?: string;
+                tone?: "accent" | "muted" | "primary" | "secondary";
+                icon?: string;
+                title?: string;
+                description?: string;
+                keyAreasHeading?: string;
+                keyAreas?: Array<string>;
+                commitmentHeading?: string;
+                commitmentItems?: Array<{
+                  icon?: string;
+                  text?: string;
+                  _type: "commitment";
+                  _key: string;
+                }>;
+                benefitsHeading?: string;
+                benefits?: Array<string>;
+                _type: "track";
+                _key: string;
+              }>;
+              callout?: Callout;
+            }
+          | {
+              _key: string;
+              _type: "workshopsDirectory";
+              sectionId?: string;
+              heading?: string;
+              intro?: string;
+              searchPlaceholder?: string;
+              categoryCards: Array<{
+                _id: string;
+                title: string | null;
+                slug: Slug | null;
+                icon: string | null;
+                description: string | null;
+              }> | null;
+              showVolunteerBadge?: boolean;
+              workshops: Array<{
+                _id: string;
+                title: string | null;
+                slug: string | null;
+                summary: string | null;
+                categories: Array<{
+                  _id: string;
+                  title: string | null;
+                  slug: Slug | null;
+                  icon: string | null;
+                  description: string | null;
+                }> | null;
+                start: string | null;
+                end: string | null;
+                location: string | null;
+                capacity: number | null;
+                registeredCount: number | null;
+                needsVolunteers: boolean | null;
+                registerUrl: string | null;
+                volunteerUrl: string | null;
+                heroImage: {
+                  asset?: SanityImageAssetReference;
+                  media?: unknown;
+                  hotspot?: SanityImageHotspot;
+                  crop?: SanityImageCrop;
+                  alt?: string;
+                  _type: "image";
+                } | null;
+              }>;
+            }
+        > | null;
+      } | null;
+    }
+  | null;
+
+// Source: src/sanity/lib/queries.ts
 // Variable: WORKSHOPS_QUERY
 // Query: *[_type == "workshop"]    | order(start asc){      _id,      title,      "slug": slug.current,      summary,      categories,      start,      end,      location,      capacity,      registeredCount,      needsVolunteers,      registerUrl,      volunteerUrl,      heroImage,      categories[]->{        _id,        title,        slug,        icon,        description      }    }
-export type WORKSHOPS_QUERYResult = Array<{
+export type WORKSHOPS_QUERY_RESULT = Array<{
   _id: string;
   title: string | null;
   slug: string | null;
@@ -3229,12 +2763,7 @@ export type WORKSHOPS_QUERYResult = Array<{
   registerUrl: string | null;
   volunteerUrl: string | null;
   heroImage: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
+    asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
@@ -3242,9 +2771,11 @@ export type WORKSHOPS_QUERYResult = Array<{
     _type: "image";
   } | null;
 }>;
+
+// Source: src/sanity/lib/queries.ts
 // Variable: WORKSHOP_QUERY
 // Query: *[_type == "workshop" && slug.current == $slug][0]{    _id,    title,    "slug": slug.current,    summary,    categories[]->{      _id,      title,      slug,      icon,      description    },    start,    end,    location,    capacity,    registeredCount,    needsVolunteers,    registerUrl,    volunteerUrl,    heroImage,    hosts[]{      _key,      name,      role,      avatar,      socialLinks[]{        _key,        label,        url      }    },    contact{      ctaLabel,      instructions,      email,      phone,      responseNote    },    externalLinks[]{      _key,      label,      href    },    body  }
-export type WORKSHOP_QUERYResult = {
+export type WORKSHOP_QUERY_RESULT = {
   _id: string;
   title: string | null;
   slug: string | null;
@@ -3265,12 +2796,7 @@ export type WORKSHOP_QUERYResult = {
   registerUrl: string | null;
   volunteerUrl: string | null;
   heroImage: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
+    asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
@@ -3282,12 +2808,7 @@ export type WORKSHOP_QUERYResult = {
     name: string | null;
     role: string | null;
     avatar: {
-      asset?: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-      };
+      asset?: SanityImageAssetReference;
       media?: unknown;
       hotspot?: SanityImageHotspot;
       crop?: SanityImageCrop;
@@ -3312,56 +2833,20 @@ export type WORKSHOP_QUERYResult = {
     label: string | null;
     href: string | null;
   }> | null;
-  body: Array<{
-    children?: Array<{
-      marks?: Array<string>;
-      text?: string;
-      _type: "span";
-      _key: string;
-    }>;
-    style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "normal";
-    listItem?: "bullet" | "number";
-    markDefs?: Array<{
-      href?: string;
-      newTab?: boolean;
-      _type: "link";
-      _key: string;
-    }>;
-    level?: number;
-    _type: "block";
-    _key: string;
-  } | {
-    filename?: string;
-    language?: "javascript" | "json" | "markdown" | "shell" | "typescript";
-    code?: string;
-    _type: "codeBlock";
-    _key: string;
-  } | {
-    style?: string;
-    _type: "divider";
-    _key: string;
-  } | {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    _type: "image";
-    _key: string;
-  }> | null;
+  body: BlockContent | null;
 } | null;
+
+// Source: src/sanity/lib/queries.ts
 // Variable: WORKSHOP_SLUGS_QUERY
 // Query: *[_type == "workshop" && defined(slug.current)]{    "slug": slug.current  }
-export type WORKSHOP_SLUGS_QUERYResult = Array<{
+export type WORKSHOP_SLUGS_QUERY_RESULT = Array<{
   slug: string | null;
 }>;
+
+// Source: src/sanity/lib/queries.ts
 // Variable: VOLUNTEERS_QUERY
 // Query: *[_type == "volunteerOpportunity"]    | order(title asc){      _id,      title,      "slug": slug.current,      summary,      trackLabel,      isUrgent,      isRemoteFriendly,      location,      commitmentSummary,      openings,      experienceLevel,      applyUrl,      heroImage,      contact{        ctaLabel      }    }
-export type VOLUNTEERS_QUERYResult = Array<{
+export type VOLUNTEERS_QUERY_RESULT = Array<{
   _id: string;
   title: string | null;
   slug: string | null;
@@ -3375,12 +2860,7 @@ export type VOLUNTEERS_QUERYResult = Array<{
   experienceLevel: string | null;
   applyUrl: string | null;
   heroImage: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
+    asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
@@ -3391,9 +2871,11 @@ export type VOLUNTEERS_QUERYResult = Array<{
     ctaLabel: string | null;
   } | null;
 }>;
+
+// Source: src/sanity/lib/queries.ts
 // Variable: VOLUNTEER_QUERY
 // Query: *[_type == "volunteerOpportunity" && slug.current == $slug][0]{    _id,    title,    "slug": slug.current,    summary,    trackLabel,    isUrgent,    isRemoteFriendly,    location,    commitmentSummary,    openings,    experienceLevel,    applyUrl,    heroImage,    responsibilities,    qualifications,    benefits,    applicationProcess[]{      _key,      title,      description    },    contact{      ctaLabel,      instructions,      email,      phone,      responseNote    },    body  }
-export type VOLUNTEER_QUERYResult = {
+export type VOLUNTEER_QUERY_RESULT = {
   _id: string;
   title: string | null;
   slug: string | null;
@@ -3407,12 +2889,7 @@ export type VOLUNTEER_QUERYResult = {
   experienceLevel: string | null;
   applyUrl: string | null;
   heroImage: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
+    asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
@@ -3434,138 +2911,104 @@ export type VOLUNTEER_QUERYResult = {
     phone: string | null;
     responseNote: string | null;
   } | null;
-  body: Array<{
-    children?: Array<{
-      marks?: Array<string>;
-      text?: string;
-      _type: "span";
-      _key: string;
-    }>;
-    style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "normal";
-    listItem?: "bullet" | "number";
-    markDefs?: Array<{
-      href?: string;
-      newTab?: boolean;
-      _type: "link";
-      _key: string;
-    }>;
-    level?: number;
-    _type: "block";
-    _key: string;
-  } | {
-    filename?: string;
-    language?: "javascript" | "json" | "markdown" | "shell" | "typescript";
-    code?: string;
-    _type: "codeBlock";
-    _key: string;
-  } | {
-    style?: string;
-    _type: "divider";
-    _key: string;
-  } | {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    _type: "image";
-    _key: string;
-  }> | null;
+  body: BlockContent | null;
 } | null;
+
+// Source: src/sanity/lib/queries.ts
 // Variable: VOLUNTEER_SLUGS_QUERY
 // Query: *[_type in ["volunteerOpportunity", "volunteerOPportunity"] && defined(slug.current)]{    "slug": slug.current  }
-export type VOLUNTEER_SLUGS_QUERYResult = Array<{
+export type VOLUNTEER_SLUGS_QUERY_RESULT = Array<{
   slug: string | null;
 }>;
+
+// Source: src/sanity/lib/queries.ts
 // Variable: SITE_SETTINGS_QUERY
-// Query: *[_id == "siteSettings"][0]{  logo,  orgName,  footerBlurb,  social{    facebook, twitter, instagram, youtube  },  quickLinks[]{    _key, label, href  },  contactEmail,  contactPhone,  newsletter{    enabled, blurb  },  navigation{    showWorkshops, showBrands  }}
-export type SITE_SETTINGS_QUERYResult = {
-  logo: null;
-  orgName: null;
-  footerBlurb: null;
-  social: null;
-  quickLinks: null;
-  contactEmail: null;
-  contactPhone: null;
-  newsletter: null;
-  navigation: null;
-} | {
-  logo: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    alt?: string;
-    _type: "image";
-  } | null;
-  orgName: null;
-  footerBlurb: null;
-  social: null;
-  quickLinks: null;
-  contactEmail: null;
-  contactPhone: null;
-  newsletter: null;
-  navigation: null;
-} | {
-  logo: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    _type: "image";
-  } | null;
-  orgName: string | null;
-  footerBlurb: string | null;
-  social: {
-    facebook: string | null;
-    twitter: string | null;
-    instagram: string | null;
-    youtube: string | null;
-  } | null;
-  quickLinks: Array<{
-    _key: string;
-    label: string | null;
-    href: string | null;
-  }> | null;
-  contactEmail: string | null;
-  contactPhone: string | null;
-  newsletter: {
-    enabled: boolean | null;
-    blurb: string | null;
-  } | null;
-  navigation: {
-    showWorkshops: boolean | null;
-    showBrands: boolean | null;
-  } | null;
-} | null;
+// Query: *[_id == "siteSettings"][0]{  logo,  orgName,  footerBlurb,  social{    facebook, twitter, instagram, youtube  },  quickLinks[]{    _key, label, href  },  contactEmail,  contactPhone,  donateUrl,  newsletter{    enabled, blurb  },  navigation{    showWorkshops, showBrands  }}
+export type SITE_SETTINGS_QUERY_RESULT =
+  | {
+      logo: null;
+      orgName: null;
+      footerBlurb: null;
+      social: null;
+      quickLinks: null;
+      contactEmail: null;
+      contactPhone: null;
+      donateUrl: null;
+      newsletter: null;
+      navigation: null;
+    }
+  | {
+      logo: {
+        asset?: SanityImageAssetReference;
+        media?: unknown;
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        alt?: string;
+        _type: "image";
+      } | null;
+      orgName: null;
+      footerBlurb: null;
+      social: null;
+      quickLinks: null;
+      contactEmail: null;
+      contactPhone: null;
+      donateUrl: null;
+      newsletter: null;
+      navigation: null;
+    }
+  | {
+      logo: {
+        asset?: SanityImageAssetReference;
+        media?: unknown;
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        _type: "image";
+      } | null;
+      orgName: string | null;
+      footerBlurb: string | null;
+      social: {
+        facebook: string | null;
+        twitter: string | null;
+        instagram: string | null;
+        youtube: string | null;
+      } | null;
+      quickLinks: Array<{
+        _key: string;
+        label: string | null;
+        href: string | null;
+      }> | null;
+      contactEmail: string | null;
+      contactPhone: string | null;
+      donateUrl: string | null;
+      newsletter: {
+        enabled: boolean | null;
+        blurb: string | null;
+      } | null;
+      navigation: {
+        showWorkshops: boolean | null;
+        showBrands: boolean | null;
+      } | null;
+    }
+  | null;
+
+// Source: src/sanity/lib/queries.ts
+// Variable: LEGAL_PAGES_QUERY
+// Query: *[_type == "page" && slug.current in ["privacy", "terms"]]{  title,  "slug": slug.current}
+export type LEGAL_PAGES_QUERY_RESULT = Array<{
+  title: string | null;
+  slug: string | null;
+}>;
+
+// Source: src/sanity/lib/queries.ts
 // Variable: GALLERY_PAGE_QUERY
 // Query: {  "settings": *[_type == "gallerySettings"][0]{    heroEyebrow,    heroTitle,    heroDescription,    heroBackgroundImage  },  "albums": *[_type == "galleryAlbum"]    | order(coalesce(date, _createdAt) desc){      _id,      title,      description,      date,      shareUrl,      highlightImage,      photos[]{        _key,        asset,        hotspot,        crop,        alt,        caption,        "dimensions": asset->metadata.dimensions{ width, height },        "lqip": asset->metadata.lqip      }    }}
-export type GALLERY_PAGE_QUERYResult = {
+export type GALLERY_PAGE_QUERY_RESULT = {
   settings: {
     heroEyebrow: string | null;
     heroTitle: string | null;
     heroDescription: string | null;
     heroBackgroundImage: {
-      asset?: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-      };
+      asset?: SanityImageAssetReference;
       media?: unknown;
       hotspot?: SanityImageHotspot;
       crop?: SanityImageCrop;
@@ -3580,12 +3023,7 @@ export type GALLERY_PAGE_QUERYResult = {
     date: string | null;
     shareUrl: string | null;
     highlightImage: {
-      asset?: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-      };
+      asset?: SanityImageAssetReference;
       media?: unknown;
       hotspot?: SanityImageHotspot;
       crop?: SanityImageCrop;
@@ -3594,12 +3032,7 @@ export type GALLERY_PAGE_QUERYResult = {
     } | null;
     photos: Array<{
       _key: string;
-      asset: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-      } | null;
+      asset: SanityImageAssetReference | null;
       hotspot: SanityImageHotspot | null;
       crop: SanityImageCrop | null;
       alt: string | null;
@@ -3614,27 +3047,32 @@ export type GALLERY_PAGE_QUERYResult = {
 };
 
 // Query TypeMap
-import "@sanity/client";
-declare module "@sanity/client" {
+declare global {
   interface SanityQueries {
-    "\n  *[_type == \"contactGroup\" && notifyChapterApplications == true][0]{\n    title,\n    recipients[]{\n      email\n    }\n  }\n": CONTACT_GROUP_QUERYResult;
-    "\n  *[_type == \"workshop\" && (\n    (defined($workshopId) && _id == $workshopId) ||\n    (defined($workshopSlug) && slug.current == $workshopSlug)\n  )][0]{\n    _id,\n    title,\n    \"slug\": slug.current,\n    contact{\n      email,\n      phone\n    }\n  }\n": WORKSHOP_CONTACT_QUERYResult;
-    "\n  *[_type == \"blogPost\" && defined(slug.current)]\n    | order(publishedAt desc)[]{\n      _id,\n      title,\n      slug,\n      body,\n      mainImage,\n      publishedAt,\n      \"categories\": coalesce(\n        categories[]->{\n          _id,\n          slug,\n          title\n        },\n        []\n      ),\n      author->{\n        name,\n        image\n      }\n    }\n": BLOG_POSTS_QUERYResult;
-    "\n  *[_type == \"blogPost\" && defined(slug.current)]{\n    \"slug\": slug.current\n  }\n": BLOG_POSTS_SLUGS_QUERYResult;
-    "\n  *[_type == \"blogPost\" && slug.current == $slug][0]{\n    _id,\n    title,\n    body,\n    mainImage,\n    publishedAt,\n    \"categories\": coalesce(\n      categories[]->{\n        _id,\n        slug,\n        title\n      },\n      []\n    ),\n    author->{\n      name,\n      image\n    },\n    relatedBlogPosts[] {\n      _key,\n      ...@->{ _id, title, slug }\n    }\n  }\n": BLOG_POST_QUERYResult;
-    "\n  *[_type == \"newsletter\" && defined(slug.current)]\n    | order(publishedAt desc){\n      _id,\n      title,\n      \"slug\": slug.current,\n      issueLabel,\n      publishedAt,\n      readTime,\n      excerpt,\n      coverImage\n    }\n": NEWSLETTERS_QUERYResult;
-    "\n  *[_type == \"newsletter\" && slug.current == $slug][0]{\n    _id,\n    title,\n    issueLabel,\n    publishedAt,\n    readTime,\n    excerpt,\n    coverImage,\n    body,\n    \"attachment\": attachment{\n      \"url\": asset->url,\n      \"filename\": asset->originalFilename,\n      \"size\": asset->size\n    }\n  }\n": NEWSLETTER_QUERYResult;
-    "\n  *[_type == \"event\" && defined(slug.current)] | order(date asc)[0...20]{\n    _id,\n    title,\n    slug,\n    date,\n    location,\n    needsVolunteer\n  }\n": EVENTS_QUERYResult;
-    "\n  *[_type == \"event\" && slug.current == $slug][0]{\n    _id,\n    title,\n    slug,\n    description,\n    date,\n    location,\n    link,\n    needsVolunteer,\n    image\n  }\n": EVENT_QUERYResult;
-    "\n*[_type == \"page\" && slug.current == $slug][0]{\n  _id,\n  _type,\n  title,\n  slug,\n  content[]{\n    ...,\n    _type == \"heroBanner\" => {\n      ...,\n      titleColor,\n      kickerColor,\n      bodyColor,\n      overlayOpacity\n    },\n    _type == \"faqs\" => {\n      ...,\n      faqs[]->\n    },\n    _type == \"workshopsDirectory\" => {\n      ...,\n      categoryCards[]->{\n        _id,\n        title,\n        slug,\n        icon,\n        description\n      },\n      \"workshops\": *[_type == \"workshop\"]\n        | order(start asc){\n          _id,\n          title,\n          \"slug\": slug.current,\n          summary,\n          categories[]->{\n            _id,\n            title,\n            slug,\n            icon,\n            description\n          },\n          start,\n          end,\n          location,\n          capacity,\n          registeredCount,\n          needsVolunteers,\n          registerUrl,\n          volunteerUrl,\n          heroImage\n        }\n    },\n    _type == \"volunteersDirectory\" => {\n      ...,\n      \"opportunities\": *[_type == \"volunteerOpportunity\"]\n        | order(title asc){\n          _id,\n          title,\n          \"slug\": slug.current,\n          summary,\n          trackLabel,\n          isUrgent,\n          isRemoteFriendly,\n          location,\n          commitmentSummary,\n          openings,\n          experienceLevel,\n          applyUrl,\n          heroImage,\n          contact{\n            ctaLabel\n          }\n        }\n    },\n    _type == \"brandPromos\" => {\n      ...,\n      brands[]->{\n        _id,\n        title,\n        kicker,\n        headline,\n        subhead,\n        footnote,\n        themeColor,\n        textColor,\n        imageOverlayStrength,\n        primaryCta{\n          label,\n          href\n        },\n        secondaryCta{\n          label,\n          href\n        },\n        promoLink{\n          href,\n          label\n        },\n        heroImage{\n          asset,\n          alt\n        },\n        logo{\n          asset,\n          alt\n        }\n      }\n    }\n  }\n}\n": PAGE_QUERYResult;
-    "\n*[_id == \"siteSettings\"][0]{\n  homePage->{\n    _id,\n    _type,\n    title,\n    slug,\n    content[]{\n      ...,\n      _type == \"heroBanner\" => {\n        ...,\n        titleColor,\n        kickerColor,\n        bodyColor,\n        overlayOpacity\n      },\n      _type == \"faqs\" => { ..., faqs[]-> },\n      _type == \"workshopsDirectory\" => {\n        ...,\n        categoryCards[]->{\n          _id,\n          title,\n          slug,\n          icon,\n          description\n        },\n        \"workshops\": *[_type == \"workshop\"]\n          | order(start asc){\n            _id,\n            title,\n            \"slug\": slug.current,\n            summary,\n            categories[]->{\n              _id,\n              title,\n              slug,\n              icon,\n              description\n            },\n            start,\n            end,\n            location,\n            capacity,\n            registeredCount,\n            needsVolunteers,\n            registerUrl,\n            volunteerUrl,\n            heroImage\n          }\n      }\n    },\n      _type == \"volunteersDirectory\" => {\n        ...,\n        \"opportunities\": *[_type == \"volunteerOpportunity\"]\n          | order(title asc){\n            _id,\n            title,\n            \"slug\": slug.current,\n            summary,\n            trackLabel,\n            isUrgent,\n            isRemoteFriendly,\n            location,\n            commitmentSummary,\n            openings,\n            experienceLevel,\n            applyUrl,\n            heroImage,\n            contact{\n              ctaLabel\n            }\n          }\n      },\n      _type == \"brandPromos\" => {\n        ...,\n        brands[]->{\n          _id,\n          title,\n          kicker,\n          headline,\n          subhead,\n        footnote,\n        themeColor,\n        textColor,\n        imageOverlayStrength,\n        primaryCta{\n          label,\n          href\n          },\n          secondaryCta{\n            label,\n            href\n          },\n        promoLink{\n          href,\n          label\n        },\n        heroImage{\n          asset,\n          alt\n        },\n        logo{\n          asset,\n          alt\n        }\n        }\n      }\n    }\n  }\n": HOME_PAGE_QUERYResult;
-    "\n  *[_type == \"workshop\"]\n    | order(start asc){\n      _id,\n      title,\n      \"slug\": slug.current,\n      summary,\n      categories,\n      start,\n      end,\n      location,\n      capacity,\n      registeredCount,\n      needsVolunteers,\n      registerUrl,\n      volunteerUrl,\n      heroImage,\n      categories[]->{\n        _id,\n        title,\n        slug,\n        icon,\n        description\n      }\n    }\n": WORKSHOPS_QUERYResult;
-    "\n  *[_type == \"workshop\" && slug.current == $slug][0]{\n    _id,\n    title,\n    \"slug\": slug.current,\n    summary,\n    categories[]->{\n      _id,\n      title,\n      slug,\n      icon,\n      description\n    },\n    start,\n    end,\n    location,\n    capacity,\n    registeredCount,\n    needsVolunteers,\n    registerUrl,\n    volunteerUrl,\n    heroImage,\n    hosts[]{\n      _key,\n      name,\n      role,\n      avatar,\n      socialLinks[]{\n        _key,\n        label,\n        url\n      }\n    },\n    contact{\n      ctaLabel,\n      instructions,\n      email,\n      phone,\n      responseNote\n    },\n    externalLinks[]{\n      _key,\n      label,\n      href\n    },\n    body\n  }\n": WORKSHOP_QUERYResult;
-    "\n  *[_type == \"workshop\" && defined(slug.current)]{\n    \"slug\": slug.current\n  }\n": WORKSHOP_SLUGS_QUERYResult;
-    "\n  *[_type == \"volunteerOpportunity\"]\n    | order(title asc){\n      _id,\n      title,\n      \"slug\": slug.current,\n      summary,\n      trackLabel,\n      isUrgent,\n      isRemoteFriendly,\n      location,\n      commitmentSummary,\n      openings,\n      experienceLevel,\n      applyUrl,\n      heroImage,\n      contact{\n        ctaLabel\n      }\n    }\n": VOLUNTEERS_QUERYResult;
-    "\n  *[_type == \"volunteerOpportunity\" && slug.current == $slug][0]{\n    _id,\n    title,\n    \"slug\": slug.current,\n    summary,\n    trackLabel,\n    isUrgent,\n    isRemoteFriendly,\n    location,\n    commitmentSummary,\n    openings,\n    experienceLevel,\n    applyUrl,\n    heroImage,\n    responsibilities,\n    qualifications,\n    benefits,\n    applicationProcess[]{\n      _key,\n      title,\n      description\n    },\n    contact{\n      ctaLabel,\n      instructions,\n      email,\n      phone,\n      responseNote\n    },\n    body\n  }\n": VOLUNTEER_QUERYResult;
-    "\n  *[_type in [\"volunteerOpportunity\", \"volunteerOPportunity\"] && defined(slug.current)]{\n    \"slug\": slug.current\n  }\n": VOLUNTEER_SLUGS_QUERYResult;
-    "\n*[_id == \"siteSettings\"][0]{\n  logo,\n  orgName,\n  footerBlurb,\n  social{\n    facebook, twitter, instagram, youtube\n  },\n  quickLinks[]{\n    _key, label, href\n  },\n  contactEmail,\n  contactPhone,\n  newsletter{\n    enabled, blurb\n  },\n  navigation{\n    showWorkshops, showBrands\n  }\n}\n": SITE_SETTINGS_QUERYResult;
-    "\n{\n  \"settings\": *[_type == \"gallerySettings\"][0]{\n    heroEyebrow,\n    heroTitle,\n    heroDescription,\n    heroBackgroundImage\n  },\n  \"albums\": *[_type == \"galleryAlbum\"]\n    | order(coalesce(date, _createdAt) desc){\n      _id,\n      title,\n      description,\n      date,\n      shareUrl,\n      highlightImage,\n      photos[]{\n        _key,\n        asset,\n        hotspot,\n        crop,\n        alt,\n        caption,\n        \"dimensions\": asset->metadata.dimensions{ width, height },\n        \"lqip\": asset->metadata.lqip\n      }\n    }\n}\n": GALLERY_PAGE_QUERYResult;
+    '\n  *[_type == "contactGroup" && notifyChapterApplications == true][0]{\n    title,\n    recipients[]{\n      email\n    }\n  }\n': CONTACT_GROUP_QUERY_RESULT;
+    '\n  *[_type == "workshop" && (\n    (defined($workshopId) && _id == $workshopId) ||\n    (defined($workshopSlug) && slug.current == $workshopSlug)\n  )][0]{\n    _id,\n    title,\n    "slug": slug.current,\n    contact{\n      email,\n      phone\n    }\n  }\n': WORKSHOP_CONTACT_QUERY_RESULT;
+    '\n  *[_type == "blogPost" && defined(slug.current)]\n    | order(publishedAt desc)[]{\n      _id,\n      title,\n      slug,\n      body,\n      mainImage,\n      publishedAt,\n      "categories": coalesce(\n        categories[]->{\n          _id,\n          slug,\n          title\n        },\n        []\n      ),\n      author->{\n        name,\n        image\n      }\n    }\n': BLOG_POSTS_QUERY_RESULT;
+    '\n  *[_type == "blogPost" && defined(slug.current)]{\n    "slug": slug.current\n  }\n': BLOG_POSTS_SLUGS_QUERY_RESULT;
+    '\n  *[_type == "blogPost" && slug.current == $slug][0]{\n    _id,\n    title,\n    body,\n    mainImage,\n    publishedAt,\n    "categories": coalesce(\n      categories[]->{\n        _id,\n        slug,\n        title\n      },\n      []\n    ),\n    author->{\n      name,\n      image\n    },\n    relatedBlogPosts[] {\n      _key,\n      ...@->{ _id, title, slug }\n    }\n  }\n': BLOG_POST_QUERY_RESULT;
+    '\n  *[_type == "newsletter" && defined(slug.current)]\n    | order(publishedAt desc){\n      _id,\n      title,\n      "slug": slug.current,\n      issueLabel,\n      publishedAt,\n      readTime,\n      excerpt,\n      coverImage\n    }\n': NEWSLETTERS_QUERY_RESULT;
+    '\n  *[_type == "newsletter" && slug.current == $slug][0]{\n    _id,\n    title,\n    issueLabel,\n    publishedAt,\n    readTime,\n    excerpt,\n    coverImage,\n    body,\n    "attachment": attachment{\n      "url": asset->url,\n      "filename": asset->originalFilename,\n      "size": asset->size\n    }\n  }\n': NEWSLETTER_QUERY_RESULT;
+    '\n  *[_type == "event" && defined(slug.current)] | order(date asc)[0...20]{\n    _id,\n    title,\n    slug,\n    date,\n    location,\n    needsVolunteer\n  }\n': EVENTS_QUERY_RESULT;
+    '\n  *[_type == "event" && slug.current == $slug][0]{\n    _id,\n    title,\n    slug,\n    description,\n    date,\n    location,\n    link,\n    needsVolunteer,\n    image\n  }\n': EVENT_QUERY_RESULT;
+    '\n*[_type == "page" && slug.current == $slug][0]{\n  _id,\n  _type,\n  title,\n  slug,\n  content[]{\n    ...,\n    _type == "heroBanner" => {\n      ...,\n      titleColor,\n      kickerColor,\n      bodyColor,\n      overlayOpacity\n    },\n    _type == "faqs" => {\n      ...,\n      faqs[]->\n    },\n    _type == "workshopsDirectory" => {\n      ...,\n      categoryCards[]->{\n        _id,\n        title,\n        slug,\n        icon,\n        description\n      },\n      "workshops": *[_type == "workshop"]\n        | order(start asc){\n          _id,\n          title,\n          "slug": slug.current,\n          summary,\n          categories[]->{\n            _id,\n            title,\n            slug,\n            icon,\n            description\n          },\n          start,\n          end,\n          location,\n          capacity,\n          registeredCount,\n          needsVolunteers,\n          registerUrl,\n          volunteerUrl,\n          heroImage\n        }\n    },\n    _type == "volunteersDirectory" => {\n      ...,\n      "opportunities": *[_type == "volunteerOpportunity"]\n        | order(title asc){\n          _id,\n          title,\n          "slug": slug.current,\n          summary,\n          trackLabel,\n          isUrgent,\n          isRemoteFriendly,\n          location,\n          commitmentSummary,\n          openings,\n          experienceLevel,\n          applyUrl,\n          heroImage,\n          contact{\n            ctaLabel\n          }\n        }\n    },\n    _type == "brandPromos" => {\n      ...,\n      brands[]->{\n        _id,\n        title,\n        kicker,\n        headline,\n        subhead,\n        footnote,\n        themeColor,\n        textColor,\n        imageOverlayStrength,\n        primaryCta{\n          label,\n          href\n        },\n        secondaryCta{\n          label,\n          href\n        },\n        promoLink{\n          href,\n          label\n        },\n        heroImage{\n          asset,\n          alt\n        },\n        logo{\n          asset,\n          alt\n        }\n      }\n    }\n  }\n}\n': PAGE_QUERY_RESULT;
+    '\n  *[_type == "page" && defined(slug.current)]{\n    "slug": slug.current\n  }\n': PAGE_SLUGS_QUERY_RESULT;
+    '\n*[_id == "siteSettings"][0]{\n  homePage->{\n    _id,\n    _type,\n    title,\n    slug,\n    content[]{\n      ...,\n      _type == "heroBanner" => {\n        ...,\n        titleColor,\n        kickerColor,\n        bodyColor,\n        overlayOpacity\n      },\n      _type == "faqs" => { ..., faqs[]-> },\n      _type == "workshopsDirectory" => {\n        ...,\n        categoryCards[]->{\n          _id,\n          title,\n          slug,\n          icon,\n          description\n        },\n        "workshops": *[_type == "workshop"]\n          | order(start asc){\n            _id,\n            title,\n            "slug": slug.current,\n            summary,\n            categories[]->{\n              _id,\n              title,\n              slug,\n              icon,\n              description\n            },\n            start,\n            end,\n            location,\n            capacity,\n            registeredCount,\n            needsVolunteers,\n            registerUrl,\n            volunteerUrl,\n            heroImage\n          }\n      }\n    },\n      _type == "volunteersDirectory" => {\n        ...,\n        "opportunities": *[_type == "volunteerOpportunity"]\n          | order(title asc){\n            _id,\n            title,\n            "slug": slug.current,\n            summary,\n            trackLabel,\n            isUrgent,\n            isRemoteFriendly,\n            location,\n            commitmentSummary,\n            openings,\n            experienceLevel,\n            applyUrl,\n            heroImage,\n            contact{\n              ctaLabel\n            }\n          }\n      },\n      _type == "brandPromos" => {\n        ...,\n        brands[]->{\n          _id,\n          title,\n          kicker,\n          headline,\n          subhead,\n        footnote,\n        themeColor,\n        textColor,\n        imageOverlayStrength,\n        primaryCta{\n          label,\n          href\n          },\n          secondaryCta{\n            label,\n            href\n          },\n        promoLink{\n          href,\n          label\n        },\n        heroImage{\n          asset,\n          alt\n        },\n        logo{\n          asset,\n          alt\n        }\n        }\n      }\n    }\n  }\n': HOME_PAGE_QUERY_RESULT;
+    '\n  *[_type == "workshop"]\n    | order(start asc){\n      _id,\n      title,\n      "slug": slug.current,\n      summary,\n      categories,\n      start,\n      end,\n      location,\n      capacity,\n      registeredCount,\n      needsVolunteers,\n      registerUrl,\n      volunteerUrl,\n      heroImage,\n      categories[]->{\n        _id,\n        title,\n        slug,\n        icon,\n        description\n      }\n    }\n': WORKSHOPS_QUERY_RESULT;
+    '\n  *[_type == "workshop" && slug.current == $slug][0]{\n    _id,\n    title,\n    "slug": slug.current,\n    summary,\n    categories[]->{\n      _id,\n      title,\n      slug,\n      icon,\n      description\n    },\n    start,\n    end,\n    location,\n    capacity,\n    registeredCount,\n    needsVolunteers,\n    registerUrl,\n    volunteerUrl,\n    heroImage,\n    hosts[]{\n      _key,\n      name,\n      role,\n      avatar,\n      socialLinks[]{\n        _key,\n        label,\n        url\n      }\n    },\n    contact{\n      ctaLabel,\n      instructions,\n      email,\n      phone,\n      responseNote\n    },\n    externalLinks[]{\n      _key,\n      label,\n      href\n    },\n    body\n  }\n': WORKSHOP_QUERY_RESULT;
+    '\n  *[_type == "workshop" && defined(slug.current)]{\n    "slug": slug.current\n  }\n': WORKSHOP_SLUGS_QUERY_RESULT;
+    '\n  *[_type == "volunteerOpportunity"]\n    | order(title asc){\n      _id,\n      title,\n      "slug": slug.current,\n      summary,\n      trackLabel,\n      isUrgent,\n      isRemoteFriendly,\n      location,\n      commitmentSummary,\n      openings,\n      experienceLevel,\n      applyUrl,\n      heroImage,\n      contact{\n        ctaLabel\n      }\n    }\n': VOLUNTEERS_QUERY_RESULT;
+    '\n  *[_type == "volunteerOpportunity" && slug.current == $slug][0]{\n    _id,\n    title,\n    "slug": slug.current,\n    summary,\n    trackLabel,\n    isUrgent,\n    isRemoteFriendly,\n    location,\n    commitmentSummary,\n    openings,\n    experienceLevel,\n    applyUrl,\n    heroImage,\n    responsibilities,\n    qualifications,\n    benefits,\n    applicationProcess[]{\n      _key,\n      title,\n      description\n    },\n    contact{\n      ctaLabel,\n      instructions,\n      email,\n      phone,\n      responseNote\n    },\n    body\n  }\n': VOLUNTEER_QUERY_RESULT;
+    '\n  *[_type in ["volunteerOpportunity", "volunteerOPportunity"] && defined(slug.current)]{\n    "slug": slug.current\n  }\n': VOLUNTEER_SLUGS_QUERY_RESULT;
+    '\n*[_id == "siteSettings"][0]{\n  logo,\n  orgName,\n  footerBlurb,\n  social{\n    facebook, twitter, instagram, youtube\n  },\n  quickLinks[]{\n    _key, label, href\n  },\n  contactEmail,\n  contactPhone,\n  donateUrl,\n  newsletter{\n    enabled, blurb\n  },\n  navigation{\n    showWorkshops, showBrands\n  }\n}\n': SITE_SETTINGS_QUERY_RESULT;
+    '\n*[_type == "page" && slug.current in ["privacy", "terms"]]{\n  title,\n  "slug": slug.current\n}\n': LEGAL_PAGES_QUERY_RESULT;
+    '\n{\n  "settings": *[_type == "gallerySettings"][0]{\n    heroEyebrow,\n    heroTitle,\n    heroDescription,\n    heroBackgroundImage\n  },\n  "albums": *[_type == "galleryAlbum"]\n    | order(coalesce(date, _createdAt) desc){\n      _id,\n      title,\n      description,\n      date,\n      shareUrl,\n      highlightImage,\n      photos[]{\n        _key,\n        asset,\n        hotspot,\n        crop,\n        alt,\n        caption,\n        "dimensions": asset->metadata.dimensions{ width, height },\n        "lqip": asset->metadata.lqip\n      }\n    }\n}\n': GALLERY_PAGE_QUERY_RESULT;
   }
+}
+// Lets @sanity/client releases that predate the global registry read it too
+declare module "@sanity/client" {
+  interface SanityQueries extends globalThis.SanityQueries {}
 }

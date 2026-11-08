@@ -2,14 +2,14 @@ import { Author } from "@/components/Author";
 import { Categories } from "@/components/Categories";
 import { components } from "@/sanity/portableTextComponents";
 import { PortableText } from "next-sanity";
-import { BLOG_POST_QUERYResult } from "@/sanity/types";
+import type { BLOG_POST_QUERY_RESULT } from "@/sanity/types";
 import { PublishedAt } from "@/components/PublishedAt";
 import { Title } from "@/components/Title";
 import { urlFor } from "@/sanity/lib/image";
 import Image from "next/image";
 import { RelatedBlogPosts } from "@/components/RelatedBlogPosts";
 
-export function BlogPost(props: NonNullable<BLOG_POST_QUERYResult>) {
+export function BlogPost(props: NonNullable<BLOG_POST_QUERY_RESULT>) {
   const {
     _id,
     title,

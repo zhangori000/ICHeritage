@@ -1,5 +1,19 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
+
+/* Map Tailwind's font utilities to the fonts loaded in src/app/layout.tsx.
+   Without this, `font-sans` was Tailwind's default system stack and the
+   preloaded Inter / Noto Serif SC files were downloaded but never used. */
+@theme inline {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+/* Brand serif (header wordmark, gallery headings, article titles). */
+.font-noto-serif-sc {
+  font-family: var(--font-noto-serif-sc), ui-serif, Georgia, Cambria,
+    "Times New Roman", Times, serif;
+}
 /* Your theme tokens */
 :root {
   /* brand palette from your notes */

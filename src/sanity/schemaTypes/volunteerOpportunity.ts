@@ -1,5 +1,5 @@
 import { defineField, defineType } from "sanity";
-import { UsersIcon } from "@sanity/icons";
+import { UsersIcon } from "@sanity/icons/Users";
 
 const defaultResponsibilities = [
   "Collaborate closely with our core team to identify the most urgent volunteer needs.",

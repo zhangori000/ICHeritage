@@ -43,3 +43,18 @@ Everything below is done in Sanity Studio at `/studio` — no code changes or re
   **Body** field (headings, links, and inline images are supported) and optionally attach a PDF under
   **Downloadable file**. Published articles appear automatically on `/resources`.
 - **Footer contact details** — `Site Settings` (email and phone). The street address is no longer shown.
+- **Donate button** — `Site Settings → Donate link`. Empty = the header shows “Donate · Soon” (disabled). Paste a
+  PayPal/Zeffy/Givebutter link and it goes live immediately.
+- **Newsletter sign-up** — not connected to a mailing service yet, so the site shows “coming soon” notes instead of
+  a form. `Site Settings → Newsletter → Show newsletter teaser` hides the footer note if you prefer.
+- **Privacy Policy / Terms** — footer links appear automatically once you create pages with the slugs `privacy`
+  and `terms` under `Pages`.
+
+## Developer notes
+
+- Stack: Next.js 16 (Turbopack), React 19.3, Sanity Studio v6 embedded at `/studio`, next-sanity v13.
+- `npm run typegen` regenerates `src/sanity/types.ts` (Sanity v6 renamed query result types to `*_QUERY_RESULT`).
+- All `sanityFetch` calls pass `stega: false` so components keep the clean TypeGen types; block-level click-to-edit in
+  Presentation still works through `createDataAttribute` in `PageBuilder`.
+- Local build needs `NEXT_PUBLIC_SANITY_PROJECT_ID`, `NEXT_PUBLIC_SANITY_DATASET`, `SANITY_API_READ_TOKEN`
+  (and `RESEND_API_KEY` at runtime for the email forms).

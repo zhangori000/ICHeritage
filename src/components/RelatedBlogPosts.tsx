@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { createDataAttribute } from "next-sanity";
-import { BLOG_POST_QUERYResult } from "@/sanity/types";
+import type { BLOG_POST_QUERY_RESULT } from "@/sanity/types";
 import { client } from "@/sanity/lib/client";
 import { useOptimistic } from "next-sanity/hooks";
 
@@ -18,13 +18,13 @@ export function RelatedBlogPosts({
   documentId,
   documentType,
 }: {
-  relatedBlogPosts: NonNullable<BLOG_POST_QUERYResult>["relatedBlogPosts"];
+  relatedBlogPosts: NonNullable<BLOG_POST_QUERY_RESULT>["relatedBlogPosts"];
   documentId: string;
   documentType: string;
 }) {
   const posts = useOptimistic<
-    NonNullable<BLOG_POST_QUERYResult>["relatedBlogPosts"] | undefined,
-    NonNullable<BLOG_POST_QUERYResult>
+    NonNullable<BLOG_POST_QUERY_RESULT>["relatedBlogPosts"] | undefined,
+    NonNullable<BLOG_POST_QUERY_RESULT>
   >(relatedBlogPosts, (state, action) => {
     if (action.id === documentId && action?.document?.relatedBlogPosts) {
       // Optimistic document only has _ref values, not resolved references
