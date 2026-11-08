@@ -76,6 +76,8 @@ export function Footer({ settings, legalPages = [] }: FooterProps) {
     )
     .sort((a, b) => LEGAL_ORDER.indexOf(a.slug) - LEGAL_ORDER.indexOf(b.slug));
 
+  const photoCredits = settings?.photoCredits?.trim() || null;
+
   const newsletterEnabled = settings?.newsletter?.enabled ?? true;
   const newsletterBlurb =
     settings?.newsletter?.blurb ??
@@ -269,7 +271,12 @@ export function Footer({ settings, legalPages = [] }: FooterProps) {
         </div>
 
         {/* Bottom bar */}
-        <div className="mt-8 pt-8 border-t border-[var(--border)]">
+        <div className="mt-8 pt-8 border-t border-[var(--border)] space-y-4">
+          {photoCredits ? (
+            <p className="text-xs leading-relaxed text-[var(--muted-foreground)]/80">
+              {photoCredits}
+            </p>
+          ) : null}
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-sm text-[var(--muted-foreground)]">
               © {new Date().getFullYear()} {orgName}. All rights reserved.

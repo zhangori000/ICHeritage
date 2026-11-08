@@ -134,6 +134,18 @@ export const siteSettingsType = defineType({
       type: "string",
     }),
 
+    // --- FOOTER: PHOTO CREDITS ---------------------------------------------
+    // Creative Commons photos require visible attribution. This line shows
+    // in small type at the very bottom of every page.
+    defineField({
+      name: "photoCredits",
+      title: "Photo credits",
+      type: "text",
+      rows: 3,
+      description:
+        "Shown in small print at the bottom of every page. List photographers for any Creative Commons images used on the site, e.g. “Lion dance photo: shankar s. (CC BY 2.0)”.",
+    }),
+
     // --- FOOTER: NEWSLETTER (right column) ---------------------------------
     defineField({
       name: "newsletter",
