@@ -8,6 +8,7 @@ import { GALLERY_PAGE_QUERY } from "@/sanity/lib/queries";
 import { urlFor } from "@/sanity/lib/image";
 import type { GALLERY_PAGE_QUERY_RESULT } from "@/sanity/types";
 import { PhotoGrid, type GalleryPhoto } from "@/components/gallery/PhotoGrid";
+import { FeaturedAlbumCard } from "@/components/gallery/FeaturedAlbumCard";
 
 type Album = NonNullable<GALLERY_PAGE_QUERY_RESULT["albums"]>[number];
 type AlbumPhoto = NonNullable<Album["photos"]>[number];
@@ -127,6 +128,29 @@ export default async function GalleryPage() {
                 (album.highlightImage?.asset?._ref && clean(album.highlightImage.alt)) ||
                 `${title} cover photo`;
 
+              // Albums that live on an external service (iCloud, Google Photos…)
+              // get the featured link card; uploaded-photo albums get the grid.
+              if (externalUrl) {
+                return (
+                  <FeaturedAlbumCard
+                    key={album._id}
+                    title={title}
+                    description={description || null}
+                    date={date}
+                    href={externalUrl.toString()}
+                    hostLabel={externalUrl.hostname.replace(/^www\./, "")}
+                    coverSrc={coverSrc || null}
+                    coverAlt={coverAlt}
+                    previews={photos.slice(0, 4).map((photo) => ({
+                      key: photo.key,
+                      src: photo.thumbSrc,
+                      alt: photo.alt,
+                    }))}
+                    photoCount={photos.length || undefined}
+                  />
+                );
+              }
+
               return (
                 <article
                   key={album._id}
@@ -163,28 +187,11 @@ export default async function GalleryPage() {
 
                     {photos.length > 0 ? (
                       <PhotoGrid albumTitle={title} photos={photos} />
-                    ) : !externalUrl ? (
+                    ) : (
                       <p className="text-sm text-[var(--muted-foreground)]">
                         Photos for this album are on their way.
                       </p>
-                    ) : null}
-
-                    {externalUrl ? (
-                      <div className="flex flex-wrap items-center gap-3 text-sm text-[var(--muted-foreground)]">
-                        <a
-                          href={externalUrl.toString()}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="inline-flex items-center justify-center rounded-full bg-[var(--foreground)] px-5 py-2 text-sm font-semibold text-white shadow-sm transition hover:opacity-90"
-                        >
-                          View full album
-                        </a>
-                        <span>
-                          Opens in a new tab on{" "}
-                          {externalUrl.hostname.replace(/^www\./, "")}.
-                        </span>
-                      </div>
-                    ) : null}
+                    )}
                   </div>
                 </article>
               );
