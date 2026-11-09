@@ -6,6 +6,7 @@ import { SanityLive } from "@/sanity/lib/live";
 import { sanityFetch } from "@/sanity/lib/live";
 import { LEGAL_PAGES_QUERY, SITE_SETTINGS_QUERY } from "@/sanity/lib/queries";
 import { Footer } from "@/components/Footer";
+import { NavigationProgress } from "@/components/NavigationProgress";
 
 export default async function FrontendLayout({
   children,
@@ -19,6 +20,7 @@ export default async function FrontendLayout({
 
   return (
     <section className="bg-white min-h-screen flex flex-col">
+      <NavigationProgress />
       <Header settings={settings ?? null} />
       <main className="flex-1">{children}</main>
       {/* Footer uses editor-controlled settings */}

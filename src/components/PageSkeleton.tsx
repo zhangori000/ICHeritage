@@ -1,9 +1,14 @@
 /**
- * Shown instantly while a page's data is being fetched (first visit to a
- * page that is not prerendered, or a slow network). Mirrors the usual page
- * shape: a hero band followed by a row of cards.
+ * Skeleton for routes rendered on request (newsletter articles, blog posts),
+ * shown while their data loads. Mirrors the usual page shape: a hero band
+ * followed by a row of cards.
+ *
+ * Deliberately NOT used as a site-wide loading.tsx: the other pages are
+ * prerendered, and a root loading boundary gets baked into their static HTML,
+ * where React holds the real content back ~300ms behind the skeleton on
+ * every full page load.
  */
-export default function Loading() {
+export function PageSkeleton() {
   return (
     <div
       role="status"

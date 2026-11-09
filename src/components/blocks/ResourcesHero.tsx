@@ -1,9 +1,9 @@
-import Image from "next/image";
 import Link from "next/link";
 import * as React from "react";
 import { stegaClean } from "next-sanity";
 
 import type { PAGE_QUERY_RESULT } from "@/sanity/types";
+import { BlurUpImage } from "@/components/BlurUpImage";
 import { urlFor } from "@/sanity/lib/image";
 
 type ColorLike =
@@ -32,6 +32,7 @@ type CTA = { label?: string | null; href?: string | null } | null | undefined;
 
 type ExtendedResourcesHeroBlock = ResourcesHeroBlock & {
   backgroundImage?: Parameters<typeof urlFor>[0] | null;
+  backgroundLqip?: string | null;
   overlayOpacity?: number | null;
   primaryCta?: CTA;
   secondaryCta?: CTA;
@@ -230,6 +231,7 @@ export function ResourcesHero(block: ExtendedResourcesHeroBlock) {
     highlights,
     ctaLabel,
     backgroundImage,
+    backgroundLqip,
     overlayOpacity,
     primaryCta,
     secondaryCta,
@@ -375,13 +377,22 @@ export function ResourcesHero(block: ExtendedResourcesHeroBlock) {
   };
 
   return (
-    <section className="relative overflow-hidden bg-[color:var(--background)] py-20 lg:py-32">
+    <section
+      className={[
+        "relative overflow-hidden py-20 lg:py-32",
+        // Dark backdrop under a photo so light heading text never sits on an
+        // empty cream band before the image (or its blurred preview) paints.
+        hasBackgroundImage ? "bg-stone-900" : "bg-[color:var(--background)]",
+      ].join(" ")}
+    >
       {hasBackgroundImage && backgroundImage ? (
         <div className="absolute inset-0 z-0" aria-hidden>
-          <Image
+          <BlurUpImage
             src={urlFor(backgroundImage).width(2400).height(1350).fit("crop").url()}
             alt={clean((backgroundImage as { alt?: string }).alt) || ""}
-            fill
+            sizes="100vw"
+            lqip={backgroundLqip}
+            hotspot={(backgroundImage as { hotspot?: { x?: number; y?: number } }).hotspot}
             className="object-cover z-0"
             priority
           />
@@ -411,7 +422,7 @@ export function ResourcesHero(block: ExtendedResourcesHeroBlock) {
 
       <div className="relative z-20">
         <div className="container mx-auto px-4">
-          <div className="mx-auto flex max-w-5xl flex-col text-center">
+          <div className="mx-auto flex max-w-5xl flex-col text-center hero-rise">
             <div className="space-y-6">
               {safeHeading ? (
                 <h1

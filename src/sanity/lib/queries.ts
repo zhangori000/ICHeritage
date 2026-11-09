@@ -126,7 +126,16 @@ export const PAGE_QUERY = defineQuery(`
       titleColor,
       kickerColor,
       bodyColor,
-      overlayOpacity
+      overlayOpacity,
+      "backgroundLqip": background.asset->metadata.lqip
+    },
+    _type == "resourcesHero" => {
+      ...,
+      "backgroundLqip": backgroundImage.asset->metadata.lqip
+    },
+    _type == "initiativesGrid" => {
+      ...,
+      cards[]{ ..., "lqip": image.asset->metadata.lqip }
     },
     _type == "faqs" => {
       ...,
@@ -247,7 +256,16 @@ export const HOME_PAGE_QUERY = defineQuery(`
         titleColor,
         kickerColor,
         bodyColor,
-        overlayOpacity
+        overlayOpacity,
+        "backgroundLqip": background.asset->metadata.lqip
+      },
+      _type == "resourcesHero" => {
+        ...,
+        "backgroundLqip": backgroundImage.asset->metadata.lqip
+      },
+      _type == "initiativesGrid" => {
+        ...,
+        cards[]{ ..., "lqip": image.asset->metadata.lqip }
       },
       _type == "faqs" => { ..., faqs[]-> },
       _type == "workshopsDirectory" => {

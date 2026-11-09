@@ -3,7 +3,8 @@
 
 import * as React from "react";
 import Image from "next/image";
-import Link from "next/link";
+import Link, { useLinkStatus } from "next/link";
+import { usePathname } from "next/navigation";
 import type { SITE_SETTINGS_QUERY_RESULT } from "@/sanity/types";
 import { urlFor } from "@/sanity/lib/image";
 import {
@@ -106,6 +107,31 @@ function DonateButton({
 }
 
 /* ------------------------------------------------------------------ */
+/* Nav underline: solid on the current page, pulsing while a clicked   */
+/* link's page is loading, so a click always gets instant feedback.    */
+/* Must render inside a <Link> (useLinkStatus reads that link's state). */
+/* ------------------------------------------------------------------ */
+function NavUnderline({ active }: { active: boolean }) {
+  const { pending } = useLinkStatus();
+  return (
+    <span
+      aria-hidden
+      className={[
+        "pointer-events-none absolute inset-x-3 bottom-0.5 h-0.5 origin-left rounded-full bg-[var(--primary)]",
+        "transition-transform duration-300 motion-reduce:transition-none",
+        pending ? "scale-x-100 animate-pulse" : active ? "scale-x-100" : "scale-x-0",
+      ].join(" ")}
+    />
+  );
+}
+
+function isActivePath(pathname: string | null, href: string) {
+  if (!pathname) return false;
+  if (href === "/") return pathname === "/";
+  return pathname === href || pathname.startsWith(`${href}/`);
+}
+
+/* ------------------------------------------------------------------ */
 /* Component                                                           */
 /* ------------------------------------------------------------------ */
 export function Header({ settings }: HeaderProps) {
@@ -133,6 +159,7 @@ export function Header({ settings }: HeaderProps) {
   const navItems = NAV_ITEMS.filter(
     (item) => !item.section || visibility[item.section]
   );
+  const pathname = usePathname();
 
   // Mobile drawer state
   const [mobileOpen, setMobileOpen] = React.useState(false);
@@ -179,13 +206,19 @@ export function Header({ settings }: HeaderProps) {
               {navItems.map((item) => {
                 if ("href" in item) {
                   // Simple link — hover = text color only
+                  const active = isActivePath(pathname, item.href);
                   return (
                     <Link
                       key={item.id}
                       href={item.href}
-                      className="text-sm font-medium transition-colors px-3 py-2 rounded-md text-[var(--muted-foreground)] hover:text-[var(--primary)]"
+                      aria-current={active ? "page" : undefined}
+                      className={[
+                        "relative text-sm font-medium transition-colors px-3 py-2 rounded-md hover:text-[var(--primary)]",
+                        active ? "text-[var(--primary)]" : "text-[var(--muted-foreground)]",
+                      ].join(" ")}
                     >
                       {item.label}
+                      <NavUnderline active={active} />
                     </Link>
                   );
                 }
@@ -196,7 +229,12 @@ export function Header({ settings }: HeaderProps) {
                   <div key={item.id} className="relative group">
                     <button
                       type="button"
-                      className="text-sm font-medium transition-colors px-3 py-2 rounded-md text-[var(--muted-foreground)] hover:text-[var(--primary)]"
+                      className={[
+                        "text-sm font-medium transition-colors px-3 py-2 rounded-md hover:text-[var(--primary)]",
+                        item.children.some((child) => isActivePath(pathname, child.href))
+                          ? "text-[var(--primary)]"
+                          : "text-[var(--muted-foreground)]",
+                      ].join(" ")}
                       aria-haspopup="menu"
                       aria-expanded="false"
                       aria-controls={menuId}
@@ -215,16 +253,24 @@ export function Header({ settings }: HeaderProps) {
                         "transition-all duration-150",
                       ].join(" ")}
                     >
-                      {item.children.map((child) => (
-                        <Link
-                          key={child.id}
-                          href={child.href}
-                          role="menuitem"
-                          className="block rounded-md px-3 py-2 text-sm transition-colors text-[var(--muted-foreground)] hover:text-[var(--primary)]"
-                        >
-                          {child.label}
-                        </Link>
-                      ))}
+                      {item.children.map((child) => {
+                        const active = isActivePath(pathname, child.href);
+                        return (
+                          <Link
+                            key={child.id}
+                            href={child.href}
+                            role="menuitem"
+                            aria-current={active ? "page" : undefined}
+                            className={[
+                              "relative block rounded-md px-3 py-2 text-sm transition-colors hover:text-[var(--primary)]",
+                              active ? "text-[var(--primary)]" : "text-[var(--muted-foreground)]",
+                            ].join(" ")}
+                          >
+                            {child.label}
+                            <NavUnderline active={false} />
+                          </Link>
+                        );
+                      })}
                     </div>
                   </div>
                 );

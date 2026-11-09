@@ -1,8 +1,8 @@
 // src/components/blocks/HeroBanner.tsx
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
+import { BlurUpImage } from "@/components/BlurUpImage";
 import { urlFor } from "@/sanity/lib/image";
 import type { PAGE_QUERY_RESULT } from "@/sanity/types";
 
@@ -60,6 +60,7 @@ export function HeroBanner({
   bodyColor,
   primaryCta,
   secondaryCta,
+  backgroundLqip,
 }: HeroBannerBlock) {
   // --- IMAGE-ONLY OVERLAY (never dims the text) -----------------------------
   const overlay = Math.max(0, Math.min(100, overlayOpacity ?? 0)) / 100;
@@ -91,15 +92,24 @@ export function HeroBanner({
     "hover:bg-[color-mix(in_oklab,var(--secondary)_90%,black)]";
 
   return (
-    <section className="relative py-20 lg:py-32 overflow-hidden">
+    <section
+      className={[
+        "relative py-20 lg:py-32 overflow-hidden",
+        // Dark backdrop under photo heroes so light headline text is never
+        // shown on an empty cream band, even before any image data arrives.
+        background ? "bg-stone-900" : "",
+      ].join(" ")}
+    >
       {/* BACKGROUND LAYERS */}
       <div className="absolute inset-0" aria-hidden>
-        {/* z-0: image */}
+        {/* z-0: blurred preview, then the photo fading in over it */}
         {background ? (
-          <Image
+          <BlurUpImage
             alt=""
-            fill
             priority
+            sizes="100vw"
+            lqip={backgroundLqip}
+            hotspot={background.hotspot}
             className="object-cover z-0"
             src={urlFor(background).width(2400).height(1200).url()}
           />
@@ -115,7 +125,7 @@ export function HeroBanner({
 
       {/* CONTENT (z-20) */}
       <div className="container mx-auto px-4 relative z-20">
-        <div className="max-w-4xl mx-auto text-center space-y-8">
+        <div className="max-w-4xl mx-auto text-center space-y-8 hero-rise">
           <div className="space-y-6">
             {/* Larger mobile title so it reads like the reference site */}
             {title ? (
