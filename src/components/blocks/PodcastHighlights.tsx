@@ -47,7 +47,7 @@ type PodcastHighlightsProps = {
   } | null;
 } & Record<string, unknown>;
 
-const placeholderImage = "/Gemini_Generated_Image_podcast_default.png";
+const placeholderImage = "/Gemini_Generated_Image_podcast_default.webp";
 
 const platformIcon = (type?: string | null) => {
   switch (type) {

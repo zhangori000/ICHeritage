@@ -53,7 +53,7 @@ type BrandPromosBlock = {
   brands?: BrandPromo[] | null;
 };
 
-const defaultImage = "/Gemini_Generated_Image_Default_Brand.png";
+const defaultImage = "/Gemini_Generated_Image_Default_Brand.webp";
 
 const clean = (value?: string | null) => (value ? stegaClean(value) : "");
 

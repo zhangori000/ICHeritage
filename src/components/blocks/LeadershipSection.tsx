@@ -50,7 +50,7 @@ type LeadershipSectionProps = {
   } | null;
 } & Record<string, unknown>;
 
-const placeholderHeadshot = "/placeholder-user.png";
+const placeholderHeadshot = "/placeholder-user.webp";
 
 type ButtonVariant = "icon" | "primary" | "secondary";
 

@@ -1,8 +1,8 @@
 ﻿import type { CSSProperties } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { stegaClean } from "next-sanity";
 
+import { BlurUpImage } from "@/components/BlurUpImage";
 import { urlFor } from "@/sanity/lib/image";
 import type { PAGE_QUERY_RESULT } from "@/sanity/types";
 
@@ -102,10 +102,10 @@ export function InitiativesGrid({
                 >
                   <div className="relative aspect-[4/3] overflow-hidden">
                     {card?.image ? (
-                      <Image
-                        fill
-                        priority={false}
+                      <BlurUpImage
                         sizes="(min-width: 1280px) 380px, (min-width: 768px) 45vw, 90vw"
+                        lqip={card.lqip}
+                        hotspot={card.image.hotspot}
                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                         alt={alt || ""}
                         src={urlFor(card.image).width(800).height(600).url()}

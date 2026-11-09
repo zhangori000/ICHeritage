@@ -57,7 +57,7 @@ type WorkshopsDirectoryBlock = {
 
 type MaybeSanitySlug = SanitySlugValue | undefined;
 
-const placeholderImage = "/Gemini_Generated_Image_podcast_default.png";
+const placeholderImage = "/Gemini_Generated_Image_podcast_default.webp";
 
 const clean = (value?: string | null) => (value ? stegaClean(value) : "");
 
