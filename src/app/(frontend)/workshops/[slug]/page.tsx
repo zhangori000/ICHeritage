@@ -19,8 +19,8 @@ import { ContactHostModal } from "@/components/workshops/ContactHostModal";
 import { EngagementForms } from "@/components/workshops/EngagementForms";
 import type { SanityImageSource } from "@sanity/image-url";
 
-const placeholderImage = "/Gemini_Generated_Image_workshop_default.png";
-const defaultHostAvatar = "/Gemini_Generated_Image_workshop_default.png";
+const placeholderImage = "/Gemini_Generated_Image_workshop_default.webp";
+const defaultHostAvatar = "/Gemini_Generated_Image_workshop_default.webp";
 
 type WorkshopParams = Promise<{ slug: string }>;
 

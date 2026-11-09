@@ -6,7 +6,7 @@ import { stegaClean } from "next-sanity";
 import { urlFor } from "@/sanity/lib/image";
 import type { PAGE_QUERY_RESULT } from "@/sanity/types";
 
-const FALLBACK_IMAGE = "/Gemini_Generated_Image_newsletter_default.png";
+const FALLBACK_IMAGE = "/Gemini_Generated_Image_newsletter_default.webp";
 
 type NewsletterArchiveBlock = Extract<
   NonNullable<NonNullable<PAGE_QUERY_RESULT>["content"]>[number],

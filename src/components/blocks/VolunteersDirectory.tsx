@@ -34,7 +34,7 @@ type VolunteersDirectoryBlock = {
   opportunities?: VolunteerOpportunityCard[] | null;
 };
 
-const placeholderImage = "/Gemini_Generated_Image_volunteer_default.png";
+const placeholderImage = "/Gemini_Generated_Image_volunteer_default.webp";
 
 const clean = (value?: string | null) => (value ? stegaClean(value) : "");
 
