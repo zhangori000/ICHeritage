@@ -38,36 +38,37 @@ export function RelatedBlogPosts({
     return null;
   }
   return (
-    <aside className="border-t">
-      <h2>Related Posts</h2>
-      <div className="not-prose text-balance">
-        <ul
-          className="flex flex-col sm:flex-row gap-0.5"
-          data-sanity={createDataAttribute({
-            ...createDataAttributeConfig,
-            id: documentId,
-            type: documentType,
-            path: "relatedBlogPosts",
-          }).toString()}
-        >
-          {posts.map((post) => (
-            <li
-              key={post._key}
-              className="p-4 bg-blue-50 sm:w-1/3 flex-shrink-0"
-              data-sanity={createDataAttribute({
-                ...createDataAttributeConfig,
-                id: documentId,
-                type: documentType,
-                path: `relatedBlogPosts[_key=="${post._key}"]`,
-              }).toString()}
+    <aside className="not-prose mt-16 border-t border-[color:var(--ink)] pt-6">
+      <h2 className="eyebrow eyebrow-rule">Related Posts</h2>
+      <ul
+        className="mt-4 flex flex-col"
+        data-sanity={createDataAttribute({
+          ...createDataAttributeConfig,
+          id: documentId,
+          type: documentType,
+          path: "relatedBlogPosts",
+        }).toString()}
+      >
+        {posts.map((post) => (
+          <li
+            key={post._key}
+            className="border-b border-[color:var(--hairline)]"
+            data-sanity={createDataAttribute({
+              ...createDataAttributeConfig,
+              id: documentId,
+              type: documentType,
+              path: `relatedBlogPosts[_key=="${post._key}"]`,
+            }).toString()}
+          >
+            <Link
+              href={`/blogPosts/${post?.slug?.current}`}
+              className="row-hover block py-4 font-serif text-xl leading-tight text-[color:var(--ink)] md:text-2xl"
             >
-              <Link href={`/blogPosts/${post?.slug?.current}`}>
-                {post.title}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </div>
+              {post.title}
+            </Link>
+          </li>
+        ))}
+      </ul>
     </aside>
   );
 }

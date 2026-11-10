@@ -34,8 +34,6 @@ type VolunteersDirectoryBlock = {
   opportunities?: VolunteerOpportunityCard[] | null;
 };
 
-const placeholderImage = "/Gemini_Generated_Image_volunteer_default.webp";
-
 const clean = (value?: string | null) => (value ? stegaClean(value) : "");
 
 const getTrackKey = (label: string) =>
@@ -44,6 +42,14 @@ const getTrackKey = (label: string) =>
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "");
+
+const filterToggleClass = (active: boolean) =>
+  [
+    "cursor-pointer border-b pb-1 text-sm font-medium transition-colors",
+    active
+      ? "border-[color:var(--ink)] text-[color:var(--ink)]"
+      : "border-transparent text-[color:var(--ink-muted)] hover:border-[color:var(--hairline)] hover:text-[color:var(--ink)]",
+  ].join(" ");
 
 export function VolunteersDirectory({
   sectionId,
@@ -113,86 +119,68 @@ export function VolunteersDirectory({
     });
   }, [activeTrack, safeOpportunities, searchTerm]);
 
-  return (
-    <section
-      id={clean(sectionId)}
-      className="relative overflow-hidden rounded-3xl border border-[color:var(--border)] bg-[color:var(--card)]"
-    >
-      <div className="absolute inset-0 bg-[color:var(--accent)]/5" aria-hidden />
-      <div className="relative isolate px-6 py-16 sm:px-10 lg:px-16">
-        <div className="mx-auto max-w-5xl">
-          <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
-            <div>
-              {heading ? (
-                <h2 className="font-serif text-3xl text-[color:var(--foreground)]">{clean(heading)}</h2>
-              ) : null}
-              {intro ? (
-                <p className="mt-3 max-w-2xl text-sm text-[color:var(--muted-foreground)]">
-                  {clean(intro)}
-                </p>
-              ) : null}
-            </div>
+  const searchInputId = React.useId();
 
-            <label className="flex w-full max-w-sm items-center gap-2 rounded-full border border-[color:var(--border)] bg-[color:var(--background)] px-4 py-2">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="h-5 w-5 text-[color:var(--muted-foreground)]"
-                aria-hidden
-              >
-                <circle cx="11" cy="11" r="7" />
-                <path d="m20 20-3.5-3.5" />
-              </svg>
-              <input
-                type="search"
-                value={searchTerm}
-                onChange={(event) => setSearchTerm(event.target.value)}
-                placeholder={clean(searchPlaceholder) || "Search volunteer roles"}
-                className="w-full bg-transparent text-sm text-[color:var(--foreground)] outline-none placeholder:text-[color:var(--muted-foreground)]"
-              />
-            </label>
+  return (
+    <section id={clean(sectionId) || undefined} className="bg-[color:var(--paper)] py-20 md:py-28">
+      <div className="wrap">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 md:items-end">
+          <div>
+            {heading ? (
+              <h2 className="display text-4xl text-[color:var(--ink)] md:text-5xl lg:text-6xl">
+                {clean(heading)}
+              </h2>
+            ) : null}
+            {intro ? (
+              <p className="mt-6 max-w-md text-lg leading-relaxed text-[color:var(--ink-soft)]">
+                {clean(intro)}
+              </p>
+            ) : null}
           </div>
 
-          {trackFilters.length > 0 ? (
-            <div className="mt-8 flex flex-wrap gap-2">
-              <button
-                type="button"
-                onClick={() => setActiveTrack("all")}
-                className={[
-                  "inline-flex items-center rounded-full border px-4 py-1.5 text-sm transition-colors",
-                  activeTrack === "all"
-                    ? "border-[color:var(--primary)] bg-[color:var(--primary)]/10 text-[color:var(--primary)]"
-                    : "border-[color:var(--border)] text-[color:var(--muted-foreground)] hover:text-[color:var(--foreground)]",
-                ].join(" ")}
-              >
-                All tracks
-              </button>
-              {trackFilters.map(({ key, label }) => (
-                <button
-                  key={key}
-                  type="button"
-                  onClick={() => setActiveTrack(key)}
-                  className={[
-                    "inline-flex items-center rounded-full border px-4 py-1.5 text-sm transition-colors",
-                    activeTrack === key
-                      ? "border-[color:var(--primary)] bg-[color:var(--primary)]/10 text-[color:var(--primary)]"
-                      : "border-[color:var(--border)] text-[color:var(--muted-foreground)] hover:text-[color:var(--foreground)]",
-                  ].join(" ")}
-                >
-                  {label}
-                </button>
-              ))}
-            </div>
-          ) : null}
+          <div className="w-full md:max-w-sm md:justify-self-end">
+            <label htmlFor={searchInputId} className="eyebrow block">
+              Search
+            </label>
+            <input
+              id={searchInputId}
+              type="search"
+              value={searchTerm}
+              onChange={(event) => setSearchTerm(event.target.value)}
+              placeholder={clean(searchPlaceholder) || "Search volunteer roles"}
+              className="mt-3 w-full rounded-none border border-[color:var(--hairline)] bg-white px-4 py-3 text-[15px] text-[color:var(--ink)] placeholder:text-[color:var(--ink-muted)] focus:border-[color:var(--ink)] focus:outline-none"
+            />
+          </div>
+        </div>
 
-          <div className="mt-10 grid gap-6 lg:grid-cols-2">
-            {filteredOpportunities.length > 0 ? (
-              filteredOpportunities.map((opportunity) => {
+        {trackFilters.length > 0 ? (
+          <div className="mt-12 flex flex-wrap gap-x-8 gap-y-3">
+            <button
+              type="button"
+              onClick={() => setActiveTrack("all")}
+              aria-pressed={activeTrack === "all"}
+              className={filterToggleClass(activeTrack === "all")}
+            >
+              All tracks
+            </button>
+            {trackFilters.map(({ key, label }) => (
+              <button
+                key={key}
+                type="button"
+                onClick={() => setActiveTrack(key)}
+                aria-pressed={activeTrack === key}
+                className={filterToggleClass(activeTrack === key)}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+        ) : null}
+
+        <div className={trackFilters.length > 0 ? "mt-6" : "mt-12"}>
+          {filteredOpportunities.length > 0 ? (
+            <ul className="border-t border-[color:var(--ink)]">
+              {filteredOpportunities.map((opportunity) => {
                 const title = clean(opportunity.title);
                 const summary = clean(opportunity.summary);
                 const track = clean(opportunity.trackLabel);
@@ -206,164 +194,93 @@ export function VolunteersDirectory({
                 const heroImage =
                   opportunity.heroImage?.asset?._ref
                     ? {
-                        src: urlFor(opportunity.heroImage).width(640).height(400).fit("crop").quality(80).url(),
+                        src: urlFor(opportunity.heroImage).width(320).height(320).fit("crop").quality(80).url(),
                         alt: clean(opportunity.heroImage?.alt) || title,
                       }
                     : null;
 
+                const metaParts = [estimatedTime, location].filter(Boolean);
+
                 return (
-                  <article
+                  <li
                     key={opportunity._id}
-                    className="group flex h-full flex-col overflow-hidden rounded-2xl border border-[color:var(--border)] bg-[color:var(--background)] shadow-sm transition hover:shadow-lg"
+                    className="row-hover grid grid-cols-[5rem_minmax(0,1fr)] gap-x-6 gap-y-5 border-b border-[color:var(--hairline)] py-8 md:grid-cols-[7rem_minmax(0,1fr)_auto] md:gap-x-10"
                   >
-                    <div className="relative h-44 w-full overflow-hidden bg-[color:var(--muted)]">
-                      {heroImage ? (
+                    {heroImage ? (
+                      <div className="relative aspect-square w-20 overflow-hidden border border-[color:var(--ink)] md:w-28">
                         <Image
                           src={heroImage.src}
                           alt={heroImage.alt}
                           fill
-                          className="object-cover transition-transform duration-300 group-hover:scale-105"
+                          sizes="(min-width: 768px) 112px, 80px"
+                          className="object-cover"
                         />
-                      ) : (
-                        <Image
-                          src={placeholderImage}
-                          alt=""
-                          fill
-                          className="object-cover opacity-60 transition-transform duration-300 group-hover:scale-105"
-                        />
-                      )}
-                    </div>
+                      </div>
+                    ) : (
+                      <div className="photo-slot aspect-square w-20 md:w-28" aria-hidden />
+                    )}
 
-                    <div className="flex flex-1 flex-col gap-5 p-6">
-                      <div className="space-y-3">
-                        {track ? (
-                          <span className="inline-flex items-center rounded-full border border-[color:var(--border)] px-3 py-1 text-xs font-semibold uppercase tracking-wide text-[color:var(--foreground)]">
-                            {track}
-                          </span>
-                        ) : null}
-                        <div className="flex flex-wrap items-center gap-2">
+                    <div className="min-w-0">
+                      {track || urgent || remoteFriendly ? (
+                        <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+                          {track ? (
+                            <span className="eyebrow text-[color:var(--pine)]">{track}</span>
+                          ) : null}
                           {urgent ? (
-                            <span className="inline-flex items-center gap-1 rounded-full bg-red-500/10 px-3 py-1 text-xs font-semibold text-red-500">
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="1.5"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                className="h-3.5 w-3.5"
-                                aria-hidden
-                              >
-                                <path d="m13 2-10 18h9l-1 6 10-18h-9z" />
-                              </svg>
-                              Urgent need
-                            </span>
+                            <span className="eyebrow text-[color:var(--seal)]">Urgent need</span>
                           ) : null}
                           {remoteFriendly ? (
-                            <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-500">
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="1.5"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                className="h-3.5 w-3.5"
-                                aria-hidden
-                              >
-                                <path d="M2 10c0-1.886 0-2.828.586-3.414C3.172 6 4.114 6 6 6h12c1.886 0 2.828 0 3.414.586C22 7.172 22 8.114 22 10v2c0 1.886 0 2.828-.586 3.414C20.828 16 19.886 16 18 16H6c-1.886 0-2.828 0-3.414-.586C2 14.828 2 13.886 2 12z" />
-                                <path d="M6 6V4" />
-                                <path d="M18 6V4" />
-                                <path d="M6 16v2" />
-                                <path d="M18 16v2" />
-                              </svg>
-                              Remote friendly
-                            </span>
+                            <span className="eyebrow text-[color:var(--pine)]">Remote friendly</span>
                           ) : null}
                         </div>
-                        <h3 className="font-serif text-2xl text-[color:var(--foreground)] transition-colors group-hover:text-[color:var(--primary)]">
-                          {title}
-                        </h3>
-                        {summary ? (
-                          <p className="text-sm text-[color:var(--muted-foreground)] line-clamp-3">{summary}</p>
-                        ) : null}
-                      </div>
-
-                      <div className="mt-auto space-y-2 text-sm text-[color:var(--muted-foreground)]">
-                        {estimatedTime ? (
-                          <div className="flex items-center gap-2">
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="1.5"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              className="h-4 w-4"
-                              aria-hidden
-                            >
-                              <circle cx="12" cy="12" r="10" />
-                              <polyline points="12 6 12 12 16 14" />
-                            </svg>
-                            <span>{estimatedTime}</span>
-                          </div>
-                        ) : null}
-                        {location ? (
-                          <div className="flex items-center gap-2">
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="1.5"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              className="h-4 w-4"
-                              aria-hidden
-                            >
-                              <path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0" />
-                              <circle cx="12" cy="10" r="3" />
-                            </svg>
-                            <span>{location}</span>
-                          </div>
-                        ) : null}
-                      </div>
-
-                      {applyHref ? (
-                        <div className="pt-2">
-                          {applyHrefIsInternal ? (
-                            <Link
-                              href={applyHref}
-                              prefetch={false}
-                              className="inline-flex w-full items-center justify-center gap-2 rounded-md bg-[color:var(--primary)] px-4 py-2 text-sm font-semibold text-[color:var(--primary-foreground)] transition hover:bg-[color:var(--primary)]/90"
-                            >
-                              Apply Now
-                            </Link>
-                          ) : (
-                            <a
-                              href={applyHref}
-                              target="_blank"
-                              rel="noreferrer"
-                              className="inline-flex w-full items-center justify-center gap-2 rounded-md bg-[color:var(--primary)] px-4 py-2 text-sm font-semibold text-[color:var(--primary-foreground)] transition hover:bg-[color:var(--primary)]/90"
-                            >
-                              Apply Now
-                            </a>
-                          )}
-                        </div>
+                      ) : null}
+                      <h3
+                        className={[
+                          "font-serif text-2xl text-[color:var(--ink)] md:text-3xl",
+                          track || urgent || remoteFriendly ? "mt-3" : "",
+                        ].join(" ")}
+                      >
+                        {title}
+                      </h3>
+                      {summary ? (
+                        <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-[color:var(--ink-soft)]">
+                          {summary}
+                        </p>
+                      ) : null}
+                      {metaParts.length > 0 ? (
+                        <p className="mt-4 text-sm text-[color:var(--ink-muted)]">
+                          {metaParts.map((part, index) => (
+                            <React.Fragment key={`${opportunity._id}-meta-${index}`}>
+                              {index > 0 ? <span aria-hidden> &middot; </span> : null}
+                              <span>{part}</span>
+                            </React.Fragment>
+                          ))}
+                        </p>
                       ) : null}
                     </div>
-                  </article>
+
+                    {applyHref ? (
+                      <div className="col-start-2 md:col-start-3 md:self-center">
+                        {applyHrefIsInternal ? (
+                          <Link href={applyHref} prefetch={false} className="btn btn-sm">
+                            Apply Now
+                          </Link>
+                        ) : (
+                          <a href={applyHref} target="_blank" rel="noreferrer" className="btn btn-sm">
+                            Apply Now
+                          </a>
+                        )}
+                      </div>
+                    ) : null}
+                  </li>
                 );
-              })
-            ) : (
-              <div className="rounded-2xl border border-dashed border-[color:var(--border)] bg-[color:var(--background)]/60 p-12 text-center text-sm text-[color:var(--muted-foreground)]">
-                No volunteer opportunities match your current search. Try a different track or keyword.
-              </div>
-            )}
-          </div>
+              })}
+            </ul>
+          ) : (
+            <p className="border-t border-[color:var(--ink)] py-12 text-[15px] leading-relaxed text-[color:var(--ink-muted)]">
+              No volunteer opportunities match your current search. Try a different track or keyword.
+            </p>
+          )}
         </div>
       </div>
     </section>

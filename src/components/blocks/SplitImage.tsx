@@ -9,26 +9,41 @@ type SplitImageProps = Extract<
 >;
 
 export function SplitImage({ title, image, orientation }: SplitImageProps) {
+  const side = stegaClean(orientation) || "imageLeft";
+  const imageRight = side === "imageRight";
+
   return (
-    <section
-      className="container mx-auto flex gap-8 py-16 data-[orientation='imageRight']:flex-row-reverse"
-      data-orientation={stegaClean(orientation) || "imageLeft"}
-    >
-      {image ? (
-        <Image
-          className="rounded-xl w-2/3 h-auto"
-          src={urlFor(image).width(800).height(600).url()}
-          width={800}
-          height={600}
-          alt=""
-        />
-      ) : null}
-      <div className="w-1/3 flex items-center">
-        {title ? (
-          <h2 className="text-3xl mx-auto md:text-5xl lg:text-8xl font-light text-pink-500 text-pretty max-w-3xl">
-            {title}
-          </h2>
-        ) : null}
+    <section className="py-20 md:py-28" data-orientation={side}>
+      <div className="wrap">
+        <div className="grid grid-cols-1 items-center gap-10 md:grid-cols-2 md:gap-16">
+          {image ? (
+            <div
+              className={[
+                "border border-[color:var(--ink)]",
+                imageRight ? "md:order-2" : "",
+              ].join(" ")}
+            >
+              <Image
+                className="block h-auto w-full"
+                src={urlFor(image).width(1200).height(900).url()}
+                width={1200}
+                height={900}
+                alt=""
+              />
+            </div>
+          ) : null}
+
+          {title ? (
+            <h2
+              className={[
+                "display text-4xl text-[color:var(--ink)] md:text-6xl",
+                imageRight ? "md:order-1" : "",
+              ].join(" ")}
+            >
+              {title}
+            </h2>
+          ) : null}
+        </div>
       </div>
     </section>
   );

@@ -22,27 +22,33 @@ export function BlogPost(props: NonNullable<BLOG_POST_QUERY_RESULT>) {
   } = props;
 
   return (
-    <article className="grid lg:grid-cols-12 gap-y-12">
-      <header className="lg:col-span-12 flex flex-col gap-4 items-start">
-        <div className="flex gap-4 items-center">
+    <article>
+      <header className="flex flex-col items-start gap-5">
+        <div className="flex flex-wrap items-baseline gap-x-4 gap-y-2">
           <Categories categories={categories} />
           <PublishedAt publishedAt={publishedAt} />
         </div>
         <Title>{title}</Title>
         <Author author={author} />
       </header>
+
       {mainImage ? (
-        <figure className="lg:col-span-4 flex flex-col gap-2 items-start">
-          <Image
-            src={urlFor(mainImage).width(400).height(400).url()}
-            width={400}
-            height={400}
-            alt=""
-          />
+        <figure className="mt-12 max-w-4xl">
+          <div className="overflow-hidden border border-[color:var(--ink)] bg-[color:var(--paper-slot)]">
+            <Image
+              src={urlFor(mainImage).width(1200).height(750).fit("crop").url()}
+              width={1200}
+              height={750}
+              alt={mainImage.alt || ""}
+              className="h-auto w-full"
+              priority
+            />
+          </div>
         </figure>
       ) : null}
+
       {body ? (
-        <div className="lg:col-span-7 lg:col-start-6 prose lg:prose-lg">
+        <div className="prose prose-lg mt-12 max-w-[68ch] text-[color:var(--ink-soft)] prose-headings:font-serif prose-headings:font-normal prose-headings:text-[color:var(--ink)] prose-p:text-[color:var(--ink-soft)] prose-li:text-[color:var(--ink-soft)] prose-strong:text-[color:var(--ink)] prose-a:text-[color:var(--seal)] prose-img:rounded-none prose-blockquote:border-[color:var(--hairline)] prose-blockquote:font-normal prose-blockquote:not-italic prose-hr:border-[color:var(--hairline)]">
           <PortableText value={body} components={components} />
           <RelatedBlogPosts
             relatedBlogPosts={relatedBlogPosts}

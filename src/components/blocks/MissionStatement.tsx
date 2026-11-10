@@ -31,65 +31,71 @@ export function MissionStatement({
     : [];
 
   return (
-    <section id={anchor} className="bg-[color:var(--primary)] py-20 text-[color:var(--primary-foreground)]">
-      <div className="container mx-auto px-4">
-        <div className="mx-auto flex max-w-4xl flex-col gap-16 text-center">
-          <div className="space-y-12">
-            {heading ? (
-              <h2 className="font-serif text-3xl font-bold md:text-4xl lg:text-5xl">
-                {heading}
-              </h2>
-            ) : null}
+    <section id={anchor} className="band py-20 md:py-28">
+      <div className="wrap">
+        {/* Mission: narrow label column, wide statement column. */}
+        {(heading || mission) && (
+          <div className="grid grid-cols-1 gap-10 md:grid-cols-12 md:gap-12">
+            <div className="md:col-span-4 lg:col-span-3">
+              {heading ? (
+                <h2 className="font-serif text-2xl text-[color:var(--band-text)]">
+                  {heading}
+                </h2>
+              ) : null}
+              <span
+                aria-hidden
+                className="font-sc mt-6 block text-[56px] leading-none text-[color:var(--seal)]"
+              >
+                传承
+              </span>
+            </div>
 
             {mission ? (
-              <blockquote className="relative">
-                <span className="absolute -top-6 -left-4 text-7xl font-serif leading-none text-[color:var(--primary-foreground)]/20">
-                  “
-                </span>
-                <span className="absolute -bottom-10 -right-4 text-7xl font-serif leading-none text-[color:var(--primary-foreground)]/20">
-                  ”
-                </span>
-                <p className="px-6 font-serif text-2xl font-medium leading-relaxed text-pretty md:px-12 md:text-3xl lg:text-4xl">
-                  {mission}
-                </p>
+              <blockquote className="md:col-span-8 lg:col-span-9 font-serif font-light text-3xl leading-[1.15] tracking-tight text-[color:var(--band-text)] md:text-4xl lg:text-5xl">
+                {mission}
               </blockquote>
             ) : null}
           </div>
+        )}
 
-          {pillarItems.length > 0 ? (
-            <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-              {pillarItems.map((pillar, index) => (
-                <article key={pillar._key ?? `${pillar.title ?? "pillar"}-${index}`} className="space-y-4">
-                  {pillar.title ? (
-                    <h3 className="font-serif text-xl font-bold md:text-2xl">
-                      {pillar.title}
-                    </h3>
-                  ) : null}
-                  {pillar.description ? (
-                    <p className="leading-relaxed text-[color:var(--primary-foreground)]/90">
-                      {pillar.description}
-                    </p>
-                  ) : null}
-                </article>
-              ))}
-            </div>
-          ) : null}
+        {/* Pillars: three columns divided by hairlines. */}
+        {pillarItems.length > 0 ? (
+          <div className="mt-16 grid grid-cols-1 border-t border-[color:var(--band-rule)] md:mt-20 md:grid-cols-3">
+            {pillarItems.map((pillar, index) => (
+              <article
+                key={pillar._key ?? `${pillar.title ?? "pillar"}-${index}`}
+                className="border-b border-[color:var(--band-rule)] py-8 last:border-b-0 md:border-b-0 md:border-r md:pr-8 md:pl-8 md:first:pl-0 md:last:border-r-0"
+              >
+                {pillar.title ? (
+                  <h3 className="font-serif text-2xl text-[color:var(--band-text)]">
+                    {pillar.title}
+                  </h3>
+                ) : null}
+                {pillar.description ? (
+                  <p className="mt-4 text-[15px] leading-relaxed text-[color:var(--band-muted)]">
+                    {pillar.description}
+                  </p>
+                ) : null}
+              </article>
+            ))}
+          </div>
+        ) : null}
 
-          {(visionHeading || vision) && (
-            <div className="space-y-6 border-t border-[color:var(--primary-foreground)]/20 pt-12">
-              {visionHeading ? (
-                <h3 className="font-serif text-2xl font-bold md:text-3xl">
-                  {visionHeading}
-                </h3>
-              ) : null}
-              {vision ? (
-                <p className="text-xl leading-relaxed text-[color:var(--primary-foreground)]/90 md:text-2xl">
-                  {vision}
-                </p>
-              ) : null}
-            </div>
-          )}
-        </div>
+        {/* Vision: same two-column rhythm under a rule. */}
+        {(visionHeading || vision) && (
+          <div className="mt-16 grid grid-cols-1 gap-8 border-t border-[color:var(--band-rule)] pt-10 md:mt-20 md:grid-cols-12 md:gap-12 md:pt-12">
+            {visionHeading ? (
+              <h3 className="font-serif text-2xl text-[color:var(--band-text)] md:col-span-4 lg:col-span-3">
+                {visionHeading}
+              </h3>
+            ) : null}
+            {vision ? (
+              <p className="font-serif font-light text-2xl leading-snug text-[color:var(--band-text)] md:col-span-8 md:text-3xl lg:col-span-9">
+                {vision}
+              </p>
+            ) : null}
+          </div>
+        )}
       </div>
     </section>
   );

@@ -506,6 +506,52 @@
   },
   {
     "type": "type",
+    "name": "closingCta.primaryCta",
+    "value": {
+      "type": "object",
+      "attributes": {
+        "label": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "href": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string"
+          },
+          "optional": true
+        }
+      }
+    }
+  },
+  {
+    "type": "type",
+    "name": "closingCta.secondaryCta",
+    "value": {
+      "type": "object",
+      "attributes": {
+        "label": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "href": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string"
+          },
+          "optional": true
+        }
+      }
+    }
+  },
+  {
+    "type": "type",
     "name": "sanity.imageAsset.reference",
     "value": {
       "type": "object",
@@ -3773,6 +3819,52 @@
     }
   },
   {
+    "name": "closingCta",
+    "type": "type",
+    "value": {
+      "type": "object",
+      "attributes": {
+        "_type": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string",
+            "value": "closingCta"
+          }
+        },
+        "heading": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "body": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "primaryCta": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "inline",
+            "name": "closingCta.primaryCta"
+          },
+          "optional": true
+        },
+        "secondaryCta": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "inline",
+            "name": "closingCta.secondaryCta"
+          },
+          "optional": true
+        }
+      }
+    }
+  },
+  {
     "name": "volunteerApplication",
     "type": "type",
     "value": {
@@ -7035,6 +7127,21 @@
             "rest": {
               "type": "inline",
               "name": "volunteerApplication"
+            }
+          },
+          {
+            "type": "object",
+            "attributes": {
+              "_key": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "string"
+                }
+              }
+            },
+            "rest": {
+              "type": "inline",
+              "name": "closingCta"
             }
           }
         ]

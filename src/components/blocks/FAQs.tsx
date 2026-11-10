@@ -8,33 +8,54 @@ type FAQsProps = Extract<
 
 export function FAQs({ _key, title, faqs }: FAQsProps) {
   return (
-    <section className="container mx-auto flex flex-col gap-8 py-16">
-      {title ? (
-        <h2 className="text-xl mx-auto md:text-2xl lg:text-5xl font-semibold text-slate-800 text-pretty max-w-3xl">
-          {title}
-        </h2>
-      ) : null}
-      {Array.isArray(faqs) ? (
-        <div className="max-w-2xl mx-auto border-b border-pink-200">
-          {faqs.map((faq) => (
-            <details
-              key={faq._id}
-              className="group [&[open]]:bg-pink-50 transition-colors duration-100 px-4 border-t border-pink-200"
-              name={_key}
-            >
-              <summary className="text-xl font-semibold text-slate-800 list-none cursor-pointer py-4 flex items-center justify-between">
-                {faq.title}
-                <span className="transform origin-center rotate-90 group-open:-rotate-90 transition-transform duration-200">
-                  &larr;
-                </span>
-              </summary>
-              <div className="pb-4">
-                {faq.body ? <PortableText value={faq.body} /> : null}
-              </div>
-            </details>
-          ))}
+    <section className="py-20 md:py-28">
+      <div className="wrap">
+        <div className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:gap-16">
+          {title ? (
+            <h2 className="display text-4xl text-[color:var(--ink)] md:text-5xl lg:col-span-4">
+              {title}
+            </h2>
+          ) : null}
+
+          {Array.isArray(faqs) ? (
+            <div className="border-t border-[color:var(--ink)] lg:col-span-8 lg:col-start-5">
+              {faqs.map((faq) => (
+                <details
+                  key={faq._id}
+                  className="group border-b border-[color:var(--hairline)]"
+                  name={_key}
+                >
+                  <summary className="flex cursor-pointer list-none items-start justify-between gap-6 py-6 font-serif text-xl text-[color:var(--ink)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[color:var(--seal)] md:text-2xl [&::-webkit-details-marker]:hidden">
+                    <span>{faq.title}</span>
+                    {/* Plus that turns into a minus: the vertical stroke rotates away. */}
+                    <svg
+                      viewBox="0 0 16 16"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.25"
+                      strokeLinecap="square"
+                      className="mt-2 h-4 w-4 shrink-0"
+                      aria-hidden
+                    >
+                      <line x1="1" y1="8" x2="15" y2="8" />
+                      <line
+                        x1="8"
+                        y1="1"
+                        x2="8"
+                        y2="15"
+                        className="origin-center transition-transform duration-200 group-open:rotate-90"
+                      />
+                    </svg>
+                  </summary>
+                  <div className="max-w-prose pb-8 leading-relaxed text-[color:var(--ink-soft)] [&_a]:underline [&_li]:mt-2 [&_ol]:list-decimal [&_ol]:pl-5 [&_p+p]:mt-4 [&_strong]:font-semibold [&_ul]:list-disc [&_ul]:pl-5">
+                    {faq.body ? <PortableText value={faq.body} /> : null}
+                  </div>
+                </details>
+              ))}
+            </div>
+          ) : null}
         </div>
-      ) : null}
+      </div>
     </section>
   );
 }

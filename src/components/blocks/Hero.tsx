@@ -10,27 +10,36 @@ type HeroProps = Extract<
 
 export function Hero({ title, text, image }: HeroProps) {
   return (
-    <section className="isolate w-full aspect-[2/1] py-16 relative overflow-hidden">
-      <div className="relative flex flex-col justify-center items-center gap-8 h-full z-20">
-        {title ? (
-          <h1 className="text-2xl md:text-4xl lg:text-6xl font-semibold text-white text-pretty max-w-3xl">
-            {title}
-          </h1>
-        ) : null}
-        <div className="prose-lg lg:prose-xl prose-invert flex items-center">
-          {text ? <PortableText value={text} /> : null}
+    <section className="bg-[color:var(--paper)] py-20 md:py-28">
+      <div className="wrap">
+        <div className="grid grid-cols-1 items-end gap-12 md:grid-cols-12 md:gap-16">
+          <div className="rise md:col-span-7">
+            {title ? (
+              <h1 className="display text-5xl text-[color:var(--ink)] md:text-6xl lg:text-7xl">
+                {title}
+              </h1>
+            ) : null}
+            {text ? (
+              <div className="mt-8 max-w-xl text-lg leading-relaxed text-[color:var(--ink-soft)] [&_a]:underline [&_p+p]:mt-4 [&_strong]:font-semibold">
+                <PortableText value={text} />
+              </div>
+            ) : null}
+          </div>
+
+          {image ? (
+            <div className="border border-[color:var(--ink)] md:col-span-5">
+              <Image
+                className="block h-auto w-full"
+                src={urlFor(image).width(1000).height(1250).url()}
+                width={1000}
+                height={1250}
+                alt=""
+                priority
+              />
+            </div>
+          ) : null}
         </div>
       </div>
-      <div className="absolute inset-0 bg-pink-500 opacity-50 z-10" />
-      {image ? (
-        <Image
-          className="absolute inset-0 object-cover blur-sm"
-          src={urlFor(image).width(1600).height(800).url()}
-          width={1600}
-          height={800}
-          alt=""
-        />
-      ) : null}
     </section>
   );
 }

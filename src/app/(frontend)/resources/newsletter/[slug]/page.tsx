@@ -1,4 +1,4 @@
-﻿import { notFound } from "next/navigation";
+import { notFound } from "next/navigation";
 
 import { NewsletterArticle } from "@/components/NewsletterArticle";
 import { sanityFetch } from "@/sanity/lib/live";
@@ -27,7 +27,7 @@ export default async function NewsletterPage({
   }
 
   return (
-    <main className="container mx-auto px-4 py-16 space-y-16">
+    <main className="wrap py-20 md:py-28">
       <NewsletterArticle {...newsletter} />
     </main>
   );

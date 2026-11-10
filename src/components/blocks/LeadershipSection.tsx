@@ -52,15 +52,36 @@ type LeadershipSectionProps = {
 
 const placeholderHeadshot = "/placeholder-user.webp";
 
-type ButtonVariant = "icon" | "primary" | "secondary";
+type ButtonVariant = "link" | "primary" | "secondary";
 
 const buttonClasses: Record<ButtonVariant, string> = {
-  icon: "inline-flex h-8 w-8 items-center justify-center rounded-md p-0 text-sm font-medium transition-all hover:bg-[color:var(--accent)] hover:text-[color:var(--accent-foreground)]",
-  primary:
-    "inline-flex items-center justify-center rounded-md px-6 py-2 text-sm font-medium transition-all bg-[color:var(--primary)] text-[color:var(--primary-foreground)] hover:bg-[color:var(--primary)]/90",
-  secondary:
-    "inline-flex items-center justify-center rounded-md px-6 py-2 text-sm font-medium transition-all border border-[color:var(--border)] bg-transparent text-[color:var(--foreground)] hover:bg-[color:var(--accent)]/10",
+  link: "textlink text-sm",
+  primary: "btn btn-primary",
+  secondary: "btn",
 };
+
+/* Sub-section header: a rule, then heading and subheading side by side. */
+function GroupHeader({
+  heading,
+  subheading,
+}: {
+  heading?: string | null;
+  subheading?: string | null;
+}) {
+  if (!heading && !subheading) return null;
+  return (
+    <div className="grid grid-cols-1 gap-3 border-t border-[color:var(--ink)] pt-6 md:grid-cols-2 md:gap-16">
+      {heading ? (
+        <h3 className="font-serif text-2xl text-[color:var(--ink)] md:text-3xl">{heading}</h3>
+      ) : null}
+      {subheading ? (
+        <p className="max-w-md text-[15px] leading-relaxed text-[color:var(--ink-muted)] md:justify-self-end">
+          {subheading}
+        </p>
+      ) : null}
+    </div>
+  );
+}
 
 export function LeadershipSection({
   sectionId,
@@ -77,12 +98,6 @@ export function LeadershipSection({
   const anchor = sectionId?.trim() ? sectionId.trim() : undefined;
   const executives = Array.isArray(executiveTeam) ? executiveTeam : [];
   const advisorItems = Array.isArray(advisors) ? advisors : [];
-  const sectionStyle = React.useMemo(
-    () => ({
-      backgroundColor: "color-mix(in oklab, var(--muted) 30%, transparent)",
-    }),
-    []
-  );
 
   const renderActionButton = (
     cta: CTA,
@@ -134,209 +149,139 @@ export function LeadershipSection({
   };
 
   return (
-    <section id={anchor} className="bg-[#f0e6d2] py-20" style={sectionStyle}>
-      <div className="container mx-auto px-4">
-        <div className="mx-auto flex max-w-6xl flex-col gap-16">
-          <div className="space-y-6 text-center">
+    <section id={anchor} className="bg-[color:var(--paper-deep)] py-20 md:py-28">
+      <div className="wrap">
+        {/* Heading left, intro right. */}
+        {(heading || intro) && (
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 md:gap-16">
             {heading ? (
-              <h2 className="font-serif text-3xl font-bold text-[color:var(--foreground)] md:text-4xl lg:text-5xl">
+              <h2 className="display text-4xl text-[color:var(--ink)] md:text-5xl lg:text-6xl">
                 {heading}
               </h2>
             ) : null}
             {intro ? (
-              <p className="mx-auto max-w-3xl text-lg text-[color:var(--muted-foreground)] md:text-xl">
+              <p className="max-w-md text-lg leading-relaxed text-[color:var(--ink-soft)] md:justify-self-end">
                 {intro}
               </p>
             ) : null}
           </div>
+        )}
 
-          {executives.length > 0 ? (
-            <div className="space-y-8">
-              {(executiveHeading || executiveSubheading) && (
-                <div className="text-center">
-                  {executiveHeading ? (
-                    <h3 className="mb-4 font-serif text-2xl font-bold text-[color:var(--foreground)] md:text-3xl">
-                      {executiveHeading}
-                    </h3>
-                  ) : null}
-                  {executiveSubheading ? (
-                    <p className="text-[color:var(--muted-foreground)]">{executiveSubheading}</p>
-                  ) : null}
-                </div>
-              )}
+        {/* Executive team: framed portraits in a grid. */}
+        {executives.length > 0 ? (
+          <div className="mt-16 md:mt-20">
+            <GroupHeader heading={executiveHeading} subheading={executiveSubheading} />
 
-              <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-                {executives.map((exec, index) => {
-                  const imageUrl = exec.headshot?.asset?._ref
-                    ? urlFor(exec.headshot).width(192).height(192).fit("crop").url()
-                    : placeholderHeadshot;
+            <div className="mt-10 grid grid-cols-1 gap-x-8 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
+              {executives.map((exec, index) => {
+                const imageUrl = exec.headshot?.asset?._ref
+                  ? urlFor(exec.headshot).width(720).height(720).fit("crop").url()
+                  : placeholderHeadshot;
 
-                  const linkedInCta: CTA = exec.linkedin
-                    ? { label: `${exec.name ?? ""} on LinkedIn`, href: exec.linkedin }
-                    : null;
-                  const emailHref = exec.email?.includes("@") ? `mailto:${exec.email}` : exec.email;
-                  const emailCta: CTA = exec.email
-                    ? { label: `Email ${exec.name ?? "team member"}`, href: emailHref }
-                    : null;
+                const linkedInCta: CTA = exec.linkedin
+                  ? { label: `${exec.name ?? ""} on LinkedIn`, href: exec.linkedin }
+                  : null;
+                const emailHref = exec.email?.includes("@") ? `mailto:${exec.email}` : exec.email;
+                const emailCta: CTA = exec.email
+                  ? { label: `Email ${exec.name ?? "team member"}`, href: emailHref }
+                  : null;
 
-                  return (
-                    <article
-                      key={exec._key ?? `${exec.name ?? "executive"}-${index}`}
-                      className="flex flex-col gap-6 rounded-xl border border-[color:var(--border)] bg-[color:var(--card)] py-6 text-center shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
-                    >
-                      <div className="space-y-4 px-6">
-                        <div className="mx-auto h-24 w-24 overflow-hidden rounded-full">
-                          <Image
-                            alt={exec.headshot?.alt || exec.name || "Team member"}
-                            src={imageUrl}
-                            width={96}
-                            height={96}
-                            className="h-full w-full object-cover"
-                          />
-                        </div>
-                        <div className="space-y-2">
-                          {exec.name ? (
-                            <h4 className="font-serif text-xl font-semibold text-[color:var(--foreground)]">
-                              {exec.name}
-                            </h4>
-                          ) : null}
-                          {exec.title ? (
-                            <span className="inline-flex items-center rounded-full border border-[color:var(--border)] px-3 py-1 text-xs font-semibold text-[color:var(--foreground)]">
-                              {exec.title}
-                            </span>
-                          ) : null}
-                          {exec.credential ? (
-                            <p className="text-xs text-[color:var(--muted-foreground)]">
-                              {exec.credential}
-                            </p>
-                          ) : null}
-                        </div>
-                      </div>
-
-                      {exec.bio ? (
-                        <p className="px-6 text-sm text-[color:var(--muted-foreground)] leading-relaxed">
-                          {exec.bio}
-                        </p>
-                      ) : null}
-
-                      {(linkedInCta || emailCta) && (
-                        <div className="flex justify-center gap-3 px-6">
-                          {renderActionButton(
-                            linkedInCta,
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="2"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              className="h-4 w-4"
-                              aria-hidden
-                            >
-                              <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6Z" />
-                              <rect width="4" height="12" x="2" y="9" />
-                              <circle cx="4" cy="4" r="2" />
-                            </svg>,
-                            "icon",
-                            linkedInCta?.label ?? undefined
-                          )}
-                          {renderActionButton(
-                            emailCta,
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="2"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              className="h-4 w-4"
-                              aria-hidden
-                            >
-                              <rect width="20" height="16" x="2" y="4" rx="2" />
-                              <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
-                            </svg>,
-                            "icon",
-                            emailCta?.label ?? undefined
-                          )}
-                        </div>
-                      )}
-                    </article>
-                  );
-                })}
-              </div>
-            </div>
-          ) : null}
-
-          {advisorItems.length > 0 ? (
-            <div className="space-y-8">
-              {(advisoryHeading || advisorySubheading) && (
-                <div className="text-center">
-                  {advisoryHeading ? (
-                    <h3 className="mb-4 font-serif text-2xl font-bold text-[color:var(--foreground)] md:text-3xl">
-                      {advisoryHeading}
-                    </h3>
-                  ) : null}
-                  {advisorySubheading ? (
-                    <p className="text-[color:var(--muted-foreground)]">{advisorySubheading}</p>
-                  ) : null}
-                </div>
-              )}
-
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                {advisorItems.map((advisor, index) => (
-                  <article
-                    key={advisor._key ?? `${advisor.name ?? "advisor"}-${index}`}
-                    className="rounded-xl border border-[color:var(--border)] bg-[color:var(--card)] py-6 shadow-sm transition-shadow duration-300 hover:shadow-lg"
-                  >
-                    <div className="space-y-3 px-6">
-                      <div className="flex items-start justify-between gap-4">
-                        <div className="space-y-1">
-                          {advisor.name ? (
-                            <h4 className="font-serif text-lg font-semibold text-[color:var(--foreground)]">
-                              {advisor.name}
-                            </h4>
-                          ) : null}
-                          {advisor.role ? (
-                            <p className="text-sm font-medium text-[color:var(--muted-foreground)]">
-                              {advisor.role}
-                            </p>
-                          ) : null}
-                        </div>
-                        {advisor.expertise ? (
-                          <span className="inline-flex items-center rounded-full border border-[color:var(--border)] px-3 py-1 text-xs font-semibold text-[color:var(--foreground)]">
-                            {advisor.expertise}
-                          </span>
-                        ) : null}
-                      </div>
-
-                      {advisor.bio ? (
-                        <p className="text-sm text-[color:var(--muted-foreground)] leading-relaxed">
-                          {advisor.bio}
-                        </p>
-                      ) : null}
+                return (
+                  <article key={exec._key ?? `${exec.name ?? "executive"}-${index}`}>
+                    <div className="aspect-square border border-[color:var(--ink)]">
+                      <Image
+                        alt={exec.headshot?.alt || exec.name || "Team member"}
+                        src={imageUrl}
+                        width={720}
+                        height={720}
+                        className="block h-full w-full object-cover"
+                      />
                     </div>
-                  </article>
-                ))}
-              </div>
-            </div>
-          ) : null}
 
-          {ctaCard ? (
-            <article className="rounded-xl border-2 border-dashed border-[color:var(--border)] bg-[color:var(--background)] py-8 shadow-sm">
-              <div className="mx-auto flex max-w-4xl flex-col items-center gap-6 px-8 text-center">
-                {ctaCard.heading ? (
-                  <h3 className="font-serif text-2xl font-bold text-[color:var(--foreground)] md:text-3xl">
-                    {ctaCard.heading}
-                  </h3>
-                ) : null}
-                {ctaCard.body ? (
-                  <p className="text-lg text-[color:var(--muted-foreground)] leading-relaxed">
-                    {ctaCard.body}
-                  </p>
-                ) : null}
-                <div className="flex flex-col gap-4 sm:flex-row">
+                    {exec.name ? (
+                      <h4 className="mt-5 font-serif text-xl text-[color:var(--ink)]">{exec.name}</h4>
+                    ) : null}
+                    {exec.title ? <p className="eyebrow mt-2">{exec.title}</p> : null}
+                    {exec.credential ? (
+                      <p className="mt-2 text-sm text-[color:var(--ink-muted)]">{exec.credential}</p>
+                    ) : null}
+
+                    {exec.bio ? (
+                      <p className="mt-4 text-[15px] leading-relaxed text-[color:var(--ink-soft)]">
+                        {exec.bio}
+                      </p>
+                    ) : null}
+
+                    {(linkedInCta || emailCta) && (
+                      <div className="mt-5 flex flex-wrap gap-x-6 gap-y-2">
+                        {renderActionButton(
+                          linkedInCta,
+                          <span>LinkedIn</span>,
+                          "link",
+                          linkedInCta?.label ?? undefined
+                        )}
+                        {renderActionButton(
+                          emailCta,
+                          <span>Email</span>,
+                          "link",
+                          emailCta?.label ?? undefined
+                        )}
+                      </div>
+                    )}
+                  </article>
+                );
+              })}
+            </div>
+          </div>
+        ) : null}
+
+        {/* Advisors: a list of rows divided by hairlines. */}
+        {advisorItems.length > 0 ? (
+          <div className="mt-16 md:mt-20">
+            <GroupHeader heading={advisoryHeading} subheading={advisorySubheading} />
+
+            <ul className="mt-10 list-none border-t border-[color:var(--hairline)] p-0">
+              {advisorItems.map((advisor, index) => (
+                <li
+                  key={advisor._key ?? `${advisor.name ?? "advisor"}-${index}`}
+                  className="grid grid-cols-1 gap-3 border-b border-[color:var(--hairline)] py-6 md:grid-cols-12 md:gap-8"
+                >
+                  <div className="md:col-span-4">
+                    {advisor.name ? (
+                      <h4 className="font-serif text-xl text-[color:var(--ink)]">{advisor.name}</h4>
+                    ) : null}
+                    {advisor.role ? <p className="eyebrow mt-2">{advisor.role}</p> : null}
+                  </div>
+                  {advisor.expertise ? (
+                    <p className="text-sm text-[color:var(--ink-muted)] md:col-span-3">
+                      {advisor.expertise}
+                    </p>
+                  ) : null}
+                  {advisor.bio ? (
+                    <p className="text-[15px] leading-relaxed text-[color:var(--ink-soft)] md:col-span-5 md:col-start-8">
+                      {advisor.bio}
+                    </p>
+                  ) : null}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : null}
+
+        {/* Closing call to action under a rule, left-aligned. */}
+        {ctaCard ? (
+          <div className="mt-16 grid grid-cols-1 gap-8 border-t border-[color:var(--ink)] pt-10 md:mt-20 md:grid-cols-2 md:gap-16 md:pt-12">
+            {ctaCard.heading ? (
+              <h3 className="font-serif text-2xl text-[color:var(--ink)] md:text-3xl">
+                {ctaCard.heading}
+              </h3>
+            ) : null}
+            <div className="max-w-md md:justify-self-end">
+              {ctaCard.body ? (
+                <p className="text-lg leading-relaxed text-[color:var(--ink-soft)]">{ctaCard.body}</p>
+              ) : null}
+              {(ctaCard.primaryCta?.label || ctaCard.secondaryCta?.label) && (
+                <div className="mt-8 flex flex-col gap-4 sm:flex-row">
                   {ctaCard.primaryCta?.label
                     ? renderActionButton(
                         ctaCard.primaryCta,
@@ -352,10 +297,10 @@ export function LeadershipSection({
                       )
                     : null}
                 </div>
-              </div>
-            </article>
-          ) : null}
-        </div>
+              )}
+            </div>
+          </div>
+        ) : null}
       </div>
     </section>
   );

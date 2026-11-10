@@ -19,7 +19,7 @@ export default async function Page({
   }
 
   return (
-    <main className="container mx-auto grid grid-cols-1 gap-6 p-12">
+    <main className="wrap py-20 md:py-28">
       <BlogPost {...post} />
     </main>
   );

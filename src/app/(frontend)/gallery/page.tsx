@@ -69,44 +69,49 @@ export default async function GalleryPage() {
     Boolean(album)
   );
 
-  const heroBackground =
+  const heroImage =
     hero?.heroBackgroundImage?.asset?._ref &&
-    urlFor(hero.heroBackgroundImage).width(2400).height(1200).quality(75).url();
+    urlFor(hero.heroBackgroundImage).width(2400).height(1000).fit("crop").quality(75).url();
 
   return (
-    <section className="bg-[var(--background)] pb-16 sm:pb-24">
-      <div className="mx-auto flex max-w-6xl flex-col gap-12 px-4 sm:px-6 lg:px-8">
-        <header className="relative overflow-hidden rounded-3xl border border-[var(--border)] bg-gradient-to-br from-[var(--foreground)]/90 via-[var(--primary)]/70 to-[var(--accent)]/70 px-6 py-16 text-center text-white shadow-xl sm:px-10 sm:py-20">
-          {heroBackground && (
-            <Image
-              src={heroBackground}
-              alt={hero?.heroBackgroundImage?.alt ?? "Gallery hero background"}
-              fill
-              priority
-              sizes="100vw"
-              className="absolute inset-0 h-full w-full object-cover opacity-40"
-            />
-          )}
-          <div className="relative mx-auto max-w-3xl space-y-4">
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-white/80">
+    <section className="bg-[color:var(--paper)] py-20 md:py-28">
+      <div className="wrap">
+        <header className="grid gap-6 md:grid-cols-2 md:items-end">
+          <div>
+            <p className="eyebrow eyebrow-rule">
               {hero?.heroEyebrow ?? "Community moments"}
             </p>
-            <h1 className="font-noto-serif-sc text-3xl font-semibold sm:text-4xl">
+            <h1 className="display mt-5 text-4xl text-[color:var(--ink)] md:text-5xl lg:text-6xl">
               {hero?.heroTitle ?? "Gallery"}
             </h1>
-            <p className="text-base text-white/90 sm:text-lg">
-              {hero?.heroDescription ??
-                "Moments from our workshops, celebrations, and community gatherings."}
-            </p>
           </div>
+          <p className="max-w-md text-lg leading-relaxed text-[color:var(--ink-soft)] md:justify-self-end">
+            {hero?.heroDescription ??
+              "Moments from our workshops, celebrations, and community gatherings."}
+          </p>
         </header>
 
+        {heroImage ? (
+          <figure className="mt-12">
+            <div className="relative aspect-[21/9] overflow-hidden border border-[color:var(--ink)] bg-[color:var(--paper-slot)]">
+              <Image
+                src={heroImage}
+                alt={hero?.heroBackgroundImage?.alt ?? ""}
+                fill
+                priority
+                sizes="(min-width: 1360px) 1280px, 100vw"
+                className="object-cover"
+              />
+            </div>
+          </figure>
+        ) : null}
+
         {albums.length === 0 ? (
-          <div className="rounded-2xl border border-dashed border-[var(--border)] bg-white/40 p-8 text-center text-sm text-[var(--muted-foreground)]">
-            Photos are coming soon. Check back shortly!
-          </div>
+          <p className="mt-12 border-t border-[color:var(--ink)] pt-6 text-[color:var(--ink-muted)]">
+            Photos are coming soon. Check back shortly.
+          </p>
         ) : (
-          <div className="grid gap-12 lg:gap-16">
+          <div className="mt-16 border-t border-[color:var(--ink)]">
             {albums.map((album) => {
               const title = clean(album.title) || "Untitled album";
               const description = clean(album.description);
@@ -129,66 +134,70 @@ export default async function GalleryPage() {
                 `${title} cover photo`;
 
               // Albums that live on an external service (iCloud, Google Photos…)
-              // get the featured link card; uploaded-photo albums get the grid.
+              // get the featured link; uploaded-photo albums get the grid.
               if (externalUrl) {
                 return (
-                  <FeaturedAlbumCard
+                  <div
                     key={album._id}
-                    title={title}
-                    description={description || null}
-                    date={date}
-                    href={externalUrl.toString()}
-                    hostLabel={externalUrl.hostname.replace(/^www\./, "")}
-                    coverSrc={coverSrc || null}
-                    coverAlt={coverAlt}
-                    previews={photos.slice(0, 4).map((photo) => ({
-                      key: photo.key,
-                      src: photo.thumbSrc,
-                      alt: photo.alt,
-                    }))}
-                    photoCount={photos.length || undefined}
-                  />
+                    className="border-b border-[color:var(--hairline)] py-12 md:py-16"
+                  >
+                    <FeaturedAlbumCard
+                      title={title}
+                      description={description || null}
+                      date={date}
+                      href={externalUrl.toString()}
+                      hostLabel={externalUrl.hostname.replace(/^www\./, "")}
+                      coverSrc={coverSrc || null}
+                      coverAlt={coverAlt}
+                      previews={photos.slice(0, 4).map((photo) => ({
+                        key: photo.key,
+                        src: photo.thumbSrc,
+                        alt: photo.alt,
+                      }))}
+                      photoCount={photos.length || undefined}
+                    />
+                  </div>
                 );
               }
 
               return (
                 <article
                   key={album._id}
-                  className="overflow-hidden rounded-3xl border border-[var(--border)] bg-white/90 shadow-sm ring-1 ring-black/5"
+                  className="border-b border-[color:var(--hairline)] py-12 md:py-16"
                 >
-                  {coverSrc && (
-                    <div className="relative h-56 w-full bg-black sm:h-72">
-                      <Image
-                        src={coverSrc}
-                        alt={coverAlt}
-                        fill
-                        sizes="(min-width: 1024px) 1100px, 100vw"
-                        className="object-cover"
-                      />
-                    </div>
-                  )}
-
-                  <div className="space-y-6 px-6 py-6 sm:px-8 sm:py-8">
-                    <div className="space-y-2">
-                      {date ? (
-                        <p className="text-xs font-semibold uppercase tracking-wide text-[var(--muted-foreground)]">
-                          {date}
-                        </p>
-                      ) : null}
-                      <h2 className="font-noto-serif-sc text-2xl font-semibold text-[var(--foreground)]">
+                  <div className="grid gap-6 md:grid-cols-2 md:items-end">
+                    <div>
+                      {date ? <p className="eyebrow">{date}</p> : null}
+                      <h2 className="mt-3 font-serif text-2xl leading-tight text-[color:var(--ink)] md:text-3xl">
                         {title}
                       </h2>
-                      {description ? (
-                        <p className="max-w-3xl text-base text-[var(--muted-foreground)]">
-                          {description}
-                        </p>
-                      ) : null}
                     </div>
+                    {description ? (
+                      <p className="max-w-md text-base leading-relaxed text-[color:var(--ink-soft)] md:justify-self-end">
+                        {description}
+                      </p>
+                    ) : null}
+                  </div>
 
+                  {coverSrc ? (
+                    <figure className="mt-8">
+                      <div className="relative aspect-[16/7] overflow-hidden border border-[color:var(--ink)] bg-[color:var(--paper-slot)]">
+                        <Image
+                          src={coverSrc}
+                          alt={coverAlt}
+                          fill
+                          sizes="(min-width: 1360px) 1280px, 100vw"
+                          className="object-cover"
+                        />
+                      </div>
+                    </figure>
+                  ) : null}
+
+                  <div className="mt-8">
                     {photos.length > 0 ? (
                       <PhotoGrid albumTitle={title} photos={photos} />
                     ) : (
-                      <p className="text-sm text-[var(--muted-foreground)]">
+                      <p className="text-sm text-[color:var(--ink-muted)]">
                         Photos for this album are on their way.
                       </p>
                     )}
