@@ -25,6 +25,7 @@ export const pageBuilderType = defineType({
     defineArrayMember({ type: "volunteerTracks" }),
     defineArrayMember({ type: "volunteerBenefits" }),
     defineArrayMember({ type: "volunteerApplication" }),
+    defineArrayMember({ type: "closingCta" }),
   ],
   options: {
     insertMenu: {

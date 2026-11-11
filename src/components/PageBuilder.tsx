@@ -21,6 +21,7 @@ import { BrandPromos } from "./blocks/BrandPromos";
 import { VolunteerTracks } from "./blocks/VolunteerTracks";
 import { VolunteerBenefits } from "./blocks/VolunteerBenefits";
 import { VolunteerApplication } from "./blocks/VolunteerApplication";
+import { ClosingCta } from "./blocks/ClosingCta";
 import type { PAGE_QUERY_RESULT } from "@/sanity/types";
 import { client } from "@/sanity/lib/client";
 import { createDataAttribute } from "next-sanity";
@@ -236,6 +237,12 @@ export function PageBuilder({
             return (
               <DragHandle key={block._key}>
                 <VolunteerApplication {...block} />
+              </DragHandle>
+            );
+          case "closingCta":
+            return (
+              <DragHandle key={block._key}>
+                <ClosingCta {...block} />
               </DragHandle>
             );
           default:

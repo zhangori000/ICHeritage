@@ -1,106 +1,305 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
-/* Map Tailwind's font utilities to the fonts loaded in src/app/layout.tsx.
-   Without this, `font-sans` was Tailwind's default system stack and the
-   preloaded Inter / Noto Serif SC files were downloaded but never used. */
+/* ---------------------------------------------------------------------------
+   Fonts. Map Tailwind's font utilities to the fonts loaded in
+   src/app/layout.tsx so `font-sans` / `font-serif` resolve to them.
+--------------------------------------------------------------------------- */
 @theme inline {
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system,
     "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-serif: var(--font-fraunces), "Iowan Old Style", Georgia, Cambria,
+    "Times New Roman", serif;
 }
 
-/* Brand serif (header wordmark, gallery headings, article titles). */
-.font-noto-serif-sc {
-  font-family: var(--font-noto-serif-sc), ui-serif, Georgia, Cambria,
-    "Times New Roman", Times, serif;
-}
-/* Your theme tokens */
-:root {
-  /* brand palette from your notes */
-  --background: #fbf2da;
-  --foreground: #3a3a3a;
-  --card: #fefcf7;
-  --card-foreground: #3a3a3a;
-  --popover: #fefcf7;
-  --popover-foreground: #3a3a3a;
-
-  /* main brand colors */
-  --primary: #a73438; /* red */
-  --primary-foreground: #ffffff;
-
-  --secondary: #5a6b4f; /* green */
-  --secondary-foreground: #ffffff;
-
-  --accent: #5a6b4f; /* using same green for accent */
-  --accent-foreground: #ffffff;
-
-  --muted: #f0e6d2;
-  --muted-foreground: #6b6b6b;
-
-  --border: #e8dcc6;
-  --input: #fefcf7;
-  --ring: #a734384d;
-
-  /* optional chart aliases */
-  --chart-1: #a73438;
-  --chart-2: #5a6b4f;
-  --chart-3: #3a3a3a;
-  --chart-4: #fbf2da;
-  --chart-5: #fefcf7;
-
-  --radius: 0.5rem;
-}
-
-/* convenience utilities (optional): make “bg-background/85” work if you use it literally */
-.bg-background\/85 {
-  background-color: color-mix(in oklab, var(--background) 85%, transparent);
-}
-
-/* if you want font-serif to match the goal site’s look */
-.font-serif {
-  font-family: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
-}
-
-textarea.rsvp-notes {
-  scrollbar-width: thin;
-  scrollbar-color: var(--border) transparent;
-}
-
-textarea.rsvp-notes::-webkit-scrollbar {
-  width: 6px;
-}
-
-textarea.rsvp-notes::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-textarea.rsvp-notes::-webkit-scrollbar-thumb {
-  background-color: var(--border);
-  border-radius: 9999px;
-}
-
-.focus-soft:focus-visible {
-  outline: none;
-  box-shadow: inset 0 0 0 2px rgba(167, 52, 56, 0.25);
+/* Chinese serif for characters used as typographic elements. */
+.font-noto-serif-sc,
+.font-sc {
+  font-family: var(--font-noto-serif-sc), "Songti SC", "PingFang SC",
+    "Noto Serif CJK SC", serif;
 }
 
 /* ---------------------------------------------------------------------------
-   Hero entrance: headline block, then buttons, rise gently into place.
+   Design tokens: paper, ink, and one seal of red.
+
+   The page is paper and ink. Seal red is used once per view, where the eye
+   should land. Pine green is reserved for success states and the volunteer
+   track. The old shadcn-style names (--background, --primary, …) are kept so
+   every component that already reads them picks up the new palette.
+--------------------------------------------------------------------------- */
+:root {
+  /* palette */
+  --paper: #f7f2e8;
+  --paper-deep: #f1eadc;
+  --paper-slot: #e9e1d3;
+  --hairline: #d9cfbf;
+  --hairline-strong: #1f1b17;
+  --ink: #1f1b17;
+  --ink-soft: #3a342e;
+  --ink-muted: #5f574d;
+  --ink-faint: #b8ac9a;
+  --seal: #a73438;
+  --seal-deep: #8c2a2e;
+  --pine: #5a6b4f;
+  --band: #2a2420; /* the one dark section per page */
+  --band-rule: #4a413a;
+  --band-text: #f7f2e8;
+  --band-muted: #c9bead;
+
+  /* legacy aliases used across components */
+  --background: var(--paper);
+  --foreground: var(--ink);
+  --card: var(--paper);
+  --card-foreground: var(--ink);
+  --popover: var(--paper);
+  --popover-foreground: var(--ink);
+
+  --primary: var(--seal);
+  --primary-foreground: #fbf6ec;
+
+  --secondary: var(--pine);
+  --secondary-foreground: #ffffff;
+
+  --accent: var(--paper-deep);
+  --accent-foreground: var(--ink);
+
+  --muted: var(--paper-deep);
+  --muted-foreground: var(--ink-muted);
+
+  --border: var(--hairline);
+  --input: #ffffff;
+  --ring: #a734384d;
+
+  --chart-1: var(--seal);
+  --chart-2: var(--pine);
+  --chart-3: var(--ink);
+  --chart-4: var(--paper);
+  --chart-5: var(--paper-deep);
+
+  /* Square corners: 1px rules instead of shadows, lists instead of cards. */
+  --radius: 0px;
+}
+
+html {
+  background: var(--paper);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---------------------------------------------------------------------------
+   Shared building blocks. Kept in @layer components so Tailwind utilities on
+   the same element still win.
+--------------------------------------------------------------------------- */
+@layer components {
+  /* Page column: 1280px plus side padding. */
+  .wrap {
+    width: 100%;
+    max-width: 1360px;
+    margin-inline: auto;
+    padding-inline: 1.25rem;
+  }
+  @media (min-width: 640px) {
+    .wrap {
+      padding-inline: 2rem;
+    }
+  }
+  @media (min-width: 1024px) {
+    .wrap {
+      padding-inline: 2.5rem;
+    }
+  }
+
+  /* Display type: Fraunces at its largest optical size, tight tracking. */
+  .display {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    font-variation-settings: "opsz" 144;
+    letter-spacing: -0.025em;
+    line-height: 1;
+    text-wrap: balance;
+  }
+  .display-em {
+    font-style: italic;
+    font-weight: 300;
+    color: var(--seal);
+  }
+
+  /* Small caps label above a heading. */
+  .eyebrow {
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+  }
+  .eyebrow-rule {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .eyebrow-rule::before {
+    content: "";
+    display: inline-block;
+    width: 1.75rem;
+    height: 1px;
+    background: var(--seal);
+  }
+
+  /* Buttons: square, one-pixel border, 44px+ tall. */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.625rem;
+    min-height: 3rem;
+    padding-inline: 1.625rem;
+    font-family: var(--font-sans);
+    font-size: 0.9375rem;
+    font-weight: 500;
+    line-height: 1;
+    text-decoration: none;
+    white-space: nowrap;
+    border: 1px solid var(--ink);
+    color: var(--ink);
+    background: transparent;
+    transition:
+      background-color 0.2s,
+      color 0.2s,
+      border-color 0.2s;
+  }
+  .btn:hover {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .btn:focus-visible {
+    outline: 2px solid var(--seal);
+    outline-offset: 2px;
+  }
+  .btn-primary {
+    background: var(--seal);
+    border-color: var(--seal);
+    color: var(--primary-foreground);
+  }
+  .btn-primary:hover {
+    background: var(--seal-deep);
+    border-color: var(--seal-deep);
+    color: var(--primary-foreground);
+  }
+  .btn-light {
+    border-color: var(--band-text);
+    color: var(--band-text);
+  }
+  .btn-light:hover {
+    background: var(--band-text);
+    color: var(--ink);
+  }
+  .btn-sm {
+    min-height: 2.75rem;
+    padding-inline: 1.375rem;
+  }
+  .btn[aria-disabled="true"] {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  /* Underlined text link. */
+  .textlink {
+    font-family: var(--font-sans);
+    font-size: 0.9375rem;
+    font-weight: 500;
+    line-height: 1.2;
+    text-decoration: none;
+    color: var(--ink);
+    border-bottom: 1px solid var(--ink);
+    padding-bottom: 3px;
+    transition:
+      color 0.2s,
+      border-color 0.2s;
+  }
+  .textlink:hover {
+    color: var(--seal);
+    border-color: var(--seal);
+  }
+
+  /* Photo placeholder when no image is set in Studio. */
+  .photo-slot {
+    position: relative;
+    background: var(--paper-slot);
+    border: 1px solid var(--hairline);
+  }
+
+  /* List row that reacts as one unit. */
+  .row-hover {
+    transition: background-color 0.25s;
+  }
+  .row-hover:hover {
+    background: rgba(31, 27, 23, 0.035);
+  }
+
+  /* Dark band: one per page, warm ink rather than brand red. */
+  .band {
+    background: var(--band);
+    color: var(--band-text);
+  }
+  /* Text links only: buttons keep their own hover colours. */
+  .band a:not(.btn) {
+    color: var(--band-text);
+  }
+  .band a:not(.btn):hover {
+    color: #e8b4b6;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Entrance motion. One orchestrated reveal on the hero; nothing elsewhere.
    Off for visitors who ask their device for reduced motion.
 --------------------------------------------------------------------------- */
-@keyframes hero-rise {
+@keyframes rise {
   from {
     opacity: 0;
-    transform: translateY(14px);
+    transform: translateY(22px);
   }
   to {
     opacity: 1;
     transform: none;
   }
 }
+@keyframes unveil {
+  from {
+    clip-path: inset(0 0 100% 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
 
+.rise > * {
+  animation: rise 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+.rise > *:nth-child(1) {
+  animation-delay: 0.05s;
+}
+.rise > *:nth-child(2) {
+  animation-delay: 0.18s;
+}
+.rise > *:nth-child(3) {
+  animation-delay: 0.31s;
+}
+.rise > *:nth-child(4) {
+  animation-delay: 0.44s;
+}
+.rise > *:nth-child(5) {
+  animation-delay: 0.57s;
+}
+.unveil {
+  animation: unveil 1.2s cubic-bezier(0.7, 0, 0.2, 1) 0.2s both;
+}
+
+/* Older hero class, kept for any block still using it. */
 .hero-rise > * {
-  animation: hero-rise 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation: rise 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
 .hero-rise > *:nth-child(2) {
   animation-delay: 0.12s;
@@ -110,9 +309,38 @@ textarea.rsvp-notes::-webkit-scrollbar-thumb {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .rise > *,
+  .unveil,
   .hero-rise > * {
     animation: none;
   }
+}
+
+/* ---------------------------------------------------------------------------
+   Misc
+--------------------------------------------------------------------------- */
+.bg-background\/85 {
+  background-color: color-mix(in oklab, var(--background) 85%, transparent);
+}
+
+textarea.rsvp-notes {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+textarea.rsvp-notes::-webkit-scrollbar {
+  width: 6px;
+}
+textarea.rsvp-notes::-webkit-scrollbar-track {
+  background: transparent;
+}
+textarea.rsvp-notes::-webkit-scrollbar-thumb {
+  background-color: var(--border);
+  border-radius: 9999px;
+}
+
+.focus-soft:focus-visible {
+  outline: none;
+  box-shadow: inset 0 0 0 2px rgba(167, 52, 56, 0.25);
 }
 
 /* ---------------------------------------------------------------------------
@@ -137,9 +365,8 @@ textarea.rsvp-notes::-webkit-scrollbar-thumb {
   position: fixed;
   inset: 0 0 auto 0;
   z-index: 110; /* above the sticky header (z-100) */
-  height: 3px;
-  background: var(--primary);
-  box-shadow: 0 0 8px color-mix(in oklab, var(--primary) 60%, transparent);
+  height: 2px;
+  background: var(--seal);
   transform-origin: left;
   opacity: 0;
   animation:

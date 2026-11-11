@@ -6,192 +6,123 @@ import { BlurUpImage } from "@/components/BlurUpImage";
 import { urlFor } from "@/sanity/lib/image";
 import type { PAGE_QUERY_RESULT } from "@/sanity/types";
 
-/** Color from @sanity/color-input (loose shape) */
-type ColorLike =
-  | {
-      _type?: "color";
-      hex?: string;
-      alpha?: number | null;
-      rgb?: { r?: number; g?: number; b?: number; a?: number | null };
-      hsl?: { h?: number; s?: number; l?: number; a?: number | null };
-    }
-  | null
-  | undefined;
-
-/** Safely convert Sanity color object to a CSS color string */
-function toCssColor(c: ColorLike, fallback = "var(--foreground)"): string {
-  if (!c) return fallback;
-  if (c.hex) return c.hex;
-  if (
-    c.rgb &&
-    typeof c.rgb.r === "number" &&
-    typeof c.rgb.g === "number" &&
-    typeof c.rgb.b === "number"
-  ) {
-    const a = typeof c.rgb.a === "number" ? c.rgb.a : 1;
-    return `rgba(${c.rgb.r}, ${c.rgb.g}, ${c.rgb.b}, ${a})`;
-  }
-  if (
-    c.hsl &&
-    typeof c.hsl.h === "number" &&
-    typeof c.hsl.s === "number" &&
-    typeof c.hsl.l === "number"
-  ) {
-    const a = typeof c.hsl.a === "number" ? c.hsl.a : 1;
-    return `hsla(${c.hsl.h}, ${c.hsl.s}%, ${c.hsl.l}%, ${a})`;
-  }
-  return fallback;
-}
-
-/** Narrow the block type to your heroBanner block from PAGE_QUERY_RESULT */
+/** Narrow the block type to the heroBanner block from PAGE_QUERY_RESULT */
 type HeroBannerBlock = Extract<
   NonNullable<NonNullable<PAGE_QUERY_RESULT>["content"]>[number],
   { _type: "heroBanner" }
 >;
 
+/**
+ * Split "Keep it Alive, Help it Thrive" into ["Keep it Alive, Help it", "Thrive"]
+ * so the last word can be set in light italic red. Short titles stay whole.
+ */
+function splitLastWord(title: string): [string, string | null] {
+  const trimmed = title.trim();
+  const words = trimmed.split(/\s+/);
+  if (words.length < 3) return [trimmed, null];
+  const last = words.pop() as string;
+  return [words.join(" "), last];
+}
+
+/**
+ * Editorial hero: copy on paper to the left, the photo to the right running
+ * off the edge of the page. The text no longer sits on top of the image, so
+ * the overlay and per-field colour pickers from the Studio are not needed
+ * here; they are kept in the schema for the older layout.
+ */
 export function HeroBanner({
   background,
-  overlayOpacity, // 0..100 (schema default 0)
   title,
-  titleColor,
   kicker,
-  kickerColor,
   body,
-  bodyColor,
   primaryCta,
   secondaryCta,
   backgroundLqip,
 }: HeroBannerBlock) {
-  // --- IMAGE-ONLY OVERLAY (never dims the text) -----------------------------
-  const overlay = Math.max(0, Math.min(100, overlayOpacity ?? 0)) / 100;
+  const [titleHead, titleTail] = title ? splitLastWord(title) : ["", null];
 
-  // Resolve text colors (fallbacks use your CSS variables)
-  const titleCss = toCssColor(titleColor, "var(--foreground)");
-  const kickerCss = toCssColor(kickerColor, "var(--primary)");
-  const bodyCss = toCssColor(bodyColor, "var(--muted-foreground)");
-
-  // Text shadow for readability on busy photos
-  const textShadow = "[text-shadow:0_2px_12px_rgba(0,0,0,0.45)]";
-
-  // --- CTA buttons: same size; left red, right green ------------------------
-  const baseCta =
-    "inline-flex items-center justify-center whitespace-nowrap transition-all " +
-    "disabled:pointer-events-none disabled:opacity-50 " +
-    "[&>svg]:pointer-events-none [&>svg:not([class*='size-'])]:size-5 " +
-    "shrink-0 outline-none focus-visible:ring-ring/50 focus-visible:ring-[3px] " +
-    "h-11 rounded-md px-8 text-base font-medium";
-
-  const ctaSolidRed =
-    baseCta +
-    " bg-[var(--primary)] text-[var(--primary-foreground)] shadow-xs " +
-    "hover:bg-[color-mix(in_oklab,var(--primary)_90%,black)]";
-
-  const ctaSolidGreen =
-    baseCta +
-    " bg-[var(--secondary)] text-[var(--secondary-foreground)] shadow-xs " +
-    "hover:bg-[color-mix(in_oklab,var(--secondary)_90%,black)]";
+  // A short kicker is set as a small-caps label above the title; a full
+  // sentence would not read at that size, so it joins the body copy instead.
+  const kickerText = kicker?.trim() ?? "";
+  const kickerIsLabel = kickerText.length > 0 && kickerText.length <= 64;
+  const paragraphs = [
+    kickerIsLabel ? null : kickerText || null,
+    body?.trim() || null,
+  ].filter((text): text is string => Boolean(text));
 
   return (
-    <section
-      className={[
-        "relative py-20 lg:py-32 overflow-hidden",
-        // Dark backdrop under photo heroes so light headline text is never
-        // shown on an empty cream band, even before any image data arrives.
-        background ? "bg-stone-900" : "",
-      ].join(" ")}
-    >
-      {/* BACKGROUND LAYERS */}
-      <div className="absolute inset-0" aria-hidden>
-        {/* z-0: blurred preview, then the photo fading in over it */}
-        {background ? (
-          <BlurUpImage
-            alt=""
-            priority
-            sizes="100vw"
-            lqip={backgroundLqip}
-            hotspot={background.hotspot}
-            className="object-cover z-0"
-            src={urlFor(background).width(2400).height(1200).url()}
-          />
-        ) : null}
+    <section className="relative overflow-x-clip border-b border-[color:var(--ink)]">
+      <div className="wrap lg:pr-0">
+        <div className="grid grid-cols-1 items-end gap-12 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] lg:gap-14">
+          {/* ------------------ Copy ------------------ */}
+          <div className="rise flex flex-col gap-8 pb-4 pt-14 lg:gap-9 lg:py-24 lg:pr-10">
+            {kickerIsLabel ? (
+              <p className="eyebrow eyebrow-rule m-0">{kickerText}</p>
+            ) : null}
 
-        {/* z-10: dark scrim BETWEEN image and content; dims only the image so
-            light text stays legible on busy photos */}
-        <div
-          className="absolute inset-0 z-10 pointer-events-none bg-black"
-          style={{ opacity: overlay }}
-        />
-      </div>
-
-      {/* CONTENT (z-20) */}
-      <div className="container mx-auto px-4 relative z-20">
-        <div className="max-w-4xl mx-auto text-center space-y-8 hero-rise">
-          <div className="space-y-6">
-            {/* Larger mobile title so it reads like the reference site */}
             {title ? (
-              <h1
-                className={[
-                  "font-serif text-5xl md:text-6xl lg:text-7xl font-medium leading-tight text-balance",
-                  textShadow,
-                ].join(" ")}
-                style={{ color: titleCss }}
-              >
-                {title}
+              <h1 className="display m-0 text-[clamp(2.75rem,8vw,5rem)] leading-[0.94] lg:text-[clamp(3.5rem,6.6vw,7rem)]">
+                {titleHead}
+                {titleTail ? (
+                  <>
+                    {" "}
+                    <em className="display-em">{titleTail}</em>
+                  </>
+                ) : null}
               </h1>
             ) : null}
 
-            {kicker ? (
+            {paragraphs.map((text, index) => (
               <p
-                className={[
-                  "font-serif text-xl md:text-2xl font-medium text-balance",
-                  textShadow,
-                ].join(" ")}
-                style={{ color: kickerCss }}
+                key={index}
+                className="m-0 max-w-[32rem] text-lg leading-relaxed text-[color:var(--ink-soft)] text-pretty md:text-xl"
               >
-                {kicker}
+                {text}
               </p>
-            ) : null}
+            ))}
 
-            {body ? (
-              <p
-                className={[
-                  "text-lg md:text-xl leading-relaxed text-pretty mx-auto",
-                  textShadow,
-                ].join(" ")}
-                style={{ color: bodyCss, maxWidth: "48rem" }} // ~max-w-3xl
-              >
-                {body}
-              </p>
+            {(primaryCta?.href && primaryCta?.label) ||
+            (secondaryCta?.href && secondaryCta?.label) ? (
+              <div className="flex flex-wrap items-center gap-x-7 gap-y-4">
+                {primaryCta?.href && primaryCta?.label ? (
+                  <Link href={primaryCta.href} className="btn btn-primary">
+                    {primaryCta.label}
+                  </Link>
+                ) : null}
+                {secondaryCta?.href && secondaryCta?.label ? (
+                  <Link href={secondaryCta.href} className="textlink">
+                    {secondaryCta.label}
+                  </Link>
+                ) : null}
+              </div>
             ) : null}
           </div>
 
-          {/* CTAs — left red, right green; identical sizing */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-4">
-            {primaryCta?.href && primaryCta?.label ? (
-              <Link href={primaryCta.href} className={ctaSolidRed}>
-                {primaryCta.label}
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="lucide lucide-arrow-right h-5 w-5"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M5 12h14" />
-                  <path d="m12 5 7 7-7 7" />
-                </svg>
-              </Link>
-            ) : null}
-
-            {secondaryCta?.href && secondaryCta?.label ? (
-              <Link href={secondaryCta.href} className={ctaSolidGreen}>
-                {secondaryCta.label}
-              </Link>
-            ) : null}
-          </div>
+          {/* ------------------ Photo ------------------ */}
+          {background ? (
+            <div className="grid grid-cols-[3rem_minmax(0,1fr)] items-stretch gap-2 pb-12 lg:grid-cols-[3.5rem_minmax(0,1fr)] lg:pb-0 lg:[margin-right:calc((100vw-min(100vw,1360px))/-2)]">
+              {/* 薪火相传: "pass the torch from generation to generation" */}
+              <span
+                aria-hidden="true"
+                className="font-sc justify-self-center pt-2 text-[2rem] leading-none tracking-[0.26em] text-[color:var(--ink)] [writing-mode:vertical-rl] lg:text-[2.5rem]"
+              >
+                薪火相传
+              </span>
+              <figure className="unveil relative m-0 aspect-[4/3] min-h-0 sm:aspect-[3/2] lg:aspect-auto lg:min-h-[40rem]">
+                <div className="absolute inset-0 overflow-hidden border-l border-t border-[color:var(--ink)] lg:border-b-0">
+                  <BlurUpImage
+                    alt=""
+                    priority
+                    sizes="(min-width: 1024px) 50vw, 100vw"
+                    lqip={backgroundLqip}
+                    hotspot={background.hotspot}
+                    className="object-cover"
+                    src={urlFor(background).width(1800).height(2000).url()}
+                  />
+                </div>
+              </figure>
+            </div>
+          ) : null}
         </div>
       </div>
     </section>

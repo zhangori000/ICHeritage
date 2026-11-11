@@ -5,7 +5,9 @@ import * as React from "react";
 type RequirementCard = {
   _key?: string;
   title?: string | null;
+  /** Kept for the Sanity schema; the editorial layout renders no icons. */
   icon?: string | null;
+  /** Kept for the Sanity schema; the editorial layout has a single tone. */
   tone?: "primary" | "secondary" | "accent" | "muted" | null;
   points?: Array<string | null> | null;
 };
@@ -41,136 +43,7 @@ type ChapterRequirementsProps = {
   metricsCard?: MetricsCard;
 } & Record<string, unknown>;
 
-type IconComponent = React.ComponentType<React.SVGProps<SVGSVGElement>>;
-
-const createIcon = (children: React.ReactNode): IconComponent =>
-  function Icon(props: React.SVGProps<SVGSVGElement>) {
-    return (
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth={2}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        {...props}
-      >
-        {children}
-      </svg>
-    );
-  };
-
-const IconUsers = createIcon(
-  <>
-    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-    <circle cx={9} cy={7} r={4} />
-    <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
-    <path d="M16 3.13a4 4 0 1 1 0 7.75" />
-  </>
-);
-
-const IconBook = createIcon(
-  <>
-    <path d="M12 7v14" />
-    <path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z" />
-  </>
-);
-
-const IconCalendar = createIcon(
-  <>
-    <path d="M8 2v4" />
-    <path d="M16 2v4" />
-    <rect width={18} height={18} x={3} y={4} rx={2} />
-    <path d="M3 10h18" />
-  </>
-);
-
-const IconTarget = createIcon(
-  <>
-    <circle cx={12} cy={12} r={10} />
-    <circle cx={12} cy={12} r={6} />
-    <circle cx={12} cy={12} r={2} />
-  </>
-);
-
-const IconGlobe = createIcon(
-  <>
-    <circle cx={12} cy={12} r={10} />
-    <path d="M2 12h20" />
-    <path d="M12 2a15.3 15.3 0 0 1 0 20" />
-    <path d="M12 2a15.3 15.3 0 0 0 0 20" />
-  </>
-);
-
-const IconHeart = createIcon(
-  <>
-    <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3a4.9 4.9 0 0 0-4.5 2A4.9 4.9 0 0 0 7.5 3 5.5 5.5 0 0 0 2 8.5c0 2.29 1.5 4.04 3 5.5l7 7Z" />
-  </>
-);
-
-const IconAward = createIcon(
-  <>
-    <circle cx={12} cy={8} r={6} />
-    <path d="m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526" />
-  </>
-);
-
-const IconLightbulb = createIcon(
-  <>
-    <path d="M9 18h6" />
-    <path d="M10 22h4" />
-    <path d="M12 2a6 6 0 0 1 6 6c0 2.2-1.2 4.1-3 5.2-.6.4-1 1-1 1.8V16H10v-1c0-.8-.4-1.4-1-1.8-1.8-1.1-3-3-3-5.2a6 6 0 0 1 6-6Z" />
-  </>
-);
-
-const IconSparkles = createIcon(
-  <>
-    <path d="m12 3 1.9 5.8 6.1.2-4.9 3.7 1.8 5.8-5-3.5-5 3.5 1.8-5.8L4 9l6.1-.2Z" />
-    <path d="M5 3v4" />
-    <path d="M3 5h4" />
-    <path d="M19 17v4" />
-    <path d="M17 19h4" />
-  </>
-);
-
-const ICONS: Record<string, IconComponent> = {
-  users: IconUsers,
-  "book-open": IconBook,
-  calendar: IconCalendar,
-  target: IconTarget,
-  globe: IconGlobe,
-  heart: IconHeart,
-  award: IconAward,
-  lightbulb: IconLightbulb,
-  sparkles: IconSparkles,
-};
-
-const toneStyles: Record<"primary" | "secondary" | "accent" | "muted", { badge: string; bullet: string }> = {
-  primary: {
-    badge: "bg-[color:var(--primary)]/10 text-[color:var(--primary)]",
-    bullet: "text-[color:var(--primary)]",
-  },
-  secondary: {
-    badge: "bg-[color:var(--secondary)]/10 text-[color:var(--secondary)]",
-    bullet: "text-[color:var(--secondary)]",
-  },
-  accent: {
-    badge: "bg-[color:var(--accent)]/10 text-[color:var(--accent)]",
-    bullet: "text-[color:var(--accent)]",
-  },
-  muted: {
-    badge: "bg-[color:var(--muted)] text-[color:var(--foreground)]/70",
-    bullet: "text-[color:var(--foreground)]/60",
-  },
-};
-
-const CheckIcon = createIcon(
-  <>
-    <path d="M21.8 10A10 10 0 1 1 17 3.33" />
-    <path d="m9 11 3 3L22 4" />
-  </>
-);
+const pad = (n: number) => String(n).padStart(2, "0");
 
 export function ChapterRequirements({
   sectionId,
@@ -184,123 +57,128 @@ export function ChapterRequirements({
   const requirementCards = Array.isArray(cards) ? cards : [];
   const processSteps = Array.isArray(processCard?.steps) ? processCard?.steps ?? [] : [];
   const metrics = Array.isArray(metricsCard?.metrics) ? metricsCard?.metrics ?? [] : [];
+  const hasProcess = Boolean(processCard && (processCard.title || processSteps.length > 0));
+  const hasMetrics = Boolean(metricsCard && (metricsCard.title || metrics.length > 0));
 
   return (
-    <section id={anchor} className="bg-[color:var(--background)] py-20">
-      <div className="container mx-auto px-4">
-        <div className="mx-auto flex max-w-6xl flex-col gap-16">
-          <div className="space-y-6 text-center">
+    <section id={anchor} className="bg-[color:var(--paper)] py-20 md:py-28">
+      <div className="wrap">
+        {heading || intro ? (
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 md:items-end">
             {heading ? (
-              <h2 className="font-serif text-3xl font-bold text-[color:var(--foreground)] md:text-4xl lg:text-5xl">
+              <h2 className="display text-4xl text-[color:var(--ink)] md:text-5xl lg:text-6xl">
                 {heading}
               </h2>
             ) : null}
             {intro ? (
-              <p className="mx-auto max-w-3xl text-lg text-[color:var(--muted-foreground)] md:text-xl">
+              <p className="max-w-md text-lg leading-relaxed text-[color:var(--ink-soft)] md:justify-self-end">
                 {intro}
               </p>
             ) : null}
           </div>
+        ) : null}
 
-          {requirementCards.length > 0 ? (
-            <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-              {requirementCards.map((card, index) => {
-                const tone = (card.tone ?? "primary") as keyof typeof toneStyles;
-                const Icon = ICONS[card.icon ?? "users"] ?? ICONS.users;
-                const points = Array.isArray(card.points)
-                  ? card.points.filter((point): point is string => Boolean(point))
-                  : [];
+        {requirementCards.length > 0 ? (
+          <ol className="mt-14 border-t border-[color:var(--ink)]">
+            {requirementCards.map((card, index) => {
+              const points = Array.isArray(card.points)
+                ? card.points.filter((point): point is string => Boolean(point))
+                : [];
 
-                return (
-                  <article
-                    key={card._key ?? `${card.title ?? "card"}-${index}`}
-                    className="flex flex-col gap-6 rounded-xl border border-[color:var(--border)] bg-[color:var(--card)] py-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+              return (
+                <li
+                  key={card._key ?? `${card.title ?? "card"}-${index}`}
+                  className="grid grid-cols-1 gap-x-10 gap-y-4 border-b border-[color:var(--hairline)] py-10 md:grid-cols-[6rem_minmax(0,1fr)] lg:grid-cols-[6rem_minmax(0,20rem)_minmax(0,1fr)]"
+                >
+                  <span
+                    className="font-serif text-5xl font-light leading-none text-[color:var(--ink-faint)] md:text-6xl"
+                    aria-hidden
                   >
-                    <div className="space-y-4 px-6">
-                      <div className="flex items-center gap-4">
-                        <span
-                          className={["inline-flex rounded-full p-3", toneStyles[tone].badge].join(" ")}
-                        >
-                          <Icon className="h-6 w-6" aria-hidden />
-                        </span>
-                        {card.title ? (
-                          <h3 className="font-serif text-xl font-semibold md:text-2xl text-[color:var(--foreground)]">
-                            {card.title}
-                          </h3>
-                        ) : null}
-                      </div>
-                    </div>
+                    {pad(index + 1)}
+                  </span>
 
-                    {points.length > 0 ? (
-                      <div className="space-y-4 px-6">
-                        {points.map((point, pointIndex) => (
-                          <div key={`${card._key ?? index}-point-${pointIndex}`} className="flex items-start gap-3">
-                            <span className={["mt-0.5 flex-shrink-0", toneStyles[tone].bullet].join(" ")}>
-                              <CheckIcon className="h-5 w-5" aria-hidden />
-                            </span>
-                            <p className="leading-relaxed text-[color:var(--muted-foreground)]">{point}</p>
-                          </div>
-                        ))}
-                      </div>
-                    ) : null}
-                  </article>
-                );
-              })}
-            </div>
-          ) : null}
-
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-            {processCard ? (
-              <article className="flex flex-col gap-6 rounded-xl border border-[color:var(--border)] bg-[color:var(--muted)]/60 py-6 shadow-sm">
-                <div className="px-6">
-                  {processCard.title ? (
-                    <h3 className="font-serif text-xl font-semibold text-[color:var(--foreground)]">
-                      {processCard.title}
-                    </h3>
+                  {card.title ? (
+                    <h3 className="font-serif text-2xl text-[color:var(--ink)] md:col-start-2">{card.title}</h3>
                   ) : null}
-                </div>
-                {processSteps.length > 0 ? (
-                  <div className="space-y-3 px-6">
-                    {processSteps.map((step, stepIndex) => (
-                      <div
-                        key={step._key ?? `${step.label ?? "step"}-${stepIndex}`}
-                        className="flex items-center justify-between border-b border-[color:var(--border)]/60 py-3 last:border-b-0"
-                      >
-                        <span className="font-medium text-[color:var(--foreground)]">{step.label}</span>
-                        {step.duration ? (
-                          <span className="text-sm text-[color:var(--muted-foreground)]">{step.duration}</span>
-                        ) : null}
-                      </div>
-                    ))}
-                  </div>
+
+                  {points.length > 0 ? (
+                    <ul className="grid grid-cols-1 gap-x-10 md:col-start-2 lg:col-start-3 lg:grid-cols-2">
+                      {points.map((point, pointIndex) => (
+                        <li
+                          key={`${card._key ?? index}-point-${pointIndex}`}
+                          className="border-t border-[color:var(--hairline)] py-3 text-[15px] leading-relaxed text-[color:var(--ink-soft)] first:border-t-0 first:pt-0 lg:[&:nth-child(2)]:border-t-0 lg:[&:nth-child(2)]:pt-0"
+                        >
+                          {point}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : null}
+                </li>
+              );
+            })}
+          </ol>
+        ) : null}
+
+        {hasProcess || hasMetrics ? (
+          <div
+            className={[
+              "grid grid-cols-1 gap-y-12",
+              requirementCards.length > 0 ? "mt-16" : "mt-14",
+              hasProcess && hasMetrics ? "lg:grid-cols-2" : "",
+            ].join(" ")}
+          >
+            {hasProcess ? (
+              <div className={hasProcess && hasMetrics ? "lg:border-r lg:border-[color:var(--hairline)] lg:pr-12" : ""}>
+                {processCard?.title ? (
+                  <h3 className="eyebrow">{processCard.title}</h3>
                 ) : null}
-              </article>
+                {processSteps.length > 0 ? (
+                  <ol className="mt-5 border-t border-[color:var(--ink)]">
+                    {processSteps.map((step, stepIndex) => (
+                      <li
+                        key={step._key ?? `${step.label ?? "step"}-${stepIndex}`}
+                        className="flex items-baseline justify-between gap-6 border-b border-[color:var(--hairline)] py-4"
+                      >
+                        <span className="flex items-baseline gap-4">
+                          <span className="font-serif text-sm text-[color:var(--ink-faint)]" aria-hidden>
+                            {pad(stepIndex + 1)}
+                          </span>
+                          <span className="text-[15px] text-[color:var(--ink)]">{step.label}</span>
+                        </span>
+                        {step.duration ? (
+                          <span className="eyebrow shrink-0">{step.duration}</span>
+                        ) : null}
+                      </li>
+                    ))}
+                  </ol>
+                ) : null}
+              </div>
             ) : null}
 
-            {metricsCard ? (
-              <article className="flex flex-col gap-6 rounded-xl border border-[color:var(--primary)]/20 bg-[color:var(--primary)] py-6 text-[color:var(--primary-foreground)] shadow-sm">
-                <div className="px-6">
-                  {metricsCard.title ? (
-                    <h3 className="font-serif text-xl font-semibold">{metricsCard.title}</h3>
-                  ) : null}
-                </div>
+            {hasMetrics ? (
+              <div className={hasProcess && hasMetrics ? "lg:pl-12" : ""}>
+                {metricsCard?.title ? (
+                  <h3 className="eyebrow eyebrow-rule">{metricsCard.title}</h3>
+                ) : null}
                 {metrics.length > 0 ? (
-                  <div className="space-y-3 px-6">
+                  <dl className="mt-5 grid grid-cols-1 gap-x-8 gap-y-8 sm:grid-cols-2">
                     {metrics.map((metric, metricIndex) => (
                       <div
                         key={metric._key ?? `${metric.label ?? "metric"}-${metricIndex}`}
-                        className="flex items-center justify-between"
+                        className="border-t border-[color:var(--hairline)] pt-3"
                       >
-                        <span>{metric.label}</span>
-                        <span className="font-semibold">{metric.value}</span>
+                        <dt className="eyebrow">{metric.label}</dt>
+                        <dd className="mt-2 font-serif text-2xl text-[color:var(--ink)] md:text-3xl">
+                          {metric.value}
+                        </dd>
                       </div>
                     ))}
-                  </div>
+                  </dl>
                 ) : null}
-              </article>
+              </div>
             ) : null}
           </div>
-        </div>
+        ) : null}
       </div>
     </section>
   );

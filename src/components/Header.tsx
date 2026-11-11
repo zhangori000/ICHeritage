@@ -13,7 +13,7 @@ import {
 } from "@/lib/siteVisibility";
 
 /* ------------------------------------------------------------------ */
-/* Nav model (matches your latest: Program menu + dedicated Volunteer) */
+/* Nav model (Program menu + dedicated Volunteer)                      */
 /* ------------------------------------------------------------------ */
 type NavLink = {
   id: string;
@@ -60,9 +60,6 @@ const NAV_ITEMS: Array<NavLink | NavGroup> = [
   { id: "nav-about", label: "About", href: "/about" },
 ];
 
-/* ------------------------------------------------------------------ */
-/* Props: use the generated type, just like Footer.                    */
-/* ------------------------------------------------------------------ */
 type HeaderProps = { settings: SITE_SETTINGS_QUERY_RESULT };
 
 /* ------------------------------------------------------------------ */
@@ -94,12 +91,12 @@ function DonateButton({
   }
   return (
     <span
-      className={`${className} cursor-not-allowed opacity-75`}
+      className={className}
       aria-disabled="true"
       title="Online donations are coming soon"
     >
       Donate
-      <span className="rounded-full bg-white/25 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide">
+      <span className="eyebrow text-[10px] text-[color:var(--primary-foreground)]/80">
         Soon
       </span>
     </span>
@@ -117,9 +114,13 @@ function NavUnderline({ active }: { active: boolean }) {
     <span
       aria-hidden
       className={[
-        "pointer-events-none absolute inset-x-3 bottom-0.5 h-0.5 origin-left rounded-full bg-[var(--primary)]",
+        "pointer-events-none absolute inset-x-0 bottom-0 h-px origin-left bg-[color:var(--seal)]",
         "transition-transform duration-300 motion-reduce:transition-none",
-        pending ? "scale-x-100 animate-pulse" : active ? "scale-x-100" : "scale-x-0",
+        pending
+          ? "scale-x-100 animate-pulse"
+          : active
+            ? "scale-x-100"
+            : "scale-x-0 group-hover/link:scale-x-100",
       ].join(" ")}
     />
   );
@@ -135,87 +136,80 @@ function isActivePath(pathname: string | null, href: string) {
 /* Component                                                           */
 /* ------------------------------------------------------------------ */
 export function Header({ settings }: HeaderProps) {
-  // Brand name mirrors Footer fallback
   const orgName = settings?.orgName ?? "ICHeritage";
-
-  // Sanity image object (nullable), same as Footer
   const logo = settings?.logo ?? null;
 
-  // Build a safe URL for the Sanity logo or fallback (same logic as Footer)
-  const logo40 =
-    (logo?.asset?._ref &&
-      urlFor(logo).width(80).height(80).fit("crop").url()) ||
-    "/images/logo.png";
-  const logo32 =
-    (logo?.asset?._ref &&
-      urlFor(logo).width(64).height(64).fit("crop").url()) ||
+  // The seal is taller than wide; keep its aspect ratio instead of cropping.
+  const logoSrc =
+    (logo?.asset?._ref && urlFor(logo).height(96).fit("max").url()) ||
     "/images/logo.png";
 
-  // Donate link from Site Settings; empty = show a "coming soon" button
   const donateUrl = settings?.donateUrl ?? null;
 
-  // Drop nav items whose section is switched off in Site Settings
   const visibility = getSectionVisibility(settings);
   const navItems = NAV_ITEMS.filter(
     (item) => !item.section || visibility[item.section]
   );
   const pathname = usePathname();
 
-  // Mobile drawer state
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
-  // Prevent background scroll when drawer is open
   React.useEffect(() => {
     document.documentElement.style.overflow = mobileOpen ? "hidden" : "";
   }, [mobileOpen]);
 
+  const desktopLink =
+    "group/link relative py-2 text-[15px] font-medium text-[color:var(--ink)] transition-colors hover:text-[color:var(--ink)]";
+
   return (
     <>
-      {/* ============================================================
-          Sticky Header (matches Footer tokens)
-      ============================================================ */}
       <header
-        className="sticky top-0 z-[100] w-full backdrop-blur"
+        className="sticky top-0 z-[100] w-full border-b border-[color:var(--hairline)] backdrop-blur-md"
         style={{
-          backgroundColor: "var(--background)",
-          borderBottom: "1px solid var(--border)",
+          backgroundColor:
+            "color-mix(in oklab, var(--paper) 86%, transparent)",
         }}
       >
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex h-14 sm:h-16 items-center justify-between">
-            {/* ------------------ Logo + Brand ------------------ */}
+        <div className="wrap">
+          <div className="flex min-h-[4.5rem] items-center justify-between gap-6 py-2 lg:min-h-20">
+            {/* ------------------ Logo + wordmark ------------------ */}
             <Link
               href="/"
-              className="flex items-center gap-2 sm:gap-3 shrink-0"
+              className="flex shrink-0 items-center gap-3"
               aria-label="Home"
             >
               <Image
-                alt={`${orgName} Logo`}
-                src={logo40}
+                alt={`${orgName} seal`}
+                src={logoSrc}
                 width={40}
-                height={40}
-                className="h-8 w-8 sm:h-10 sm:w-10"
+                height={45}
+                className="h-9 w-auto object-contain lg:h-10"
+                priority
               />
-              <span className="font-noto-serif-sc text-lg sm:text-xl font-semibold text-[var(--foreground)]">
-                {orgName}
+              <span className="flex flex-col gap-0.5">
+                <span className="font-serif text-[22px] font-medium leading-none tracking-[-0.01em] text-[color:var(--ink)] lg:text-2xl">
+                  {orgName}
+                </span>
+                <span className="eyebrow hidden text-[10px] tracking-[0.18em] sm:block">
+                  Chinese cultural heritage · nonprofit
+                </span>
               </span>
             </Link>
 
             {/* ------------------ Desktop navigation ------------------ */}
-            <nav className="hidden lg:flex items-center gap-6 xl:gap-8 flex-1 justify-center">
+            <nav
+              aria-label="Main"
+              className="hidden flex-1 items-center justify-center gap-8 lg:flex"
+            >
               {navItems.map((item) => {
                 if ("href" in item) {
-                  // Simple link — hover = text color only
                   const active = isActivePath(pathname, item.href);
                   return (
                     <Link
                       key={item.id}
                       href={item.href}
                       aria-current={active ? "page" : undefined}
-                      className={[
-                        "relative text-sm font-medium transition-colors px-3 py-2 rounded-md hover:text-[var(--primary)]",
-                        active ? "text-[var(--primary)]" : "text-[var(--muted-foreground)]",
-                      ].join(" ")}
+                      className={desktopLink}
                     >
                       {item.label}
                       <NavUnderline active={active} />
@@ -223,54 +217,77 @@ export function Header({ settings }: HeaderProps) {
                   );
                 }
 
-                // Dropdown (Program) — group hover keeps panel open
+                // Dropdown (Program / Volunteer): group hover keeps panel open
                 const menuId = `${item.id}-menu`;
+                const groupActive = item.children.some((child) =>
+                  isActivePath(pathname, child.href)
+                );
                 return (
-                  <div key={item.id} className="relative group">
+                  <div key={item.id} className="group relative">
                     <button
                       type="button"
                       className={[
-                        "text-sm font-medium transition-colors px-3 py-2 rounded-md hover:text-[var(--primary)]",
-                        item.children.some((child) => isActivePath(pathname, child.href))
-                          ? "text-[var(--primary)]"
-                          : "text-[var(--muted-foreground)]",
+                        "group/link relative flex items-center gap-1.5 py-2 text-[15px] font-medium text-[color:var(--ink)]",
                       ].join(" ")}
                       aria-haspopup="menu"
                       aria-expanded="false"
                       aria-controls={menuId}
                     >
                       {item.label}
+                      <svg
+                        aria-hidden="true"
+                        width="10"
+                        height="10"
+                        viewBox="0 0 10 10"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.25"
+                        className="transition-transform duration-200 group-hover:rotate-180"
+                      >
+                        <path d="M1.5 3.5 5 7l3.5-3.5" />
+                      </svg>
+                      <span
+                        aria-hidden
+                        className={[
+                          "pointer-events-none absolute inset-x-0 bottom-0 h-px origin-left bg-[color:var(--seal)] transition-transform duration-300 motion-reduce:transition-none",
+                          groupActive
+                            ? "scale-x-100"
+                            : "scale-x-0 group-hover:scale-x-100",
+                        ].join(" ")}
+                      />
                     </button>
 
                     <div
                       id={menuId}
                       role="menu"
                       className={[
-                        "absolute left-0 mt-2 w-56 rounded-md border shadow-lg p-2 origin-top",
-                        "bg-[var(--card)] border-[var(--border)]",
-                        "invisible opacity-0 translate-y-1",
-                        "group-hover:visible group-hover:opacity-100 group-hover:translate-y-0",
+                        "absolute left-0 top-full w-60 origin-top pt-3",
+                        "invisible translate-y-1 opacity-0",
+                        "group-hover:visible group-hover:translate-y-0 group-hover:opacity-100",
                         "transition-all duration-150",
                       ].join(" ")}
                     >
-                      {item.children.map((child) => {
-                        const active = isActivePath(pathname, child.href);
-                        return (
-                          <Link
-                            key={child.id}
-                            href={child.href}
-                            role="menuitem"
-                            aria-current={active ? "page" : undefined}
-                            className={[
-                              "relative block rounded-md px-3 py-2 text-sm transition-colors hover:text-[var(--primary)]",
-                              active ? "text-[var(--primary)]" : "text-[var(--muted-foreground)]",
-                            ].join(" ")}
-                          >
-                            {child.label}
-                            <NavUnderline active={false} />
-                          </Link>
-                        );
-                      })}
+                      <div className="border border-[color:var(--ink)] bg-[color:var(--paper)] p-2">
+                        {item.children.map((child) => {
+                          const active = isActivePath(pathname, child.href);
+                          return (
+                            <Link
+                              key={child.id}
+                              href={child.href}
+                              role="menuitem"
+                              aria-current={active ? "page" : undefined}
+                              className={[
+                                "block px-3 py-2.5 text-[15px] transition-colors",
+                                active
+                                  ? "text-[color:var(--seal)]"
+                                  : "text-[color:var(--ink)] hover:text-[color:var(--seal)]",
+                              ].join(" ")}
+                            >
+                              {child.label}
+                            </Link>
+                          );
+                        })}
+                      </div>
                     </div>
                   </div>
                 );
@@ -278,15 +295,10 @@ export function Header({ settings }: HeaderProps) {
             </nav>
 
             {/* ------------------ Desktop actions ------------------ */}
-            <div className="hidden lg:flex items-center gap-3 xl:gap-4">
+            <div className="hidden items-center lg:flex">
               <DonateButton
                 href={donateUrl}
-                className={[
-                  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all",
-                  "px-4 py-2 h-10",
-                  "bg-[var(--primary)] text-[var(--primary-foreground)] hover:brightness-110",
-                  "shadow-xs",
-                ].join(" ")}
+                className="btn btn-primary btn-sm"
               />
             </div>
 
@@ -298,11 +310,7 @@ export function Header({ settings }: HeaderProps) {
               aria-expanded={mobileOpen}
               aria-controls="mobile-menu"
               aria-label="Open menu"
-              className={[
-                "lg:hidden inline-flex items-center justify-center h-9 w-9 p-0 rounded-md",
-                "text-[var(--foreground)]",
-                "transition-colors hover:bg-[var(--accent)] hover:text-[var(--accent-foreground)]",
-              ].join(" ")}
+              className="inline-flex h-11 w-11 items-center justify-center border border-[color:var(--hairline)] text-[color:var(--ink)] transition-colors hover:border-[color:var(--ink)] lg:hidden"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -310,15 +318,15 @@ export function Header({ settings }: HeaderProps) {
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
-                strokeWidth="2"
+                strokeWidth="1.5"
                 strokeLinecap="round"
                 strokeLinejoin="round"
+                aria-hidden="true"
               >
-                <line x1="4" y1="6" x2="20" y2="6" />
+                <line x1="4" y1="7" x2="20" y2="7" />
                 <line x1="4" y1="12" x2="20" y2="12" />
-                <line x1="4" y1="18" x2="20" y2="18" />
+                <line x1="4" y1="17" x2="20" y2="17" />
               </svg>
-              <span className="sr-only">Toggle menu</span>
             </button>
           </div>
         </div>
@@ -327,27 +335,24 @@ export function Header({ settings }: HeaderProps) {
       {/* ============================================================
           Mobile drawer + backdrop
       ============================================================ */}
-      {/* Backdrop */}
       <div
         aria-hidden="true"
         onClick={() => setMobileOpen(false)}
         className={[
-          "fixed inset-0 z-[9998] bg-black/50",
+          "fixed inset-0 z-[9998] bg-[color:var(--ink)]/50",
           "transition-opacity duration-300",
           mobileOpen
-            ? "opacity-100 pointer-events-auto"
-            : "opacity-0 pointer-events-none",
+            ? "pointer-events-auto opacity-100"
+            : "pointer-events-none opacity-0",
         ].join(" ")}
       />
 
-      {/* Drawer */}
       <div
         id="mobile-menu"
         role="dialog"
         aria-modal="true"
         className={[
-          "fixed right-0 inset-y-0 z-[9999] w-80 sm:w-96 shadow-lg border-l p-6 flex flex-col gap-6",
-          "bg-[var(--background)] border-[var(--border)] text-[var(--foreground)]",
+          "fixed inset-y-0 right-0 z-[9999] flex w-[min(100vw,22rem)] flex-col gap-8 overflow-y-auto border-l border-[color:var(--ink)] bg-[color:var(--paper)] p-6 text-[color:var(--ink)]",
           "transition-transform duration-300 ease-in-out",
           mobileOpen ? "translate-x-0" : "translate-x-full",
         ].join(" ")}
@@ -360,26 +365,20 @@ export function Header({ settings }: HeaderProps) {
             onClick={() => setMobileOpen(false)}
           >
             <Image
-              alt={`${orgName} Logo`}
-              src={logo32}
+              alt={`${orgName} seal`}
+              src={logoSrc}
               width={32}
-              height={32}
+              height={36}
+              className="h-8 w-auto object-contain"
             />
-            <span className="font-noto-serif-sc text-lg font-semibold">
-              {orgName}
-            </span>
+            <span className="font-serif text-xl font-medium">{orgName}</span>
           </Link>
 
-          {/* Close */}
           <button
             type="button"
             aria-label="Close menu"
             onClick={() => setMobileOpen(false)}
-            className={[
-              "inline-flex items-center justify-center h-9 w-9 p-0 rounded-md",
-              "transition-colors",
-              "hover:bg-[var(--accent)] hover:text-[var(--accent-foreground)]",
-            ].join(" ")}
+            className="inline-flex h-11 w-11 items-center justify-center border border-[color:var(--hairline)] transition-colors hover:border-[color:var(--ink)]"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -387,9 +386,10 @@ export function Header({ settings }: HeaderProps) {
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
-              strokeWidth="2"
+              strokeWidth="1.5"
               strokeLinecap="round"
               strokeLinejoin="round"
+              aria-hidden="true"
             >
               <path d="M18 6 6 18" />
               <path d="m6 6 12 12" />
@@ -398,63 +398,64 @@ export function Header({ settings }: HeaderProps) {
         </div>
 
         {/* Drawer nav */}
-        <nav className="flex flex-col gap-4">
-          <div className="space-y-1">
-            <div className="text-sm font-semibold text-[color:var(--foreground)]/60 uppercase tracking-wider mb-3">
-              Main Navigation
-            </div>
-
-            {navItems.map((item) => {
-              if ("href" in item) {
-                return (
-                  <Link
-                    key={item.id}
-                    href={item.href}
-                    onClick={() => setMobileOpen(false)}
-                    className="block py-3 text-base font-medium transition-colors text-[var(--muted-foreground)] hover:text-[var(--primary)]"
-                  >
-                    {item.label}
-                  </Link>
-                );
-              }
-
-              // Program children, visually grouped
+        <nav className="flex flex-col" aria-label="Main">
+          {navItems.map((item) => {
+            if ("href" in item) {
+              const active = isActivePath(pathname, item.href);
               return (
-                <div
+                <Link
                   key={item.id}
-                  className="space-y-1 pt-3 border-t border-[var(--border)]"
+                  href={item.href}
+                  onClick={() => setMobileOpen(false)}
+                  aria-current={active ? "page" : undefined}
+                  className={[
+                    "border-t border-[color:var(--hairline)] py-4 font-serif text-2xl transition-colors",
+                    active ? "text-[color:var(--seal)]" : "hover:text-[color:var(--seal)]",
+                  ].join(" ")}
                 >
-                  <div className="text-sm font-semibold text-[color:var(--foreground)]/60 uppercase tracking-wider mb-2">
-                    {item.label}
-                  </div>
-                  {item.children.map((child) => (
+                  {item.label}
+                </Link>
+              );
+            }
+
+            return (
+              <div
+                key={item.id}
+                className="flex flex-col border-t border-[color:var(--hairline)] py-4"
+              >
+                <span className="eyebrow mb-3">{item.label}</span>
+                {item.children.map((child) => {
+                  const active = isActivePath(pathname, child.href);
+                  return (
                     <Link
                       key={child.id}
                       href={child.href}
                       onClick={() => setMobileOpen(false)}
-                      className="block py-3 pl-4 text-base font-medium transition-colors text-[var(--muted-foreground)] hover:text-[var(--primary)]"
+                      aria-current={active ? "page" : undefined}
+                      className={[
+                        "py-2 font-serif text-2xl transition-colors",
+                        active
+                          ? "text-[color:var(--seal)]"
+                          : "hover:text-[color:var(--seal)]",
+                      ].join(" ")}
                     >
                       {child.label}
                     </Link>
-                  ))}
-                </div>
-              );
-            })}
-          </div>
-
-          {/* Drawer footer actions */}
-          <div className="flex flex-col gap-4 pt-4 border-t border-[var(--border)]">
-            <DonateButton
-              href={donateUrl}
-              onClick={() => setMobileOpen(false)}
-              className={[
-                "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all",
-                "w-full h-11 px-4 shadow-xs",
-                "bg-[var(--primary)] text-[var(--primary-foreground)] hover:brightness-110",
-              ].join(" ")}
-            />
-          </div>
+                  );
+                })}
+              </div>
+            );
+          })}
         </nav>
+
+        {/* Drawer footer action */}
+        <div className="mt-auto border-t border-[color:var(--hairline)] pt-6">
+          <DonateButton
+            href={donateUrl}
+            onClick={() => setMobileOpen(false)}
+            className="btn btn-primary w-full"
+          />
+        </div>
       </div>
     </>
   );

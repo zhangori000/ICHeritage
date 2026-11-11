@@ -364,17 +364,21 @@ const sectionsByStep: Record<string, Section[]> = {
 };
 
 const inputClasses =
-  "h-12 rounded-lg border border-[color:var(--border)] bg-[color:var(--background)] px-4 text-sm text-[color:var(--foreground)] transition focus:border-[color:var(--primary)] focus:outline-none focus:ring-2 focus:ring-[color:var(--primary)]/20";
+  "h-12 w-full rounded-none border border-[color:var(--hairline)] bg-white px-4 text-[15px] text-[color:var(--ink)] placeholder:text-[color:var(--ink-muted)] transition-colors focus:border-[color:var(--ink)] focus:outline-none";
 
 const textareaClasses =
-  "w-full resize-y rounded-lg border border-[color:var(--border)] bg-[color:var(--background)] px-4 py-3 text-sm leading-relaxed text-[color:var(--foreground)] transition focus:border-[color:var(--primary)] focus:outline-none focus:ring-2 focus:ring-[color:var(--primary)]/20";
+  "w-full resize-y rounded-none border border-[color:var(--hairline)] bg-white px-4 py-3 text-[15px] leading-relaxed text-[color:var(--ink)] placeholder:text-[color:var(--ink-muted)] transition-colors focus:border-[color:var(--ink)] focus:outline-none";
 
 const fileClasses =
-  "block w-full rounded-lg border border-dashed border-[color:var(--border)] bg-[color:var(--background)] px-4 py-3 text-sm text-[color:var(--muted-foreground)] file:me-4 file:cursor-pointer file:rounded-md file:border-0 file:bg-[color:var(--primary)] file:px-4 file:py-2 file:text-sm file:font-semibold file:text-[color:var(--primary-foreground)] hover:border-[color:var(--primary)]";
+  "block w-full rounded-none border border-[color:var(--hairline)] bg-white px-4 py-3 text-sm text-[color:var(--ink-muted)] file:me-4 file:cursor-pointer file:rounded-none file:border file:border-[color:var(--ink)] file:bg-transparent file:px-4 file:py-2 file:text-sm file:font-medium file:text-[color:var(--ink)] hover:border-[color:var(--ink)] focus:border-[color:var(--ink)] focus:outline-none";
+
+// Label text: short field labels as eyebrows; long textarea questions in serif.
+const fieldLabelClass = "eyebrow leading-snug";
+const questionLabelClass = "font-serif text-lg leading-snug text-[color:var(--ink)]";
 
 const renderField = (field: FieldConfig, stepId: string) => {
   const baseLabelClass = classNames(
-    "grid gap-2 text-sm text-[color:var(--foreground)]/80",
+    "grid gap-2.5",
     field.colSpan === "full" ? "md:col-span-2" : undefined
   );
 
@@ -382,7 +386,7 @@ const renderField = (field: FieldConfig, stepId: string) => {
     case "input":
       return (
         <label key={field.name} className={baseLabelClass}>
-          {field.label}
+          <span className={fieldLabelClass}>{field.label}</span>
           <input
             name={field.name}
             type={field.inputType ?? "text"}
@@ -393,7 +397,7 @@ const renderField = (field: FieldConfig, stepId: string) => {
             className={inputClasses}
           />
           {field.helperText ? (
-            <span className="text-xs text-[color:var(--muted-foreground)]">{field.helperText}</span>
+            <span className="text-xs leading-relaxed text-[color:var(--ink-muted)]">{field.helperText}</span>
           ) : null}
         </label>
       );
@@ -401,7 +405,7 @@ const renderField = (field: FieldConfig, stepId: string) => {
     case "select":
       return (
         <label key={field.name} className={baseLabelClass}>
-          {field.label}
+          <span className={fieldLabelClass}>{field.label}</span>
           <select
             name={field.name}
             required={field.required}
@@ -419,7 +423,7 @@ const renderField = (field: FieldConfig, stepId: string) => {
             ))}
           </select>
           {field.helperText ? (
-            <span className="text-xs text-[color:var(--muted-foreground)]">{field.helperText}</span>
+            <span className="text-xs leading-relaxed text-[color:var(--ink-muted)]">{field.helperText}</span>
           ) : null}
         </label>
       );
@@ -427,7 +431,7 @@ const renderField = (field: FieldConfig, stepId: string) => {
     case "textarea":
       return (
         <label key={field.name} className={baseLabelClass}>
-          {field.label}
+          <span className={questionLabelClass}>{field.label}</span>
           <textarea
             name={field.name}
             required={field.required}
@@ -439,7 +443,7 @@ const renderField = (field: FieldConfig, stepId: string) => {
             maxLength={field.maxLength}
           />
           {field.helperText ? (
-            <span className="text-xs text-[color:var(--muted-foreground)]">{field.helperText}</span>
+            <span className="text-xs leading-relaxed text-[color:var(--ink-muted)]">{field.helperText}</span>
           ) : null}
         </label>
       );
@@ -447,7 +451,7 @@ const renderField = (field: FieldConfig, stepId: string) => {
     case "file":
       return (
         <label key={field.name} className={baseLabelClass}>
-          {field.label}
+          <span className={fieldLabelClass}>{field.label}</span>
           <input
             name={field.name}
             type="file"
@@ -457,7 +461,7 @@ const renderField = (field: FieldConfig, stepId: string) => {
             accept={field.accept}
           />
           {field.helperText ? (
-            <span className="text-xs text-[color:var(--muted-foreground)]">{field.helperText}</span>
+            <span className="text-xs leading-relaxed text-[color:var(--ink-muted)]">{field.helperText}</span>
           ) : null}
         </label>
       );
@@ -635,14 +639,12 @@ export function StartChapterApplicationForm() {
   const isLastStep = currentStep === STEPS.length - 1;
 
   return (
-    <div className="rounded-3xl border border-[color:var(--border)] bg-[color:var(--card)] p-6 shadow-lg md:p-10">
+    <div className="border-t border-[color:var(--ink)] pt-8 md:pt-10">
       <div className="space-y-6">
         <div className="flex flex-col gap-4">
           <div className="flex items-center justify-between gap-2">
-            <span className="text-xs font-semibold uppercase tracking-[0.3em] text-[color:var(--muted-foreground)]">
-              Application Progress
-            </span>
-            <span className="text-xs text-[color:var(--muted-foreground)]">
+            <span className="eyebrow eyebrow-rule">Application Progress</span>
+            <span className="eyebrow">
               Step {currentStep + 1} of {STEPS.length}
             </span>
           </div>
@@ -655,30 +657,35 @@ export function StartChapterApplicationForm() {
                 <li
                   key={step.id}
                   className={classNames(
-                    "rounded-xl border p-4",
-                    isActive
-                      ? "border-[color:var(--primary)] bg-[color:var(--primary)]/6"
-                      : "border-[color:var(--border)] bg-transparent",
-                    isComplete ? "opacity-80" : undefined
+                    "border-t pt-4",
+                    isActive ? "border-[color:var(--ink)]" : "border-[color:var(--hairline)]"
                   )}
+                  aria-current={isActive ? "step" : undefined}
                 >
-                  <div className="flex items-center gap-2 text-xs uppercase tracking-[0.24em] text-[color:var(--muted-foreground)]">
+                  <div className="flex items-baseline gap-3">
                     <span
                       className={classNames(
-                        "flex h-6 w-6 items-center justify-center rounded-full border text-[0.75rem] font-semibold",
+                        "font-serif text-2xl leading-none",
                         isActive
-                          ? "border-[color:var(--primary)] text-[color:var(--primary)]"
-                          : "border-[color:var(--border)] text-[color:var(--muted-foreground)]",
-                        isComplete
-                          ? "border-[color:var(--primary)] bg-[color:var(--primary)] text-[color:var(--primary-foreground)]"
-                          : undefined
+                          ? "text-[color:var(--seal)]"
+                          : isComplete
+                            ? "text-[color:var(--ink)]"
+                            : "text-[color:var(--ink-faint)]"
+                      )}
+                      aria-hidden
+                    >
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                    <span
+                      className={classNames(
+                        "eyebrow",
+                        isActive ? "text-[color:var(--ink)]" : undefined
                       )}
                     >
-                      {index + 1}
+                      {step.title}
                     </span>
-                    <span>{step.title}</span>
                   </div>
-                  <p className="mt-3 text-sm text-[color:var(--muted-foreground)]">{step.description}</p>
+                  <p className="mt-3 text-sm leading-relaxed text-[color:var(--ink-muted)]">{step.description}</p>
                 </li>
               );
             })}
@@ -698,16 +705,16 @@ export function StartChapterApplicationForm() {
               {sectionsByStep[step.id]?.map((section) => (
                 <div key={section.heading} className="space-y-4">
                   <div className="space-y-2">
-                    <h2 className="font-serif text-2xl text-[color:var(--foreground)]">{section.heading}</h2>
+                    <h2 className="font-serif text-2xl text-[color:var(--ink)] md:text-3xl">{section.heading}</h2>
                     {section.description ? (
-                      <p className="text-sm text-[color:var(--muted-foreground)]">{section.description}</p>
+                      <p className="max-w-xl text-[15px] leading-relaxed text-[color:var(--ink-soft)]">{section.description}</p>
                     ) : null}
                   </div>
                   <div
                     className={
                       section.columns === 2
-                        ? "grid gap-4 md:grid-cols-2"
-                        : "grid gap-4"
+                        ? "grid gap-5 md:grid-cols-2"
+                        : "grid gap-6"
                     }
                   >
                     {section.fields.map((field) => renderField(field, step.id))}
@@ -718,26 +725,26 @@ export function StartChapterApplicationForm() {
               {step.id === "team-governance" ? (
                 <div className="space-y-8">
                   <div className="space-y-4">
-                    <h3 className="font-serif text-xl text-[color:var(--foreground)]">
+                    <h3 className="font-serif text-2xl text-[color:var(--ink)]">
                       What mentorship do you want from HQ?
                     </h3>
-                    <div className="grid gap-3 md:grid-cols-2">
+                    <div className="grid gap-x-10 border-t border-[color:var(--hairline)] md:grid-cols-2">
                       {mentorshipOptions.map((option) => (
                         <label
                           key={option}
-                          className="flex items-start gap-3 rounded-xl border border-[color:var(--border)] bg-[color:var(--background)] px-4 py-3 text-sm text-[color:var(--foreground)]/90"
+                          className="flex items-start gap-3 border-b border-[color:var(--hairline)] py-3 text-[15px] leading-relaxed text-[color:var(--ink-soft)]"
                         >
                           <input
                             type="checkbox"
                             name="mentorshipNeeds"
                             value={option}
                             data-step={step.id}
-                            className="mt-1 h-4 w-4 rounded border-[color:var(--border)] text-[color:var(--primary)] focus:ring-[color:var(--primary)]/40"
+                            className="mt-1 h-4 w-4 shrink-0 rounded-none accent-[color:var(--seal)]"
                           />
                           <span>{option}</span>
                         </label>
                       ))}
-                      <label className="flex flex-col gap-2 rounded-xl border border-[color:var(--border)] bg-[color:var(--background)] px-4 py-3 text-sm text-[color:var(--foreground)]/90 md:col-span-2">
+                      <label className="flex flex-col gap-3 border-b border-[color:var(--hairline)] py-3 text-[15px] leading-relaxed text-[color:var(--ink-soft)] md:col-span-2">
                         <span className="flex items-center gap-3">
                           <input
                             type="checkbox"
@@ -745,7 +752,7 @@ export function StartChapterApplicationForm() {
                             value="Other"
                             data-step={step.id}
                             onChange={handleOtherMentorshipChange}
-                            className="mt-1 h-4 w-4 rounded border-[color:var(--border)] text-[color:var(--primary)] focus:ring-[color:var(--primary)]/40"
+                            className="mt-1 h-4 w-4 shrink-0 rounded-none accent-[color:var(--seal)]"
                           />
                           Other (describe)
                         </span>
@@ -763,15 +770,15 @@ export function StartChapterApplicationForm() {
                   </div>
 
                   <div className="space-y-4">
-                    <h3 className="font-serif text-xl text-[color:var(--foreground)]">Commitment & Agreement</h3>
-                    <p className="text-sm text-[color:var(--muted-foreground)]">
+                    <h3 className="font-serif text-2xl text-[color:var(--ink)]">Commitment & Agreement</h3>
+                    <p className="max-w-xl text-[15px] leading-relaxed text-[color:var(--ink-soft)]">
                       Please review and check each statement to confirm your commitment to ICHeritage guidelines.
                     </p>
-                    <div className="space-y-3">
+                    <div className="border-t border-[color:var(--hairline)]">
                       {commitments.map((commitment) => (
                         <label
                           key={commitment}
-                          className="flex items-start gap-3 rounded-xl border border-[color:var(--border)] bg-[color:var(--background)] px-4 py-3 text-sm text-[color:var(--foreground)]/90"
+                          className="flex items-start gap-3 border-b border-[color:var(--hairline)] py-3 text-[15px] leading-relaxed text-[color:var(--ink-soft)]"
                         >
                           <input
                             type="checkbox"
@@ -779,7 +786,7 @@ export function StartChapterApplicationForm() {
                             value={commitment}
                             required
                             data-step={step.id}
-                            className="mt-1 h-4 w-4 rounded border-[color:var(--border)] text-[color:var(--primary)] focus:ring-[color:var(--primary)]/40"
+                            className="mt-1 h-4 w-4 shrink-0 rounded-none accent-[color:var(--seal)]"
                           />
                           <span>{commitment}</span>
                         </label>
@@ -788,10 +795,10 @@ export function StartChapterApplicationForm() {
                   </div>
 
                   <div className="space-y-4">
-                    <h3 className="font-serif text-xl text-[color:var(--foreground)]">Signature</h3>
+                    <h3 className="font-serif text-2xl text-[color:var(--ink)]">Signature</h3>
                     <div className="grid gap-4 md:grid-cols-2">
-                      <label className="grid gap-2 text-sm text-[color:var(--foreground)]/80">
-                        Typed name (digital signature)
+                      <label className="grid gap-2.5">
+                        <span className={fieldLabelClass}>Typed name (digital signature)</span>
                         <input
                           name="signatureName"
                           type="text"
@@ -800,8 +807,8 @@ export function StartChapterApplicationForm() {
                           className={inputClasses}
                         />
                       </label>
-                      <label className="grid gap-2 text-sm text-[color:var(--foreground)]/80">
-                        Date
+                      <label className="grid gap-2.5">
+                        <span className={fieldLabelClass}>Date</span>
                         <input
                           name="signatureDate"
                           type="date"
@@ -817,8 +824,8 @@ export function StartChapterApplicationForm() {
             </fieldset>
           ))}
 
-          <div className="flex flex-col gap-3 border-t border-[color:var(--border)] pt-6 sm:flex-row sm:items-center sm:justify-between">
-            <div className="text-xs text-[color:var(--muted-foreground)]">
+          <div className="flex flex-col gap-4 border-t border-[color:var(--ink)] pt-6 sm:flex-row sm:items-center sm:justify-between">
+            <div className="text-sm text-[color:var(--ink-muted)]">
               You can move back anytime—your answers stay saved until you submit.
             </div>
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
@@ -826,7 +833,7 @@ export function StartChapterApplicationForm() {
                 <button
                   type="button"
                   onClick={handleBack}
-                  className="inline-flex h-11 cursor-pointer items-center justify-center rounded-full border border-[color:var(--border)] bg-transparent px-6 text-sm font-semibold text-[color:var(--foreground)] transition hover:border-[color:var(--primary)] hover:text-[color:var(--primary)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--primary)]/20"
+                  className="btn cursor-pointer"
                 >
                   Back
                 </button>
@@ -835,7 +842,7 @@ export function StartChapterApplicationForm() {
                 <button
                   type="submit"
                   disabled={status === "submitting"}
-                  className="inline-flex h-11 cursor-pointer items-center justify-center rounded-full bg-[color:var(--primary)] px-8 text-sm font-semibold text-[color:var(--primary-foreground)] transition hover:bg-[color-mix(in_oklab,var(--primary)_92%,black)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--primary)]/40 disabled:cursor-not-allowed disabled:opacity-75"
+                  className="btn btn-primary cursor-pointer disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   {status === "submitting" ? "Submitting..." : "Submit application"}
                 </button>
@@ -843,7 +850,7 @@ export function StartChapterApplicationForm() {
                 <button
                   type="button"
                   onClick={handleNext}
-                  className="inline-flex h-11 cursor-pointer items-center justify-center rounded-full bg-[color:var(--primary)] px-8 text-sm font-semibold text-[color:var(--primary-foreground)] transition hover:bg-[color-mix(in_oklab,var(--primary)_92%,black)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--primary)]/40"
+                  className="btn btn-primary cursor-pointer"
                 >
                   Next step
                 </button>
@@ -854,15 +861,15 @@ export function StartChapterApplicationForm() {
       </div>
       {dialog ? (
         <div className="fixed inset-0 z-[400] flex items-center justify-center bg-black/40 px-4 py-6 backdrop-blur-sm">
-          <div className="w-full max-w-lg rounded-2xl border border-[color:var(--border)] bg-[color:var(--card)] p-6 shadow-2xl">
+          <div className="w-full max-w-lg border border-[color:var(--ink)] bg-[color:var(--paper)] p-6 md:p-8">
             <div className="space-y-4">
               <div className="flex items-start gap-3">
                 <span
                   className={[
-                    "inline-flex h-10 w-10 items-center justify-center rounded-full",
+                    "mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center",
                     dialog.type === "success"
-                      ? "bg-emerald-100 text-emerald-700"
-                      : "bg-red-100 text-red-700",
+                      ? "text-[color:var(--pine)]"
+                      : "text-[color:var(--seal)]",
                   ].join(" ")}
                   aria-hidden
                 >
@@ -879,49 +886,49 @@ export function StartChapterApplicationForm() {
                   )}
                 </span>
                 <div className="space-y-1">
-                  <h3 className="font-serif text-xl text-[color:var(--foreground)]">
+                  <h3 className="font-serif text-2xl text-[color:var(--ink)]">
                     {dialog.type === "success" ? "Application sent" : "Submission issue"}
                   </h3>
-                  <p className="text-sm text-[color:var(--muted-foreground)]">{dialog.message}</p>
+                  <p className="text-[15px] leading-relaxed text-[color:var(--ink-soft)]">{dialog.message}</p>
                 </div>
               </div>
 
               {dialog.type === "success" ? (
-                <div className="space-y-3 rounded-lg bg-[color:var(--background)] px-4 py-3 text-sm text-[color:var(--muted-foreground)]">
+                <div className="space-y-3 border-t border-[color:var(--hairline)] pt-4 text-sm leading-relaxed text-[color:var(--ink-muted)]">
                   {dialog.details?.institutionName ? (
                     <div>
-                      <span className="font-medium text-[color:var(--foreground)]">Chapter:</span>{" "}
+                      <span className="font-medium text-[color:var(--ink)]">Chapter:</span>{" "}
                       {dialog.details.institutionName}
                     </div>
                   ) : null}
                   {dialog.details?.leadEmail ? (
                     <div>
-                      <span className="font-medium text-[color:var(--foreground)]">Applicant email:</span>{" "}
+                      <span className="font-medium text-[color:var(--ink)]">Applicant email:</span>{" "}
                       {dialog.details.leadEmail}
                       {dialog.details.confirmationEmailSent ? (
-                        <span className="text-emerald-600">{` • Confirmation sent`}</span>
+                        <span className="text-[color:var(--pine)]">{` • Confirmation sent`}</span>
                       ) : (
-                        <span className="text-amber-600">{` • Confirmation could not be sent`}</span>
+                        <span className="text-[color:var(--seal)]">{` • Confirmation could not be sent`}</span>
                       )}
                     </div>
                   ) : null}
                   {dialog.details?.confirmationEmailError ? (
-                    <div className="rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-800">
+                    <div className="border-l-2 border-[color:var(--seal)] pl-3 text-xs leading-relaxed text-[color:var(--ink-soft)]">
                       {dialog.details.confirmationEmailError}
                     </div>
                   ) : null}
                   {dialog.details?.recipients && dialog.details.recipients.length > 0 ? (
                     <div>
-                      <span className="font-medium text-[color:var(--foreground)]">HQ notified:</span>{" "}
+                      <span className="font-medium text-[color:var(--ink)]">HQ notified:</span>{" "}
                       {dialog.details.recipients.join(", ")}
                       {dialog.details.fallbackGroupUsed ? (
-                        <span className="text-xs text-[color:var(--muted-foreground)]">{` • Using fallback contact group`}</span>
+                        <span className="text-xs text-[color:var(--ink-muted)]">{` • Using fallback contact group`}</span>
                       ) : null}
                     </div>
                   ) : null}
                   {dialog.details?.attachments && dialog.details.attachments.length > 0 ? (
                     <div>
-                      <span className="font-medium text-[color:var(--foreground)]">Attachments:</span>
+                      <span className="font-medium text-[color:var(--ink)]">Attachments:</span>
                       <ul className="mt-1 list-inside list-disc space-y-1">
                         {dialog.details.attachments.map((name, index) => (
                           <li key={`${name}-${index}`} className="text-xs">
@@ -931,7 +938,7 @@ export function StartChapterApplicationForm() {
                       </ul>
                     </div>
                   ) : null}
-                  <p className="text-xs text-[color:var(--muted-foreground)]">
+                  <p className="text-xs text-[color:var(--ink-muted)]">
                     A copy of your answers is on the way. If you don&apos;t see it soon, check your spam folder and mark it as &quot;Not spam&quot;.
                   </p>
                 </div>
@@ -942,10 +949,8 @@ export function StartChapterApplicationForm() {
                   type="button"
                   onClick={handleDialogDismiss}
                   className={[
-                    "inline-flex cursor-pointer items-center justify-center rounded-full px-5 py-2.5 text-sm font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--primary)]/40",
-                    dialog.type === "success"
-                      ? "bg-[color:var(--primary)] text-[color:var(--primary-foreground)] hover:bg-[color-mix(in_oklab,var(--primary)_92%,black)]"
-                      : "border border-[color:var(--border)] bg-[color:var(--background)] text-[color:var(--foreground)] hover:border-[color:var(--primary)] hover:text-[color:var(--primary)]",
+                    "btn btn-sm cursor-pointer",
+                    dialog.type === "success" ? "btn-primary" : "",
                   ].join(" ")}
                 >
                   {dialog.type === "success" ? "Back to Start a Chapter" : "Close"}

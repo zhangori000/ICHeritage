@@ -28,6 +28,7 @@ import { brandPromosType } from "./blocks/brandPromosType";
 import { volunteerTracksType } from "./blocks/volunteerTracksType";
 import { volunteerBenefitsType } from "./blocks/volunteerBenefitsType";
 import { volunteerApplicationType } from "./blocks/volunteerApplicationType";
+import { closingCtaType } from "./blocks/closingCtaType";
 import newsletter from "./newsletter";
 import { siteSettingsType } from "./siteSettingsType";
 import { heroBannerType } from "./heroBannerType";
@@ -71,6 +72,7 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     volunteerTracksType,
     volunteerBenefitsType,
     volunteerApplicationType,
+    closingCtaType,
     newsletter,
     siteSettingsType,
     heroBannerType,

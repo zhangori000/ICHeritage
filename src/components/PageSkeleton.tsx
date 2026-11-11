@@ -1,7 +1,7 @@
 /**
  * Skeleton for routes rendered on request (newsletter articles, blog posts),
- * shown while their data loads. Mirrors the usual page shape: a hero band
- * followed by a row of cards.
+ * shown while their data loads. Mirrors the page shape: an eyebrow and
+ * display heading, then a rule and a few list rows.
  *
  * Deliberately NOT used as a site-wide loading.tsx: the other pages are
  * prerendered, and a root loading boundary gets baked into their static HTML,
@@ -9,40 +9,43 @@
  * every full page load.
  */
 export function PageSkeleton() {
+  const block = "bg-[color:var(--paper-deep)]";
+
   return (
     <div
       role="status"
       aria-live="polite"
       aria-label="Loading page"
-      className="animate-pulse bg-[var(--background)]"
+      className="animate-pulse bg-[color:var(--paper)]"
     >
-      <div className="container mx-auto px-4 py-12 sm:px-6 lg:px-8">
-        {/* Hero band */}
-        <div className="mx-auto flex max-w-3xl flex-col items-center gap-5 py-16 text-center">
-          <div className="h-3 w-32 rounded-full bg-[var(--muted)]" />
-          <div className="h-10 w-3/4 rounded-lg bg-[var(--muted)]" />
-          <div className="h-10 w-1/2 rounded-lg bg-[var(--muted)]" />
-          <div className="mt-2 h-4 w-2/3 rounded bg-[var(--muted)]" />
-          <div className="h-4 w-1/2 rounded bg-[var(--muted)]" />
-          <div className="mt-4 flex gap-3">
-            <div className="h-11 w-36 rounded-md bg-[var(--muted)]" />
-            <div className="h-11 w-28 rounded-md bg-[var(--muted)]" />
+      <div className="wrap py-20 md:py-28">
+        {/* Header */}
+        <div className="grid gap-6 md:grid-cols-2 md:items-end">
+          <div className="flex flex-col gap-5">
+            <div className={`h-3 w-24 ${block}`} />
+            <div className={`h-12 w-full md:h-14 ${block}`} />
+            <div className={`h-12 w-2/3 md:h-14 ${block}`} />
+          </div>
+          <div className="flex max-w-md flex-col gap-3 md:justify-self-end md:w-full">
+            <div className={`h-4 w-full ${block}`} />
+            <div className={`h-4 w-5/6 ${block}`} />
+            <div className={`h-4 w-2/3 ${block}`} />
           </div>
         </div>
 
-        {/* Card row */}
-        <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-3">
+        {/* List rows */}
+        <div className="mt-12 border-t border-[color:var(--ink)]">
           {Array.from({ length: 3 }).map((_, index) => (
             <div
               key={index}
-              className="overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--card)]"
+              className="grid grid-cols-1 gap-3 border-b border-[color:var(--hairline)] py-6 md:grid-cols-[140px_minmax(0,1fr)_auto] md:gap-6"
             >
-              <div className="aspect-[4/3] bg-[var(--muted)]" />
-              <div className="space-y-3 p-6">
-                <div className="h-5 w-2/3 rounded bg-[var(--muted)]" />
-                <div className="h-4 w-full rounded bg-[var(--muted)]" />
-                <div className="h-4 w-5/6 rounded bg-[var(--muted)]" />
+              <div className={`h-3 w-16 ${block}`} />
+              <div className="flex flex-col gap-3">
+                <div className={`h-7 w-3/4 ${block}`} />
+                <div className={`h-4 w-full ${block}`} />
               </div>
+              <div className={`h-3 w-24 ${block}`} />
             </div>
           ))}
         </div>

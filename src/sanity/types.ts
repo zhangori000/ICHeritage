@@ -106,6 +106,16 @@ export type Callout = {
   }>;
 };
 
+export type ClosingCtaPrimaryCta = {
+  label?: string;
+  href?: string;
+};
+
+export type ClosingCtaSecondaryCta = {
+  label?: string;
+  href?: string;
+};
+
 export type SanityImageAssetReference = {
   _ref: string;
   _type: "reference";
@@ -635,6 +645,14 @@ export type Newsletter = {
   };
 };
 
+export type ClosingCta = {
+  _type: "closingCta";
+  heading?: string;
+  body?: string;
+  primaryCta?: ClosingCtaPrimaryCta;
+  secondaryCta?: ClosingCtaSecondaryCta;
+};
+
 export type VolunteerApplication = {
   _type: "volunteerApplication";
   sectionId?: string;
@@ -1150,6 +1168,9 @@ export type PageBuilder = Array<
   | ({
       _key: string;
     } & VolunteerApplication)
+  | ({
+      _key: string;
+    } & ClosingCta)
 >;
 
 export type Page = {
@@ -1419,6 +1440,8 @@ export type AllSanitySchemaTypes =
   | CtaCard
   | ViewAllCta
   | Callout
+  | ClosingCtaPrimaryCta
+  | ClosingCtaSecondaryCta
   | SanityImageAssetReference
   | ObjectImage
   | CardImage
@@ -1450,6 +1473,7 @@ export type AllSanitySchemaTypes =
   | SiteSettings
   | SanityFileAssetReference
   | Newsletter
+  | ClosingCta
   | VolunteerApplication
   | VolunteerBenefits
   | VolunteerTracks
@@ -1818,6 +1842,14 @@ export type PAGE_QUERY_RESULT = {
         }>;
         processCard?: ProcessCard;
         metricsCard?: MetricsCard;
+      }
+    | {
+        _key: string;
+        _type: "closingCta";
+        heading?: string;
+        body?: string;
+        primaryCta?: ClosingCtaPrimaryCta;
+        secondaryCta?: ClosingCtaSecondaryCta;
       }
     | {
         _key: string;
@@ -2353,6 +2385,14 @@ export type HOME_PAGE_QUERY_RESULT =
               }>;
               processCard?: ProcessCard;
               metricsCard?: MetricsCard;
+            }
+          | {
+              _key: string;
+              _type: "closingCta";
+              heading?: string;
+              body?: string;
+              primaryCta?: ClosingCtaPrimaryCta;
+              secondaryCta?: ClosingCtaSecondaryCta;
             }
           | {
               _key: string;
