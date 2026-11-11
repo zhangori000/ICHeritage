@@ -243,10 +243,11 @@ html {
     background: var(--band);
     color: var(--band-text);
   }
-  .band a {
+  /* Text links only: buttons keep their own hover colours. */
+  .band a:not(.btn) {
     color: var(--band-text);
   }
-  .band a:hover {
+  .band a:not(.btn):hover {
     color: #e8b4b6;
   }
 }
