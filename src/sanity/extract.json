@@ -1113,6 +1113,13 @@
         },
         "optional": true
       },
+      "hideFromWebsite": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "boolean"
+        },
+        "optional": true
+      },
       "description": {
         "type": "objectAttribute",
         "value": {
@@ -1227,6 +1234,13 @@
                 "optional": true
               },
               "caption": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "string"
+                },
+                "optional": true
+              },
+              "takenAt": {
                 "type": "objectAttribute",
                 "value": {
                   "type": "string"

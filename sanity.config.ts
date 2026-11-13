@@ -15,6 +15,7 @@ import { schema } from "./src/sanity/schemaTypes";
 import { structure } from "./src/sanity/structure";
 import { colorInput } from "@sanity/color-input";
 import { resolve } from "./src/sanity/presentation/resolve";
+import { photosTool } from "./src/sanity/tools/photos";
 
 export default defineConfig({
   basePath: "/studio",
@@ -39,6 +40,11 @@ export default defineConfig({
     }),
     colorInput(),
   ],
+  // "Photos" sits right after the content editor in the top bar.
+  tools: (prev) => {
+    const at = prev.findIndex((tool) => tool.name === "structure") + 1;
+    return [...prev.slice(0, at), photosTool(), ...prev.slice(at)];
+  },
   document: {
     newDocumentOptions: (prev) =>
       prev.filter((item) => item.templateId !== "siteSettings"),

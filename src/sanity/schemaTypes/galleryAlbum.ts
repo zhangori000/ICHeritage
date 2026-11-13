@@ -4,9 +4,10 @@ import { defineArrayMember, defineField, defineType } from "sanity";
 
 /**
  * A gallery album is a set of photos uploaded directly in Sanity Studio.
- * Editors can drag-and-drop many images at once into the "Photos" field.
- * An optional external link (iCloud, Google Photos, …) is still supported
- * for albums that live elsewhere.
+ * The "Photos" tool (src/sanity/tools/photos) is the easy way to manage
+ * them: bulk upload, reorder, captions and cover. Editors can also drag
+ * images into the "Photos" field here. An optional external link (iCloud,
+ * Google Photos, …) is still supported for albums that live elsewhere.
  */
 export const galleryAlbumType = defineType({
   name: "galleryAlbum",
@@ -19,6 +20,13 @@ export const galleryAlbumType = defineType({
       title: "Album title",
       type: "string",
       validation: (rule) => rule.required(),
+    }),
+    defineField({
+      name: "hideFromWebsite",
+      title: "Hide from website",
+      type: "boolean",
+      description:
+        "Turn on to keep this album off the Gallery page while you are still adding photos.",
     }),
     defineField({
       name: "description",
@@ -55,7 +63,7 @@ export const galleryAlbumType = defineType({
       title: "Photos",
       type: "array",
       description:
-        "Upload the photos for this album. You can drag and drop several files at once. Drag photos to reorder them.",
+        "Upload the photos for this album. You can drag and drop several files at once. Drag photos to reorder them. For many photos at once, captions and covers, the Photos tab at the top of Studio is easier.",
       of: [
         defineArrayMember({
           type: "image",
@@ -72,6 +80,13 @@ export const galleryAlbumType = defineType({
               type: "string",
               title: "Caption",
               description: "Optional caption shown under the photo when opened.",
+            }),
+            defineField({
+              name: "takenAt",
+              type: "datetime",
+              title: "Date taken",
+              description: "Filled in by the Photos tool, used for sorting.",
+              hidden: true,
             }),
           ],
         }),
@@ -95,12 +110,14 @@ export const galleryAlbumType = defineType({
       photos: "photos",
       media: "highlightImage",
       firstPhoto: "photos.0",
+      hideFromWebsite: "hideFromWebsite",
     },
-    prepare({ title, date, photos, media, firstPhoto }) {
+    prepare({ title, date, photos, media, firstPhoto, hideFromWebsite }) {
       const count = Array.isArray(photos) ? photos.length : 0;
       const parts = [
         date ? String(date) : null,
         `${count} photo${count === 1 ? "" : "s"}`,
+        hideFromWebsite === true ? "Hidden" : null,
       ].filter(Boolean);
       return {
         title: title || "Untitled album",

@@ -547,7 +547,7 @@ export const GALLERY_PAGE_QUERY = defineQuery(`
     heroDescription,
     heroBackgroundImage
   },
-  "albums": *[_type == "galleryAlbum"]
+  "albums": *[_type == "galleryAlbum" && hideFromWebsite != true]
     | order(coalesce(date, _createdAt) desc){
       _id,
       title,

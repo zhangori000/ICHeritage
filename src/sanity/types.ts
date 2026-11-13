@@ -218,6 +218,7 @@ export type GalleryAlbum = {
   _updatedAt: string;
   _rev: string;
   title?: string;
+  hideFromWebsite?: boolean;
   description?: string;
   date?: string;
   highlightImage?: {
@@ -235,6 +236,7 @@ export type GalleryAlbum = {
     crop?: SanityImageCrop;
     alt?: string;
     caption?: string;
+    takenAt?: string;
     _type: "image";
     _key: string;
   }>;
@@ -3051,7 +3053,7 @@ export type LEGAL_PAGES_QUERY_RESULT = Array<{
 
 // Source: src/sanity/lib/queries.ts
 // Variable: GALLERY_PAGE_QUERY
-// Query: {  "settings": *[_type == "gallerySettings"][0]{    heroEyebrow,    heroTitle,    heroDescription,    heroBackgroundImage  },  "albums": *[_type == "galleryAlbum"]    | order(coalesce(date, _createdAt) desc){      _id,      title,      description,      date,      shareUrl,      highlightImage,      photos[]{        _key,        asset,        hotspot,        crop,        alt,        caption,        "dimensions": asset->metadata.dimensions{ width, height },        "lqip": asset->metadata.lqip      }    }}
+// Query: {  "settings": *[_type == "gallerySettings"][0]{    heroEyebrow,    heroTitle,    heroDescription,    heroBackgroundImage  },  "albums": *[_type == "galleryAlbum" && hideFromWebsite != true]    | order(coalesce(date, _createdAt) desc){      _id,      title,      description,      date,      shareUrl,      highlightImage,      photos[]{        _key,        asset,        hotspot,        crop,        alt,        caption,        "dimensions": asset->metadata.dimensions{ width, height },        "lqip": asset->metadata.lqip      }    }}
 export type GALLERY_PAGE_QUERY_RESULT = {
   settings: {
     heroEyebrow: string | null;
@@ -3119,7 +3121,7 @@ declare global {
     '\n  *[_type in ["volunteerOpportunity", "volunteerOPportunity"] && defined(slug.current)]{\n    "slug": slug.current\n  }\n': VOLUNTEER_SLUGS_QUERY_RESULT;
     '\n*[_id == "siteSettings"][0]{\n  logo,\n  orgName,\n  footerBlurb,\n  social{\n    facebook, twitter, instagram, youtube\n  },\n  quickLinks[]{\n    _key, label, href\n  },\n  contactEmail,\n  contactPhone,\n  donateUrl,\n  photoCredits,\n  newsletter{\n    enabled, blurb\n  },\n  navigation{\n    showWorkshops, showBrands\n  }\n}\n': SITE_SETTINGS_QUERY_RESULT;
     '\n*[_type == "page" && slug.current in ["privacy", "terms"]]{\n  title,\n  "slug": slug.current\n}\n': LEGAL_PAGES_QUERY_RESULT;
-    '\n{\n  "settings": *[_type == "gallerySettings"][0]{\n    heroEyebrow,\n    heroTitle,\n    heroDescription,\n    heroBackgroundImage\n  },\n  "albums": *[_type == "galleryAlbum"]\n    | order(coalesce(date, _createdAt) desc){\n      _id,\n      title,\n      description,\n      date,\n      shareUrl,\n      highlightImage,\n      photos[]{\n        _key,\n        asset,\n        hotspot,\n        crop,\n        alt,\n        caption,\n        "dimensions": asset->metadata.dimensions{ width, height },\n        "lqip": asset->metadata.lqip\n      }\n    }\n}\n': GALLERY_PAGE_QUERY_RESULT;
+    '\n{\n  "settings": *[_type == "gallerySettings"][0]{\n    heroEyebrow,\n    heroTitle,\n    heroDescription,\n    heroBackgroundImage\n  },\n  "albums": *[_type == "galleryAlbum" && hideFromWebsite != true]\n    | order(coalesce(date, _createdAt) desc){\n      _id,\n      title,\n      description,\n      date,\n      shareUrl,\n      highlightImage,\n      photos[]{\n        _key,\n        asset,\n        hotspot,\n        crop,\n        alt,\n        caption,\n        "dimensions": asset->metadata.dimensions{ width, height },\n        "lqip": asset->metadata.lqip\n      }\n    }\n}\n': GALLERY_PAGE_QUERY_RESULT;
   }
 }
 // Lets @sanity/client releases that predate the global registry read it too
