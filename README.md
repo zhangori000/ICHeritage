@@ -36,9 +36,13 @@ Everything below is done in Sanity Studio at `/studio` — no code changes or re
 - **Show / hide Workshops and Brands** — `Site Settings → Section visibility`. Both are off by
   default: the links disappear from the menu and `/workshops` and `/brands` redirect to the home page.
   Tip: if a home-page card still links to a hidden section, edit that card under `Pages → Home Page`.
-- **Gallery photos** — `Gallery → Photo Albums → + Create`. Give the album a title, then drag and drop
-  photos into the **Photos** field (several at once is fine). Optional: a date, a cover image, a caption
-  per photo, and an external album link. `Gallery → Gallery Page Settings` controls the hero text.
+- **Gallery photos** — open the **Photos** tab at the top of Studio (`/studio/photos`, works on a phone too).
+  Press **New album**, give it a title, then drag photos onto the page or press **Choose photos** (as many as
+  you like; big photos are shrunk automatically). Click a photo to caption it, drag to reorder, star one to
+  make it the cover, or use **Select** to move or remove several at once. Every change saves and goes live
+  right away, with **Undo** for anything removed or moved. New albums start hidden: flip **Show on website**
+  when they are ready. An album that still links to iCloud shows how to bring its photos in and a button to
+  remove the link. `Gallery → Gallery Page Settings` controls the hero text.
 - **Articles / newsletters** — `Resources → Articles & Newsletters → + Create`. Write the article in the
   **Body** field (headings, links, and inline images are supported) and optionally attach a PDF under
   **Downloadable file**. Published articles appear automatically on `/resources`.
