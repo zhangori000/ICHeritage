@@ -19,7 +19,10 @@ export default async function FrontendLayout({
   ]);
 
   return (
-    <section className="bg-white min-h-screen flex flex-col">
+    // Paper, not white: blocks without their own background (home and
+    // chapter heroes, About's "Who We Are") show this colour, so every
+    // page reads as the same paper as the header, footer and gallery.
+    <section className="bg-[color:var(--paper)] min-h-screen flex flex-col">
       <NavigationProgress />
       <Header settings={settings ?? null} />
       <main className="flex-1">{children}</main>
