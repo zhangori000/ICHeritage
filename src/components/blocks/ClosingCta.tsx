@@ -12,7 +12,7 @@ function clean(value: string | null | undefined): string {
 }
 
 /**
- * The one dark band at the end of a page: display heading on the left,
+ * The closing band at the end of a page: display heading on the left,
  * supporting text and buttons on the right.
  */
 export function ClosingCta({ heading, body, primaryCta, secondaryCta }: ClosingCtaBlock) {

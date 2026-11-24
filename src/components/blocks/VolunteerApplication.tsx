@@ -39,12 +39,12 @@ const clean = (value?: string | null) => (value ? stegaClean(value) : "");
 
 const pad = (n: number) => String(n).padStart(2, "0");
 
-// Buttons on the dark band: the first is the seal-red primary, the rest are
-// light outlines. Utilities pin the primary's text colour above `.band a`.
+// Buttons on the band: the first is the seal-red primary, the rest are
+// outlines. Utilities pin the text colours above `.band a`.
 const bandButtonClass = (index: number) =>
   index === 0
     ? "btn btn-primary text-[color:var(--primary-foreground)] hover:text-[color:var(--primary-foreground)]"
-    : "btn btn-light hover:text-[color:var(--ink)]";
+    : "btn btn-light hover:text-[color:var(--paper)]";
 
 function renderSupportLink(link: { label: string; href: string }, key: string, index: number) {
   const hrefValue = link.href ?? "";

@@ -149,7 +149,7 @@ export function LeadershipSection({
   };
 
   return (
-    <section id={anchor} className="bg-[color:var(--paper-deep)] py-20 md:py-28">
+    <section id={anchor} className="border-t border-[color:var(--hairline)] bg-[color:var(--paper)] py-20 md:py-28">
       <div className="wrap">
         {/* Heading left, intro right. */}
         {(heading || intro) && (

@@ -67,7 +67,7 @@ export function VolunteerBenefits(block: VolunteerBenefitsBlock) {
     count >= 3 ? "md:grid-cols-3" : count === 2 ? "md:grid-cols-2" : "md:grid-cols-1";
 
   return (
-    <section id={anchor} className="bg-[color:var(--paper-deep)] py-20 md:py-28">
+    <section id={anchor} className="border-t border-[color:var(--hairline)] bg-[color:var(--paper)] py-20 md:py-28">
       <div className="wrap">
         {heading || intro ? (
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2 md:items-end">

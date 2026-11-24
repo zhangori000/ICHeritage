@@ -42,7 +42,7 @@ export function NewsletterArchive({
   const subscribeBody = clean(cta?.body);
 
   return (
-    <section id="newsletter" className="bg-[color:var(--paper-deep)] py-20 md:py-28">
+    <section id="newsletter" className="border-t border-[color:var(--hairline)] bg-[color:var(--paper)] py-20 md:py-28">
       <div className="wrap">
         {heading || description ? (
           <div className="grid gap-6 md:grid-cols-2 md:items-end">

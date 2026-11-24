@@ -2,7 +2,7 @@ import { defineField, defineType } from "sanity";
 import { BlockElementIcon } from "@sanity/icons/BlockElement";
 
 /**
- * Closing call to action: the one dark band at the end of a page, with a
+ * Closing call to action: the closing band at the end of a page, with a
  * short display heading, a sentence or two, and up to two buttons.
  * Example: "Bring heritage to your campus." / Start a chapter · Volunteer.
  */
