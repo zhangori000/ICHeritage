@@ -29,7 +29,6 @@ type SubmissionFeedback = {
   message: string;
   details?: {
     volunteerId?: string;
-    targetRecipients?: string[];
   };
 };
 
@@ -170,7 +169,7 @@ export const VolunteerForm = forwardRef<VolunteerFormHandle, VolunteerFormProps>
         });
 
         const result = (await response.json().catch(() => null)) as
-          | { error?: string; message?: string; targetRecipients?: string[]; volunteerId?: string }
+          | { error?: string; message?: string; volunteerId?: string }
           | null;
 
         if (!response.ok || result?.error) {
@@ -187,9 +186,6 @@ export const VolunteerForm = forwardRef<VolunteerFormHandle, VolunteerFormProps>
           details: {
             volunteerId:
               typeof result?.volunteerId === "string" ? result.volunteerId : undefined,
-            targetRecipients: Array.isArray(result?.targetRecipients)
-              ? (result?.targetRecipients as string[])
-              : undefined,
           },
         });
 
@@ -247,12 +243,6 @@ export const VolunteerForm = forwardRef<VolunteerFormHandle, VolunteerFormProps>
           {feedback.details?.volunteerId ? (
             <p className="text-xs text-[color:var(--muted-foreground)]">
               Reference ID: {feedback.details.volunteerId}
-            </p>
-          ) : null}
-          {feedback.details?.targetRecipients && feedback.details.targetRecipients.length > 0 ? (
-            <p className="text-xs text-[color:var(--muted-foreground)]">
-              <span className="font-medium text-[color:var(--foreground)]">Notified:</span>{" "}
-              {feedback.details.targetRecipients.join(", ")}
             </p>
           ) : null}
           <button

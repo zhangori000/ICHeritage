@@ -73,40 +73,6 @@ const defaultBenefits = [
       "Participate in cultural immersion experiences",
     ],
   },
-  {
-    icon: "globe",
-    tone: "accent",
-    title: "Global Impact",
-    description:
-      "Be part of a worldwide movement preserving cultural heritage.",
-    points: [
-      "Connect with volunteers and chapters internationally",
-      "Contribute to global cultural preservation efforts",
-      "Share best practices with volunteers worldwide",
-      "Participate in international cultural exchange programs",
-    ],
-  },
-];
-
-const defaultTestimonials = [
-  {
-    quote:
-      "Volunteering with ICHeritage has been transformative. I've learned so much about my own culture while helping others connect with theirs. The community here is incredibly supportive.",
-    name: "Sarah Chen",
-    role: "Workshop Volunteer, San Francisco",
-  },
-  {
-    quote:
-      "The leadership skills I've developed through my organizational volunteer role have been invaluable for my career. Plus, the work we do here truly matters.",
-    name: "Michael Zhang",
-    role: "Organizational Volunteer, New York",
-  },
-  {
-    quote:
-      "What I love most is the flexibility. I can volunteer for events that fit my schedule while still making a meaningful contribution to cultural preservation.",
-    name: "Lisa Wang",
-    role: "Workshop Volunteer, Los Angeles",
-  },
 ];
 
 export const volunteerBenefitsType = defineType({
@@ -201,13 +167,12 @@ export const volunteerBenefitsType = defineType({
       name: "testimonialsHeading",
       title: "Testimonials heading",
       type: "string",
-      initialValue: "What Our Volunteers Say",
+      description: "Only add quotes from real volunteers, with their permission.",
     }),
     defineField({
       name: "testimonialsIntro",
       title: "Testimonials intro",
       type: "string",
-      initialValue: "Hear from volunteers about their experiences and the impact they've made.",
     }),
     defineField({
       name: "testimonials",
@@ -245,7 +210,6 @@ export const volunteerBenefitsType = defineType({
         }),
       ],
       validation: (rule) => rule.max(6),
-      initialValue: defaultTestimonials,
     }),
   ],
   preview: {

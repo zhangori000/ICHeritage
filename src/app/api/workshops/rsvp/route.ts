@@ -115,7 +115,7 @@ export async function POST(request: Request) {
     },
   };
 
-  const { recipients: toEmails, fallbackUsed } =
+  const { recipients: toEmails } =
     await resolveNotificationRecipients([payload.contactEmail]);
 
   if (!toEmails.length) {
@@ -199,8 +199,6 @@ export async function POST(request: Request) {
       message: "RSVP request delivered to the workshop team.",
       confirmationEmailSent,
       confirmationEmailError,
-      fallbackGroupUsed: fallbackUsed,
-      targetRecipients: toEmails,
     });
   } catch (error) {
     console.error("Failed to deliver workshop RSVP request", error);

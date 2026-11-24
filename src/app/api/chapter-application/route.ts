@@ -155,7 +155,7 @@ export async function POST(request: Request) {
 
   const { fields, files } = normalizeFormData(formData);
 
-  const { recipients: toEmails, fallbackUsed: fallbackGroupUsed } =
+  const { recipients: toEmails } =
     await resolveNotificationRecipients([]);
 
   if (!toEmails.length) {
@@ -255,11 +255,9 @@ export async function POST(request: Request) {
 
     return NextResponse.json({
       ok: true,
-      message: "Chapter application delivered to the HQ notification list.",
+      message: "Thanks! Your chapter application was sent to the ICHeritage team.",
       confirmationEmailSent,
       confirmationEmailError,
-      fallbackGroupUsed,
-      targetRecipients: toEmails,
     });
   } catch (error) {
     console.error("Failed to send chapter application notification", error);
