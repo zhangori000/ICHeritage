@@ -3,8 +3,12 @@ import { BLOG_POSTS_QUERY } from "@/sanity/lib/queries";
 import type { BLOG_POSTS_QUERY_RESULT } from "@/sanity/types";
 import { BlogPostCard } from "@/components/BlogPostCard";
 import { Title } from "@/components/Title";
+import { notFound } from "next/navigation";
+import { BLOG_ENABLED } from "./blogEnabled";
 
 export default async function Page() {
+  if (!BLOG_ENABLED) notFound();
+
   const { data: posts } = await sanityFetch<typeof BLOG_POSTS_QUERY>({
     stega: false,
     query: BLOG_POSTS_QUERY,

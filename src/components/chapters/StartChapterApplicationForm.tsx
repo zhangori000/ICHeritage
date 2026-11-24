@@ -106,8 +106,6 @@ type DialogState = {
     attachments?: string[];
     confirmationEmailSent?: boolean;
     confirmationEmailError?: string;
-    fallbackGroupUsed?: boolean;
-    recipients?: string[];
   };
 };
 
@@ -214,7 +212,7 @@ const sectionsByStep: Record<string, Section[]> = {
           name: "leadContact",
           label: "Contact (mobile / WhatsApp / WeChat / email)",
           required: true,
-          placeholder: "+1 (555) 123-4567 or @handle",
+          placeholder: "Phone, WhatsApp, WeChat ID, or @handle",
         },
         {
           kind: "input",
@@ -599,10 +597,6 @@ export function StartChapterApplicationForm() {
               typeof result?.confirmationEmailError === "string"
                 ? (result.confirmationEmailError as string)
                 : undefined,
-            fallbackGroupUsed: Boolean(result?.fallbackGroupUsed),
-            recipients: Array.isArray(result?.targetRecipients)
-              ? (result?.targetRecipients as string[])
-              : undefined,
           },
         });
       } catch (error) {
@@ -915,15 +909,6 @@ export function StartChapterApplicationForm() {
                   {dialog.details?.confirmationEmailError ? (
                     <div className="border-l-2 border-[color:var(--seal)] pl-3 text-xs leading-relaxed text-[color:var(--ink-soft)]">
                       {dialog.details.confirmationEmailError}
-                    </div>
-                  ) : null}
-                  {dialog.details?.recipients && dialog.details.recipients.length > 0 ? (
-                    <div>
-                      <span className="font-medium text-[color:var(--ink)]">HQ notified:</span>{" "}
-                      {dialog.details.recipients.join(", ")}
-                      {dialog.details.fallbackGroupUsed ? (
-                        <span className="text-xs text-[color:var(--ink-muted)]">{` • Using fallback contact group`}</span>
-                      ) : null}
                     </div>
                   ) : null}
                   {dialog.details?.attachments && dialog.details.attachments.length > 0 ? (

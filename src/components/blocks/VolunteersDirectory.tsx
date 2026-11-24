@@ -138,19 +138,21 @@ export function VolunteersDirectory({
             ) : null}
           </div>
 
-          <div className="w-full md:max-w-sm md:justify-self-end">
-            <label htmlFor={searchInputId} className="eyebrow block">
-              Search
-            </label>
-            <input
-              id={searchInputId}
-              type="search"
-              value={searchTerm}
-              onChange={(event) => setSearchTerm(event.target.value)}
-              placeholder={clean(searchPlaceholder) || "Search volunteer roles"}
-              className="mt-3 w-full rounded-none border border-[color:var(--hairline)] bg-white px-4 py-3 text-[15px] text-[color:var(--ink)] placeholder:text-[color:var(--ink-muted)] focus:border-[color:var(--ink)] focus:outline-none"
-            />
-          </div>
+          {safeOpportunities.length > 0 ? (
+            <div className="w-full md:max-w-sm md:justify-self-end">
+              <label htmlFor={searchInputId} className="eyebrow block">
+                Search
+              </label>
+              <input
+                id={searchInputId}
+                type="search"
+                value={searchTerm}
+                onChange={(event) => setSearchTerm(event.target.value)}
+                placeholder={clean(searchPlaceholder) || "Search volunteer roles"}
+                className="mt-3 w-full rounded-none border border-[color:var(--hairline)] bg-white px-4 py-3 text-[15px] text-[color:var(--ink)] placeholder:text-[color:var(--ink-muted)] focus:border-[color:var(--ink)] focus:outline-none"
+              />
+            </div>
+          ) : null}
         </div>
 
         {trackFilters.length > 0 ? (
@@ -278,7 +280,9 @@ export function VolunteersDirectory({
             </ul>
           ) : (
             <p className="border-t border-[color:var(--ink)] py-12 text-[15px] leading-relaxed text-[color:var(--ink-muted)]">
-              No volunteer opportunities match your current search. Try a different track or keyword.
+              {safeOpportunities.length === 0
+                ? "There are no open volunteer roles right now. Check back soon."
+                : "No volunteer opportunities match your current search. Try a different track or keyword."}
             </p>
           )}
         </div>

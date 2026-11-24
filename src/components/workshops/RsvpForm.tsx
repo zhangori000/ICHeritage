@@ -20,8 +20,6 @@ type SubmissionFeedback = {
   details?: {
     confirmationEmailSent?: boolean;
     confirmationEmailError?: string;
-    fallbackGroupUsed?: boolean;
-    targetRecipients?: string[];
   };
 };
 
@@ -155,10 +153,6 @@ export function RsvpForm({
               typeof result?.confirmationEmailError === 'string'
                 ? result.confirmationEmailError
                 : undefined,
-            fallbackGroupUsed: Boolean(result?.fallbackGroupUsed),
-            targetRecipients: Array.isArray(result?.targetRecipients)
-              ? (result.targetRecipients as string[])
-              : undefined,
           },
         });
       } catch (error) {
@@ -202,13 +196,6 @@ export function RsvpForm({
           {feedback.details?.confirmationEmailError ? (
             <p className="rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-800">
               {feedback.details.confirmationEmailError}
-            </p>
-          ) : null}
-          {feedback.details?.targetRecipients && feedback.details.targetRecipients.length > 0 ? (
-            <p className="text-xs text-[color:var(--muted-foreground)]">
-              <span className="font-medium text-[color:var(--foreground)]">Notified:</span>{' '}
-              {feedback.details.targetRecipients.join(', ')}
-              {feedback.details.fallbackGroupUsed ? ' (using default contact group)' : ''}
             </p>
           ) : null}
           <button

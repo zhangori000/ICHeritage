@@ -42,18 +42,11 @@ export async function resolveNotificationRecipients(
   preferredEmails.forEach((email) => recipientSet.add(email));
   groupRecipients.forEach((email) => recipientSet.add(email));
 
-  let fallbackUsed = false;
-
   if (recipientSet.size === 0) {
     FALLBACK_RECIPIENTS.forEach((email) => recipientSet.add(email));
-    fallbackUsed = true;
   }
 
-  return {
-    recipients: Array.from(recipientSet),
-    fallbackUsed,
-    groupRecipients,
-  };
+  return { recipients: Array.from(recipientSet) };
 }
 
 export const detectEmailFromText = (value?: string | null) => {

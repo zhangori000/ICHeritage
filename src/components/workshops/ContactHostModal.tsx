@@ -23,8 +23,6 @@ type SubmissionFeedback = {
   details?: {
     confirmationEmailSent?: boolean;
     confirmationEmailError?: string;
-    fallbackGroupUsed?: boolean;
-    targetRecipients?: string[];
   };
 };
 
@@ -190,10 +188,6 @@ export function ContactHostModal({
               typeof result?.confirmationEmailError === 'string'
                 ? result.confirmationEmailError
                 : undefined,
-            fallbackGroupUsed: Boolean(result?.fallbackGroupUsed),
-            targetRecipients: Array.isArray(result?.targetRecipients)
-              ? (result.targetRecipients as string[])
-              : undefined,
           },
         });
       } catch (error) {
@@ -315,15 +309,6 @@ export function ContactHostModal({
                       <p className="mt-2 rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-800">
                         {feedback.details.confirmationEmailError}
                       </p>
-                    ) : null}
-                    {feedback.details?.targetRecipients && feedback.details.targetRecipients.length > 0 ? (
-                      <div className="mt-3 text-xs text-[color:var(--muted-foreground)]">
-                        <span className="font-medium text-[color:var(--foreground)]">Notified:</span>{' '}
-                        {feedback.details.targetRecipients.join(', ')}
-                        {feedback.details.fallbackGroupUsed ? (
-                          <span>{' (using default contact group)'}</span>
-                        ) : null}
-                      </div>
                     ) : null}
                   </div>
 

@@ -364,7 +364,7 @@ export async function POST(request: Request) {
   const preferredRecipients = normalizedPayload.contactEmail
     ? [normalizedPayload.contactEmail]
     : [];
-  const { recipients: toEmails, fallbackUsed } = await resolveNotificationRecipients(
+  const { recipients: toEmails } = await resolveNotificationRecipients(
     preferredRecipients
   );
 
@@ -420,8 +420,6 @@ export async function POST(request: Request) {
       {
         ok: true,
         message: "Volunteer interest delivered to the workshop team.",
-        targetRecipients: toEmails,
-        fallbackGroupUsed: fallbackUsed,
         volunteerId: volunteerRecordId,
         storageWarning: persistenceWarning,
       },

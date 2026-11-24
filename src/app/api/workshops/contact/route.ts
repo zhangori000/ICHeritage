@@ -100,7 +100,7 @@ export async function POST(request: Request) {
     pageUrl: body.pageUrl ?? null,
   };
 
-  const { recipients: toEmails, fallbackUsed } =
+  const { recipients: toEmails } =
     await resolveNotificationRecipients([payload.contactEmail]);
 
   if (!toEmails.length) {
@@ -181,8 +181,6 @@ export async function POST(request: Request) {
       message: "Message delivered to the workshop hosts.",
       confirmationEmailSent,
       confirmationEmailError,
-      fallbackGroupUsed: fallbackUsed,
-      targetRecipients: toEmails,
     });
   } catch (error) {
     console.error("Failed to deliver workshop contact message", error);

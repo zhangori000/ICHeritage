@@ -256,8 +256,13 @@ export const volunteerApplicationType = defineType({
                 rule.custom((value) => {
                   if (!value) return "Provide a link.";
                   const trimmed = value.trim();
-                  if (trimmed.startsWith("/") || trimmed.startsWith("http")) return true;
-                  return "Start with / for internal links or use a full URL.";
+                  if (
+                    trimmed.startsWith("/") ||
+                    trimmed.startsWith("http") ||
+                    trimmed.startsWith("mailto:")
+                  )
+                    return true;
+                  return "Start with / for internal links, mailto: for email, or use a full URL.";
                 }),
             }),
           ],
@@ -267,8 +272,7 @@ export const volunteerApplicationType = defineType({
         }),
       ],
       initialValue: [
-        { label: "Contact Volunteer Coordinator", href: "/contact" },
-        { label: "Read Volunteer FAQ", href: "/volunteers/faq" },
+        { label: "Contact Volunteer Coordinator", href: "mailto:chineseicheritage@gmail.com" },
       ],
       validation: (rule) => rule.max(4),
     }),
