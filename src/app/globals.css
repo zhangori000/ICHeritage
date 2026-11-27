@@ -41,10 +41,12 @@
   --seal: #a73438;
   --seal-deep: #8c2a2e;
   --pine: #5a6b4f;
-  --band: #2a2420; /* the one dark section per page */
-  --band-rule: #4a413a;
-  --band-text: #f7f2e8;
-  --band-muted: #c9bead;
+  /* Former dark band. The owner asked for every page to read as one colour,
+     so "band" sections now use the same paper and ink as the rest. */
+  --band: #f7f2e8;
+  --band-rule: #d9cfbf;
+  --band-text: #1f1b17;
+  --band-muted: #5f574d;
 
   /* legacy aliases used across components */
   --background: var(--paper);
@@ -193,7 +195,7 @@ html {
   }
   .btn-light:hover {
     background: var(--band-text);
-    color: var(--ink);
+    color: var(--band);
   }
   .btn-sm {
     min-height: 2.75rem;
@@ -238,17 +240,18 @@ html {
     background: rgba(31, 27, 23, 0.035);
   }
 
-  /* Dark band: one per page, warm ink rather than brand red. */
+  /* Closing/feature band: same paper as the page, set off by a rule. */
   .band {
     background: var(--band);
     color: var(--band-text);
+    border-top: 1px solid var(--hairline);
   }
   /* Text links only: buttons keep their own hover colours. */
   .band a:not(.btn) {
     color: var(--band-text);
   }
   .band a:not(.btn):hover {
-    color: #e8b4b6;
+    color: var(--seal);
   }
 }
 

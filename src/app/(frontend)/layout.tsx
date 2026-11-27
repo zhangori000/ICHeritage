@@ -19,7 +19,7 @@ export default async function FrontendLayout({
   ]);
 
   return (
-    <section className="bg-white min-h-screen flex flex-col">
+    <section className="bg-[color:var(--paper)] min-h-screen flex flex-col">
       <NavigationProgress />
       <Header settings={settings ?? null} />
       <main className="flex-1">{children}</main>

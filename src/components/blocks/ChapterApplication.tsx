@@ -79,7 +79,7 @@ export function ChapterApplication({
   return (
     <section id={sectionAnchor}>
       {hasPaperContent ? (
-        <div className="bg-[color:var(--paper-deep)] py-20 md:py-28">
+        <div className="border-t border-[color:var(--hairline)] bg-[color:var(--paper)] py-20 md:py-28">
           <div className="wrap">
             {hasHeader ? (
               <div className="grid grid-cols-1 gap-8 md:grid-cols-2 md:items-end">
@@ -172,7 +172,7 @@ export function ChapterApplication({
         </div>
       ) : null}
 
-      {/* Closing call to action: the one dark band on the page. */}
+      {/* Closing call to action, set off from the section above by a rule. */}
       <div className="band py-20 md:py-28">
         <div className="wrap">
           <div
